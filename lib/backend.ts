@@ -47,7 +47,7 @@ function canonicalPublicJwk(jwk: JsonWebKey) {
   return JSON.stringify({ crv: jwk.crv, kty: jwk.kty, x: jwk.x, y: jwk.y });
 }
 
-export async function activateArunikaLicense(licenseCode: string) {
+export async function activateArunikaLicense(licenseCode: string, activationPin: string) {
   let deviceId = localStorage.getItem("arunika_device_id");
   let privateJwk: JsonWebKey | null = null;
   let publicJwk: JsonWebKey | null = null;
@@ -86,6 +86,7 @@ export async function activateArunikaLicense(licenseCode: string) {
     deviceName: navigator.userAgent.includes("Mobile") ? "Arunika Mobile" : "Arunika Web",
     publicKey: publicJwk,
     publicKeyThumbprint: thumbprint,
+    activationPin: activationPin.trim(),
   });
 
   if (!result?.ok) throw new Error(result?.message || result?.code || "Aktivasi gagal.");
