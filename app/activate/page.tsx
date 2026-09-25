@@ -27,14 +27,14 @@ export default function ActivatePage(){
       setBusy(false);
       return;
     }
-    if(!/^\d{4,8}$/.test(pin)){
-      setMessage("Buat PIN perangkat 4–8 digit.");
+    if(!/^\d{6}$/.test(pin)){
+      setMessage("PIN aktivasi harus 6 digit.");
       setBusy(false);
       return;
     }
 
     try{
-      const result=await activateArunikaLicense(normalized);
+      const result=await activateArunikaLicense(normalized,pin);
       if(!result?.ok) throw new Error(result?.message||"Aktivasi gagal.");
 
       const current=await getOne<Settings>("settings","settings");
@@ -49,7 +49,6 @@ export default function ActivatePage(){
           ...current,
           activated:true,
           licenseCode:normalized,
-          pin,
           onboardingDone:false
         });
       }
@@ -59,6 +58,8 @@ export default function ActivatePage(){
       const raw=String((error as Error)?.message||error);
       const friendly=raw.includes("PRODUCT_NOT_ENTITLED")
         ?"Kode ini tidak memiliki akses ke Arunika."
+        :raw.includes("PIN_INVALID")
+        ?"PIN aktivasi salah."
         :raw.includes("DEVICE_LIMIT")
         ?"Lisensi ini sudah mencapai batas perangkat."
         :raw.includes("NOT_FOUND")||raw.includes("tidak ditemukan")
@@ -80,9 +81,9 @@ export default function ActivatePage(){
       <div className="auth-copy">
         <div className="eyebrow">AKTIVASI ARUNIKA PRO</div>
         <h1>Aktivasi nyata. Lisensi terhubung ke backend.</h1>
-        <p>Kode aktivasi diverifikasi ke server Arunika dan diikat ke perangkat ini. PIN yang kamu buat menjadi PIN lokal perangkat dan tidak dikirim ke server.</p>
+        <p>Kode aktivasi diverifikasi ke server Arunika dan diikat ke perangkat ini. Kode aktivasi dan PIN diverifikasi ke server Arunika lalu lisensi diikat ke perangkat ini.</p>
         <div className="auth-points">
-          <span><Icon name="lock" size={18}/> Lisensi diverifikasi server</span>
+          <span><Icon name="lock" size={18}/> Kode + PIN diverifikasi server</span>
           <span><Icon name="check" size={18}/> Maksimal perangkat mengikuti lisensi</span>
           <span><Icon name="sparkles" size={18}/> Data Demo dibersihkan setelah aktivasi berhasil</span>
         </div>
@@ -96,8 +97,8 @@ export default function ActivatePage(){
           <input value={license} onChange={e=>setLicense(e.target.value)} placeholder="ARUN-XXXX-XXXX-XXXX" autoCapitalize="characters"/>
         </label>
         <label>
-          <span>Buat PIN perangkat</span>
-          <input value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,""))} placeholder="4–8 digit" type="password" inputMode="numeric" maxLength={8}/>
+          <span>PIN aktivasi</span>
+          <input value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,""))} placeholder="6 digit dari email" type="password" inputMode="numeric" maxLength={6}/>
         </label>
         <button className="primary-btn large full" disabled={busy}>{busy?"Memverifikasi lisensi…":"Aktifkan Arunika Pro"}</button>
         {message?<div className={success?"form-message success-message":"form-message"}>{message}</div>:null}
