@@ -1,0 +1,26 @@
+import { Icon } from "@/components/Icon";
+
+export default function LandingPage(){
+  return <main className="landing">
+    <nav className="landing-nav"><a className="brand-row" href="/"><div className="brand-symbol">A</div><div><strong>ARUNIKA</strong><span>Reading & learning journal</span></div></a><div className="landing-links"><a href="#fitur">Fitur</a><a href="#cara">Cara kerja</a><a href="/activate">Aktivasi</a></div><a className="nav-cta" href="/app">Coba Demo</a></nav>
+
+    <section className="landing-hero"><div className="hero-glow one"/><div className="hero-glow two"/><div className="landing-copy"><div className="eyebrow">READ · LEARN · GROW</div><h1>Tempat perjalanan membaca dan belajarmu <em>bertumbuh.</em></h1><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari. Arunika menyatukan reading journal, learning tracker, habit, dan knowledge vault dalam satu aplikasi yang tenang dan mudah dipakai.</p><div className="hero-actions"><a className="primary-btn large" href="/app">Masuk Mode Demo <Icon name="arrow" size={18}/></a><a className="ghost-btn large" href="/pro">Beli Pro · Rp20.000</a></div><div className="trust-row"><span><Icon name="check" size={15}/> Data lokal di perangkat</span><span><Icon name="check" size={15}/> Bisa dipasang seperti aplikasi</span><span><Icon name="check" size={15}/> Demo tanpa login</span></div></div>
+      <div className="landing-mockup"><div className="mock-browser panel"><div className="mock-dots"><i/><i/><i/></div><div className="mock-content"><div className="mock-sidebar"><div className="mock-logo">A</div>{Array.from({length:7}).map((_,i)=><span key={i} className={i===0?"active":""}/>)}</div><div className="mock-main"><div className="mock-top"><div><small>SELAMAT DATANG</small><strong>Hari yang baik untuk membaca.</strong></div><div className="mock-avatar">A</div></div><div className="mock-stats">{["8 hari","14/20","3 buku","152 mnt"].map(v=><div key={v}><span/><strong>{v}</strong></div>)}</div><div className="mock-grid"><div className="mock-book"><div className="mock-cover">A</div><div><small>CONTINUE READING</small><strong>Atomic Habits</strong><p>James Clear</p><div className="mock-progress"><i/></div></div></div><div className="mock-chart">{[35,60,42,78,50,85,65,90].map((h,i)=><i key={i} style={{height:`${h}%`}}/>)}</div></div></div></div></div></div>
+    </section>
+
+    <section className="landing-section" id="fitur"><div className="center-title"><div className="eyebrow">SEMUA YANG PENTING</div><h2>Bukan cuma mencatat buku.</h2><p>Arunika mengikuti perjalanan belajarmu secara menyeluruh—buku, video, webinar, podcast, habit, hingga insight yang ingin disimpan.</p></div><div className="feature-grid">{[
+      ["book","Reading Log","Progress halaman, status, rating, harga, jenis, kepemilikan, review, dan cover."],
+      ["play","Learning Log","Track video, podcast, webinar, course, durasi, sumber, rating, dan highlights."],
+      ["clock","Reading Session","Catat halaman awal–akhir, menit membaca, notes, dan highlight setiap sesi."],
+      ["calendar","Habit Tracker","Kalender membaca bulanan dengan recap halaman, menit, hari baca, dan target."],
+      ["bulb","Knowledge Vault","Semua review, catatan, highlight, dan takeaway berkumpul jadi bank pengetahuan pribadi."],
+      ["chart","Insights","Monthly reads, monthly watch, top genre, penulis, channel, dan progress target tahunan."]
+    ].map(([icon,title,text])=><article className="panel feature-card" key={title}><div className="feature-icon"><Icon name={icon as any}/></div><h3>{title}</h3><p>{text}</p></article>)}</div></section>
+
+    <section className="landing-section split-section" id="cara"><div><div className="eyebrow">DIBUAT UNTUK DIPAKAI</div><h2>Dari baca menjadi pengetahuan yang benar-benar tersimpan.</h2><p>Mulai dari menambahkan buku, catat sesi, simpan highlight, lalu lihat pola kebiasaanmu. Semua alurnya dibuat pendek dan nyaman di HP maupun laptop.</p><div className="steps">{[["01","Catat","Masukkan buku atau sumber belajar."],["02","Jalani","Update progress dan sesi setiap hari."],["03","Simpan","Kumpulkan review, notes, dan highlight."],["04","Lihat","Baca kembali insight dan perkembanganmu."]].map(([n,t,d])=><div key={n}><span>{n}</span><div><strong>{t}</strong><p>{d}</p></div></div>)}</div></div><div className="quote-showcase panel"><div className="sun-mark"/><Icon name="quote" size={30}/><blockquote>“Setiap tindakan adalah suara untuk tipe orang yang ingin kita jadi.”</blockquote><p>Disimpan dari sesi membaca · Atomic Habits</p></div></section>
+
+    <section className="landing-section price-section"><div className="price-panel panel"><div><div className="eyebrow">ARUNIKA PRO</div><h2>Coba dulu. Upgrade saat sudah cocok.</h2><p>Mode demo langsung bisa dipakai. Pro membuka koleksi tanpa batas, backup & restore, dan akses penuh dengan aktivasi kode + PIN.</p></div><div className="price-side"><div><span>sekali bayar</span><strong>Rp20.000</strong></div><a className="primary-btn large" href="/pro">Lihat Arunika Pro</a></div></div></section>
+
+    <footer className="landing-footer"><div className="brand-row"><div className="brand-symbol">A</div><div><strong>ARUNIKA</strong><span>Catat. Simpan. Tumbuh.</span></div></div><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><span>© 2026 Arunika</span></footer>
+  </main>;
+}
