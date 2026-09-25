@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { BarChart, Donut, GenreBars } from "./Charts";
 import { Icon } from "./Icon";
 import { Modal } from "./Modal";
-import { InstallButton } from "./AppControls";
 import { readFileAsDataUrl } from "@/lib/file";
 import type { Book, HabitDay, LearningItem, ReadingSession, Settings } from "@/lib/types";
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
@@ -239,7 +238,6 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport }: an
   const [name,setName]=useState(settings.name);const [daily,setDaily]=useState(settings.dailyPageTarget);const [yearly,setYearly]=useState(settings.yearlyBookTarget);
   return <div className="page-stack"><PageIntro eyebrow="Settings" title="Atur Arunika sesuai ritmemu" text="Target baca, profil lokal, instalasi PWA, backup, dan status lisensi dapat dikelola dari sini." />
     <section className="settings-layout"><div className="panel settings-card"><SectionHead eyebrow="Profile & target" title="Preferensi membaca"/><div className="form-grid"><Field label="Nama"><input value={name} onChange={e=>setName(e.target.value)}/></Field><Field label="Target halaman / hari"><input type="number" min="1" value={daily} onChange={e=>setDaily(Number(e.target.value))}/></Field><Field label="Target buku / tahun"><input type="number" min="1" value={yearly} onChange={e=>setYearly(Number(e.target.value))}/></Field></div><button className="primary-btn" onClick={()=>onSave({name,dailyPageTarget:daily,yearlyBookTarget:yearly})}>Simpan pengaturan</button></div>
-      <div className="panel settings-card"><SectionHead eyebrow="App" title="Install Arunika"/><p className="muted">Pasang sebagai aplikasi di home screen untuk pengalaman lebih fokus dan cepat.</p><InstallButton /></div>
       <div className="panel settings-card"><SectionHead eyebrow="Data" title="Backup & restore"/><p className="muted">Data pribadi tetap lokal. Export JSON membuat salinan yang bisa disimpan sendiri.</p><div className="button-row"><button className="ghost-btn" onClick={onExport}><Icon name="download" size={17}/> Export</button><button className="ghost-btn" onClick={onImport}><Icon name="upload" size={17}/> Import</button></div>{!isPro?<div className="pro-lock"><Icon name="lock" size={16}/> Backup & restore tersedia di Pro.</div>:null}</div>
       <div className="panel settings-card accent"><SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/><p>{isPro?`Lisensi ${settings.licenseCode||"lokal"} aktif di perangkat ini.`:"Demo menyimpan data lokal dan membatasi jumlah koleksi. Upgrade Pro Rp25.000 untuk membuka mode penuh."}</p>{!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp25.000</a>:null}</div>
     </section>
