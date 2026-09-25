@@ -10,55 +10,107 @@ import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rup
 import type { Snapshot } from "./app-types";
 
 export function Overview({ data, metrics, insights, onTab, onSession }: any) {
-  const targetPct = percent(metrics.finishedBooks.length, data.settings.yearlyBookTarget);
+  const featured: Book | undefined = metrics.readingBooks[0] || data.books[0];
+  const continueReading = data.books.filter((b: Book) => b.status === "reading").slice(0, 8);
+  const picks = [...data.books].filter((b: Book) => b.id !== featured?.id).slice(0, 10);
+  const learningQueue = data.learning.filter((item: LearningItem) => item.status !== "finished").slice(0, 8);
   const todayPages = metrics.todayHabit?.pages || 0;
-  const continueBook = metrics.readingBooks[0];
+  const heroPct = featured ? percent(featured.pagesRead, featured.totalPages) : 0;
+
   return (
-    <div className="page-stack">
-      <section className="hero-dashboard panel sunrise-panel">
-        <div>
-          <div className="eyebrow">Selamat datang, {data.settings.name}</div>
-          <h2>Catat yang dibaca. Simpan yang dipelajari. <em>Tumbuh setiap hari.</em></h2>
-          <p>Semua perjalanan membaca dan belajarmu tersimpan lokal di perangkat ini.</p>
-          <div className="hero-buttons"><button className="primary-btn" onClick={onSession}><Icon name="plus" size={17}/> Catat sesi baca</button><button className="ghost-btn" onClick={() => onTab("learning")}>Tambah learning</button></div>
-        </div>
-        <Donut value={metrics.finishedBooks.length} total={data.settings.yearlyBookTarget} label="target buku" />
-      </section>
-
-      <section className="stat-grid">
-        <Stat label="Buku selesai" value={`${metrics.finishedBooks.length}/${data.settings.yearlyBookTarget}`} helper={`${targetPct}% target tahunan`} icon="book" />
-        <Stat label="Hari ini" value={`${todayPages}/${data.settings.dailyPageTarget}`} helper="halaman target harian" icon="target" />
-        <Stat label="Reading streak" value={`${metrics.streak} hari`} helper="jaga ritmenya" icon="sparkles" />
-        <Stat label="Learning time" value={`${metrics.learningMinutes} mnt`} helper={`${metrics.finishedLearning.length} konten selesai`} icon="play" />
-      </section>
-
-      <section className="dashboard-grid">
-        <div className="panel section-panel span-7">
-          <SectionHead eyebrow="Continue reading" title="Lanjutkan bacaanmu" action={<button className="small-link" onClick={() => onTab("books")}>Lihat semua <Icon name="arrow" size={15}/></button>} />
-          {continueBook ? <BookHero book={continueBook} onSession={onSession} /> : <EmptyState icon="book" title="Belum ada buku aktif" text="Tambahkan buku dan mulai perjalanan membaca." />}
-        </div>
-        <div className="panel section-panel span-5">
-          <SectionHead eyebrow="Monthly reads" title="Ritme membaca" />
-          <BarChart data={insights.monthlyBooks} />
-        </div>
-      </section>
-
-      <section className="dashboard-grid">
-        <div className="panel section-panel span-5">
-          <SectionHead eyebrow="Learning queue" title="Belajar berikutnya" action={<button className="small-link" onClick={() => onTab("learning")}>Buka tracker <Icon name="arrow" size={15}/></button>} />
-          <div className="compact-list">
-            {data.learning.slice(0, 3).map((item: LearningItem) => <div className="compact-row" key={item.id}><div className="tiny-art"><Icon name="play" size={16}/></div><div><strong>{item.title}</strong><span>{item.channel} · {item.source}</span></div><b>{percent(item.watchedMinutes,item.totalMinutes)}%</b></div>)}
+    <div className="stream-home">
+      <section
+        className={"stream-hero " + (featured?.cover ? "has-cover" : "no-cover")}
+        style={featured?.cover ? {
+          backgroundImage: `linear-gradient(90deg, rgba(7,7,9,.98) 0%, rgba(7,7,9,.86) 32%, rgba(7,7,9,.25) 68%, rgba(7,7,9,.84) 100%), linear-gradient(0deg, #070709 0%, transparent 45%), url("${featured.cover}")`
+        } : undefined}
+      >
+        <div className="stream-hero-content">
+          <div className="hero-brandline"><span className="hero-a">A</span><span>ARUNIKA ORIGINAL</span></div>
+          <div className="hero-kicker">Pilihan untuk {data.settings.name}</div>
+          <h2>{featured?.title || "Mulai perjalanan membacamu."}</h2>
+          {featured ? <div className="hero-meta"><b>{heroPct}% dibaca</b><span>{featured.genre || "Buku"}</span><span>{featured.type}</span><span>{featured.rating ? `${featured.rating}★` : "Belum dinilai"}</span></div> : null}
+          <p>{featured?.review || "Catat buku, sesi membaca, video, podcast, webinar, dan insight yang ingin kamu bawa lebih jauh."}</p>
+          <div className="stream-hero-actions">
+            <button className="netflix-play" onClick={onSession}><Icon name="play" size={20}/> {featured ? "Lanjut Baca" : "Mulai Mencatat"}</button>
+            <button className="netflix-more" onClick={() => onTab("books")}><span className="info-dot">i</span> Info Selengkapnya</button>
           </div>
+          {featured ? <div className="hero-progress"><div className="progress"><span style={{width:`${heroPct}%`}}/></div><small>{featured.pagesRead} / {featured.totalPages} halaman</small></div> : null}
         </div>
-        <div className="panel section-panel span-7">
-          <SectionHead eyebrow="Knowledge highlights" title="Yang layak diingat" action={<button className="small-link" onClick={() => onTab("knowledge")}>Knowledge vault <Icon name="arrow" size={15}/></button>} />
-          <div className="quote-grid">
-            {data.sessions.filter((s: ReadingSession) => s.highlight).slice(-2).reverse().map((session: ReadingSession) => <div className="quote-card" key={session.id}><Icon name="quote"/><p>{session.highlight}</p><span>{data.books.find((b: Book)=>b.id===session.bookId)?.title}</span></div>)}
-          </div>
+
+        <div className="hero-quick-stats">
+          <div><strong>{metrics.streak}</strong><span>hari streak</span></div>
+          <div><strong>{todayPages}</strong><span>halaman hari ini</span></div>
+          <div><strong>{metrics.finishedBooks.length}</strong><span>buku selesai</span></div>
         </div>
       </section>
+
+      <div className="stream-rows">
+        <MediaRail title="Lanjutkan Membaca" action={() => onTab("books")}>
+          {continueReading.map((book: Book) => (
+            <button className="media-card wide-card" key={book.id} onClick={() => onTab("books")}>
+              <div className="media-art">
+                {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "ARUNIKA"}</small></div>}
+                <div className="media-overlay"><span className="round-play"><Icon name="play" size={18}/></span></div>
+              </div>
+              <div className="media-progress"><span style={{width:`${percent(book.pagesRead,book.totalPages)}%`}}/></div>
+              <div className="media-caption"><strong>{book.title}</strong><span>{book.author}</span></div>
+            </button>
+          ))}
+          {!continueReading.length ? <button className="media-card empty-media" onClick={() => onTab("books")}><Icon name="plus"/><span>Tambahkan buku</span></button> : null}
+        </MediaRail>
+
+        <MediaRail title="10 Pilihan untuk Perjalananmu" action={() => onTab("wishlist")} topTen>
+          {picks.map((book: Book,index:number) => (
+            <button className="top-card" key={book.id} onClick={() => onTab("books")}>
+              <span className="top-number">{index+1}</span>
+              <div className="top-poster">
+                {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "BOOK"}</small></div>}
+                <div className="top-info"><strong>{book.title}</strong><span>{book.author}</span></div>
+              </div>
+            </button>
+          ))}
+        </MediaRail>
+
+        <MediaRail title="Belajar Berikutnya" action={() => onTab("learning")}>
+          {learningQueue.map((item: LearningItem) => (
+            <button className="media-card learning-media" key={item.id} onClick={() => onTab("learning")}>
+              <div className="media-art landscape">
+                {item.thumbnail ? <img src={item.thumbnail} alt={item.title}/> : <div className="learning-poster"><Icon name="play" size={28}/><span>{item.type}</span></div>}
+                <span className="media-badge">{item.source}</span>
+              </div>
+              <div className="media-progress"><span style={{width:`${percent(item.watchedMinutes,item.totalMinutes)}%`}}/></div>
+              <div className="media-caption"><strong>{item.title}</strong><span>{item.channel} · {item.topic}</span></div>
+            </button>
+          ))}
+          {!learningQueue.length ? <button className="media-card empty-media" onClick={() => onTab("learning")}><Icon name="plus"/><span>Tambah learning</span></button> : null}
+        </MediaRail>
+
+        <section className="stream-dashboard-row">
+          <article className="stream-mini-panel">
+            <div className="stream-mini-head"><div><span>Target Tahunan</span><h3>{metrics.finishedBooks.length} dari {data.settings.yearlyBookTarget} buku</h3></div><button onClick={()=>onTab("insights")}>Lihat insight</button></div>
+            <Donut value={metrics.finishedBooks.length} total={data.settings.yearlyBookTarget} label="target buku"/>
+          </article>
+          <article className="stream-mini-panel insight-preview">
+            <div className="stream-mini-head"><div><span>Aktivitas Tahun Ini</span><h3>Ritme membaca</h3></div><button onClick={()=>onTab("habit")}>Habit</button></div>
+            <BarChart data={insights.monthlyBooks}/>
+          </article>
+          <article className="stream-mini-panel knowledge-preview">
+            <div className="stream-mini-head"><div><span>Knowledge Vault</span><h3>Yang layak diingat</h3></div><button onClick={()=>onTab("knowledge")}>Buka vault</button></div>
+            {data.sessions.filter((x: ReadingSession)=>x.highlight).slice(-1).map((x:ReadingSession)=><blockquote key={x.id}>“{x.highlight}”</blockquote>)}
+            {!data.sessions.some((x:ReadingSession)=>x.highlight)?<p>Highlight dan insight pilihanmu akan muncul di sini.</p>:null}
+          </article>
+        </section>
+      </div>
     </div>
   );
+}
+
+function MediaRail({title,action,children,topTen=false}:{title:string;action:()=>void;children:any;topTen?:boolean}){
+  return <section className={"media-rail "+(topTen?"top-ten-rail":"")}>
+    <div className="rail-heading"><h3>{title}</h3><button onClick={action}>Lihat Semua <Icon name="arrow" size={14}/></button></div>
+    <div className="rail-track">{children}</div>
+  </section>;
 }
 
 export function BooksView({ books, query, setQuery, filter, setFilter, onAdd, onEdit, onDelete }: any) {
