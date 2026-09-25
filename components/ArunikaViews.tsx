@@ -247,7 +247,33 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport, onIn
 
 export function BookForm({ open, book, setBook, onClose, onSubmit }: any) {
   async function cover(file?:File){if(file)setBook({...book,cover:await readFileAsDataUrl(file)});}
-  return <Modal open={open} title={book.title?"Edit buku":"Tambah buku"} subtitle="Isi Reading Log Arunika." onClose={onClose} wide><form className="modal-form" onSubmit={onSubmit}><div className="form-grid two"><Field label="Judul buku *"><input required value={book.title} onChange={e=>setBook({...book,title:e.target.value})}/></Field><Field label="Penulis *"><input required value={book.author} onChange={e=>setBook({...book,author:e.target.value})}/></Field><Field label="Genre"><input value={book.genre} onChange={e=>setBook({...book,genre:e.target.value})} placeholder="Self Development"/></Field><Field label="Status"><select value={book.status} onChange={e=>setBook({...book,status:e.target.value})}><option value="reading">Sedang dibaca</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select></Field><Field label="Jumlah halaman dibaca"><input type="number" min="0" value={book.pagesRead} onChange={e=>setBook({...book,pagesRead:Number(e.target.value)})}/></Field><Field label="Total halaman"><input type="number" min="0" value={book.totalPages} onChange={e=>setBook({...book,totalPages:Number(e.target.value)})}/></Field><Field label="Tanggal mulai"><input type="date" value={book.startDate||""} onChange={e=>setBook({...book,startDate:e.target.value})}/></Field><Field label="Tanggal selesai"><input type="date" value={book.finishDate||""} onChange={e=>setBook({...book,finishDate:e.target.value})}/></Field><Field label="Rating"><select value={book.rating} onChange={e=>setBook({...book,rating:Number(e.target.value)})}>{[0,1,2,3,4,5].map(n=><option value={n} key={n}>{n?`${n} bintang`:"Belum dinilai"}</option>)}</select></Field><Field label="Harga"><input type="number" min="0" value={book.price} onChange={e=>setBook({...book,price:Number(e.target.value)})}/></Field><Field label="Jenis buku"><select value={book.type} onChange={e=>setBook({...book,type:e.target.value})}><option>Fisik</option><option>E-book</option><option>Audiobook</option></select></Field><Field label="Kepemilikan"><select value={book.ownership} onChange={e=>setBook({...book,ownership:e.target.value})}><option>Buku sendiri</option><option>Pinjam</option><option>Perpustakaan</option><option>Lainnya</option></select></Field><Field label="Cover buku"><input type="file" accept="image/*" onChange={e=>cover(e.target.files?.[0])}/></Field>{book.cover?<div className="cover-preview"><img src={book.cover} alt="Preview cover"/></div>:null}<Field label="Review / kenapa harus baca" wide><textarea rows={4} value={book.review} onChange={e=>setBook({...book,review:e.target.value})}/></Field></div><ModalActions onClose={onClose}/></form></Modal>;
+  return <Modal open={open} title={book.title?"Edit buku":"Tambah buku"} subtitle="Cukup isi yang penting. Detail lain bisa ditambahkan kapan saja." onClose={onClose} wide>
+    <form className="modal-form" onSubmit={onSubmit}>
+      <div className="form-grid two compact-form">
+        <Field label="Judul buku *"><input required value={book.title} onChange={e=>setBook({...book,title:e.target.value})} placeholder="Judul buku"/></Field>
+        <Field label="Penulis *"><input required value={book.author} onChange={e=>setBook({...book,author:e.target.value})} placeholder="Nama penulis"/></Field>
+        <Field label="Status"><select value={book.status} onChange={e=>setBook({...book,status:e.target.value})}><option value="reading">Sedang dibaca</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select></Field>
+        <Field label="Total halaman"><input type="number" min="0" value={book.totalPages} onChange={e=>setBook({...book,totalPages:Number(e.target.value)})}/></Field>
+        <Field label="Halaman dibaca"><input type="number" min="0" value={book.pagesRead} onChange={e=>setBook({...book,pagesRead:Number(e.target.value)})}/></Field>
+        <Field label="Cover buku"><input type="file" accept="image/*" onChange={e=>cover(e.target.files?.[0])}/></Field>
+        {book.cover?<div className="cover-preview compact-cover-preview"><img src={book.cover} alt="Preview cover"/><span>Preview cover</span></div>:null}
+      </div>
+      <details className="form-advanced">
+        <summary>Detail tambahan</summary>
+        <div className="form-grid two advanced-grid">
+          <Field label="Genre"><input value={book.genre} onChange={e=>setBook({...book,genre:e.target.value})} placeholder="Self Development"/></Field>
+          <Field label="Rating"><select value={book.rating} onChange={e=>setBook({...book,rating:Number(e.target.value)})}>{[0,1,2,3,4,5].map(n=><option value={n} key={n}>{n ? n + " bintang" : "Belum dinilai"}</option>)}</select></Field>
+          <Field label="Tanggal mulai"><input type="date" value={book.startDate||""} onChange={e=>setBook({...book,startDate:e.target.value})}/></Field>
+          <Field label="Tanggal selesai"><input type="date" value={book.finishDate||""} onChange={e=>setBook({...book,finishDate:e.target.value})}/></Field>
+          <Field label="Jenis buku"><select value={book.type} onChange={e=>setBook({...book,type:e.target.value})}><option>Fisik</option><option>E-book</option><option>Audiobook</option></select></Field>
+          <Field label="Kepemilikan"><select value={book.ownership} onChange={e=>setBook({...book,ownership:e.target.value})}><option>Buku sendiri</option><option>Pinjam</option><option>Perpustakaan</option><option>Lainnya</option></select></Field>
+          <Field label="Harga"><input type="number" min="0" value={book.price} onChange={e=>setBook({...book,price:Number(e.target.value)})}/></Field>
+          <Field label="Review / alasan membaca" wide><textarea rows={4} value={book.review} onChange={e=>setBook({...book,review:e.target.value})}/></Field>
+        </div>
+      </details>
+      <ModalActions onClose={onClose}/>
+    </form>
+  </Modal>;
 }
 
 export function LearningForm({ open, item, setItem, onClose, onSubmit }: any) {
@@ -256,32 +282,56 @@ export function LearningForm({ open, item, setItem, onClose, onSubmit }: any) {
     const autoThumb=youtubeThumbnailFromUrl(value);
     setItem({...item,url:value,thumbnail:autoThumb || item.thumbnail,source:autoThumb && (!item.source || item.source==="YouTube") ? "YouTube" : item.source});
   }
-  return <Modal open={open} title={item.title?"Edit learning":"Tambah learning"} subtitle="Video, webinar, podcast, course, atau artikel." onClose={onClose} wide>
+  return <Modal open={open} title={item.title?"Edit learning":"Tambah learning"} subtitle="Simpan link dan progress. Detail lain bisa diisi belakangan." onClose={onClose} wide>
     <form className="modal-form" onSubmit={onSubmit}>
-      <div className="form-grid two">
-        <Field label="Judul *"><input required value={item.title} onChange={e=>setItem({...item,title:e.target.value})}/></Field>
-        <Field label="Channel / Brand"><input value={item.channel} onChange={e=>setItem({...item,channel:e.target.value})}/></Field>
+      <div className="form-grid two compact-form">
         <Field label="URL konten" wide><input type="url" value={item.url||""} onChange={e=>setUrl(e.target.value)} placeholder="https://youtube.com/watch?v=..."/></Field>
-        <Field label="Topik"><input value={item.topic} onChange={e=>setItem({...item,topic:e.target.value})}/></Field>
-        <Field label="Jenis"><select value={item.type} onChange={e=>setItem({...item,type:e.target.value})}><option>Video</option><option>Podcast</option><option>Webinar</option><option>Course</option><option>Article</option></select></Field>
-        <Field label="Durasi ditonton (menit)"><input type="number" min="0" value={item.watchedMinutes} onChange={e=>setItem({...item,watchedMinutes:Number(e.target.value)})}/></Field>
+        <Field label="Judul *"><input required value={item.title} onChange={e=>setItem({...item,title:e.target.value})} placeholder="Judul video / podcast / course"/></Field>
+        <Field label="Channel / Brand"><input value={item.channel} onChange={e=>setItem({...item,channel:e.target.value})}/></Field>
+        <Field label="Status"><select value={item.status} onChange={e=>setItem({...item,status:e.target.value})}><option value="watching">Sedang dipelajari</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select></Field>
+        <Field label="Progress (menit)"><input type="number" min="0" value={item.watchedMinutes} onChange={e=>setItem({...item,watchedMinutes:Number(e.target.value)})}/></Field>
         <Field label="Total durasi (menit)"><input type="number" min="0" value={item.totalMinutes} onChange={e=>setItem({...item,totalMinutes:Number(e.target.value)})}/></Field>
-        <Field label="Tanggal mulai"><input type="date" value={item.startDate||""} onChange={e=>setItem({...item,startDate:e.target.value})}/></Field>
-        <Field label="Tanggal selesai"><input type="date" value={item.finishDate||""} onChange={e=>setItem({...item,finishDate:e.target.value})}/></Field>
-        <Field label="Status"><select value={item.status} onChange={e=>setItem({...item,status:e.target.value})}><option value="watching">Ditonton</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select></Field>
-        <Field label="Rating"><select value={item.rating} onChange={e=>setItem({...item,rating:Number(e.target.value)})}>{[0,1,2,3,4,5].map(n=><option value={n} key={n}>{n?`${n} bintang`:"Belum dinilai"}</option>)}</select></Field>
-        <Field label="Sumber"><input value={item.source} onChange={e=>setItem({...item,source:e.target.value})} placeholder="YouTube / Spotify / Zoom"/></Field>
-        <Field label="Thumbnail"><input type="file" accept="image/*" onChange={e=>thumb(e.target.files?.[0])}/></Field>
-        {item.thumbnail?<div className="learning-form-preview wide"><img src={item.thumbnail} alt="Preview thumbnail"/><div><strong>Preview</strong><span>{item.url?"Klik card nanti akan membuka sumber asli.":"Thumbnail tersimpan lokal bersama data learning."}</span></div></div>:null}
-        <Field label="Highlights / takeaway" wide><textarea rows={5} value={item.highlights} onChange={e=>setItem({...item,highlights:e.target.value})}/></Field>
       </div>
+      {item.thumbnail?<div className="learning-form-preview"><img src={item.thumbnail} alt="Preview thumbnail"/><div><strong>Preview</strong><span>{item.url?"Card akan membuka sumber aslinya.":"Thumbnail tersimpan lokal."}</span></div></div>:null}
+      <details className="form-advanced">
+        <summary>Detail tambahan</summary>
+        <div className="form-grid two advanced-grid">
+          <Field label="Topik"><input value={item.topic} onChange={e=>setItem({...item,topic:e.target.value})}/></Field>
+          <Field label="Jenis"><select value={item.type} onChange={e=>setItem({...item,type:e.target.value})}><option>Video</option><option>Podcast</option><option>Webinar</option><option>Course</option><option>Article</option></select></Field>
+          <Field label="Sumber"><input value={item.source} onChange={e=>setItem({...item,source:e.target.value})} placeholder="YouTube / Spotify / Zoom"/></Field>
+          <Field label="Rating"><select value={item.rating} onChange={e=>setItem({...item,rating:Number(e.target.value)})}>{[0,1,2,3,4,5].map(n=><option value={n} key={n}>{n ? n + " bintang" : "Belum dinilai"}</option>)}</select></Field>
+          <Field label="Tanggal mulai"><input type="date" value={item.startDate||""} onChange={e=>setItem({...item,startDate:e.target.value})}/></Field>
+          <Field label="Tanggal selesai"><input type="date" value={item.finishDate||""} onChange={e=>setItem({...item,finishDate:e.target.value})}/></Field>
+          <Field label="Thumbnail"><input type="file" accept="image/*" onChange={e=>thumb(e.target.files?.[0])}/></Field>
+          <Field label="Highlight / takeaway" wide><textarea rows={4} value={item.highlights} onChange={e=>setItem({...item,highlights:e.target.value})}/></Field>
+        </div>
+      </details>
       <ModalActions onClose={onClose}/>
     </form>
   </Modal>;
 }
+
 export function SessionForm({ open, session, setSession, books, onClose, onSubmit }: any) {
   const pages=Math.max(0,session.endPage-session.startPage);
-  return <Modal open={open} title="Catat sesi membaca" subtitle="Progress buku dan habit harian akan diperbarui otomatis." onClose={onClose}><form className="modal-form" onSubmit={onSubmit}><div className="form-grid"><Field label="Buku"><select required value={session.bookId} onChange={e=>setSession({...session,bookId:e.target.value})}><option value="">Pilih buku</option>{books.map((b:Book)=><option value={b.id} key={b.id}>{b.title}</option>)}</select></Field><Field label="Tanggal"><input type="date" value={session.date} onChange={e=>setSession({...session,date:e.target.value})}/></Field><div className="form-grid two"><Field label="Halaman awal"><input type="number" min="0" value={session.startPage} onChange={e=>setSession({...session,startPage:Number(e.target.value)})}/></Field><Field label="Halaman akhir"><input type="number" min="0" value={session.endPage} onChange={e=>setSession({...session,endPage:Number(e.target.value)})}/></Field></div><div className="session-calc"><strong>{pages} halaman</strong><span>akan ditambahkan ke habit hari ini</span></div><Field label="Durasi (menit)"><input type="number" min="0" value={session.minutes} onChange={e=>setSession({...session,minutes:Number(e.target.value)})}/></Field><Field label="Catatan sesi"><textarea rows={3} value={session.notes} onChange={e=>setSession({...session,notes:e.target.value})}/></Field><Field label="Highlight"><textarea rows={3} value={session.highlight} onChange={e=>setSession({...session,highlight:e.target.value})}/></Field></div><ModalActions onClose={onClose}/></form></Modal>;
+  return <Modal open={open} title="Catat sesi membaca" subtitle="Isi progress utama. Habit harian akan diperbarui otomatis." onClose={onClose}>
+    <form className="modal-form" onSubmit={onSubmit}>
+      <div className="form-grid compact-form">
+        <Field label="Buku"><select required value={session.bookId} onChange={e=>setSession({...session,bookId:e.target.value})}><option value="">Pilih buku</option>{books.map((b:Book)=><option value={b.id} key={b.id}>{b.title}</option>)}</select></Field>
+        <Field label="Tanggal"><input type="date" value={session.date} onChange={e=>setSession({...session,date:e.target.value})}/></Field>
+        <div className="form-grid two page-range-fields"><Field label="Halaman awal"><input type="number" min="0" value={session.startPage} onChange={e=>setSession({...session,startPage:Number(e.target.value)})}/></Field><Field label="Halaman akhir"><input type="number" min="0" value={session.endPage} onChange={e=>setSession({...session,endPage:Number(e.target.value)})}/></Field></div>
+        <div className="session-calc"><strong>{pages} halaman</strong><span>ditambahkan ke progress hari ini</span></div>
+        <Field label="Durasi (menit)"><input type="number" min="0" value={session.minutes} onChange={e=>setSession({...session,minutes:Number(e.target.value)})}/></Field>
+      </div>
+      <details className="form-advanced">
+        <summary>Catatan & highlight</summary>
+        <div className="form-grid advanced-grid">
+          <Field label="Catatan sesi"><textarea rows={3} value={session.notes} onChange={e=>setSession({...session,notes:e.target.value})}/></Field>
+          <Field label="Highlight"><textarea rows={3} value={session.highlight} onChange={e=>setSession({...session,highlight:e.target.value})}/></Field>
+        </div>
+      </details>
+      <ModalActions onClose={onClose}/>
+    </form>
+  </Modal>;
 }
 
 export function HabitForm({ open, existing, onClose, onSave }: any) {
