@@ -10,13 +10,13 @@
   "icons": [
     {
       "src": "/icons/icon.svg",
-      "sizes": "512x512",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
       "src": "/icons/icon-maskable.svg",
-      "sizes": "512x512",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
     }
@@ -30,5 +30,7 @@
     "window-controls-overlay",
     "standalone",
     "minimal-ui"
-  ]
+  ],
+  "id": "/app",
+  "scope": "/"
 }
