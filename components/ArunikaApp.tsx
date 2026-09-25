@@ -10,6 +10,7 @@ import { downloadJson, readFileAsDataUrl } from "@/lib/file";
 import type { BackupPayload, Book, BookStatus, HabitDay, LearningItem, LearningStatus, ReadingSession, Settings } from "@/lib/types";
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
 import { verifyArunikaLicense } from "@/lib/backend";
+import { ThemeToggle } from "./AppControls";
 
 type Tab = "overview" | "books" | "learning" | "sessions" | "habit" | "knowledge" | "insights" | "wishlist" | "settings";
 type Snapshot = Awaited<ReturnType<typeof loadSnapshot>>;
@@ -281,7 +282,8 @@ export function ArunikaApp() {
         </div>
         <div className="stream-nav-actions">
           <button className="nav-icon-btn" title="Cari" onClick={() => { setTab("books"); setTimeout(() => document.querySelector<HTMLInputElement>(".search-box input")?.focus(), 100); }}><Icon name="search" /></button>
-          <button className="desktop-install" onClick={installApp}>Install</button>
+          <ThemeToggle compact />
+          <button className="desktop-install" onClick={installApp}><Icon name="download" size={14}/> Install Arunika</button>
           {!isPro ? <a className="stream-pro-pill" href="/pro"><Icon name="crown" size={15}/> PRO</a> : <span className="stream-pro-active"><Icon name="check" size={14}/> PRO</span>}
           <button className="profile-avatar" onClick={() => setTab("settings")} title="Profil">{snapshot.settings.name.slice(0, 1).toUpperCase()}</button>
         </div>
@@ -290,7 +292,7 @@ export function ArunikaApp() {
       <aside className={`mobile-drawer ${mobileNav ? "open" : ""}`}>
         <div className="drawer-head"><span className="stream-wordmark">ARUNIKA</span><button className="icon-btn" onClick={()=>setMobileNav(false)}><Icon name="x"/></button></div>
         <nav>{navItems.map((item)=><button key={item.key} className={tab===item.key?"active":""} onClick={()=>{setTab(item.key);setMobileNav(false)}}><Icon name={item.icon}/><span>{item.label}</span></button>)}</nav>
-        {!isPro?<a className="drawer-pro" href="/pro"><Icon name="crown"/> Upgrade Arunika Pro <span>Rp20.000</span></a>:null}
+        {!isPro?<a className="drawer-pro" href="/pro"><Icon name="crown"/> Upgrade Arunika Pro <span>Rp25.000</span></a>:null}
       </aside>
       {mobileNav?<button className="drawer-backdrop" onClick={()=>setMobileNav(false)} aria-label="Tutup menu"/>:null}
 
