@@ -29,7 +29,6 @@ export default function LandingPage(){
       </nav>
       <div className="landing-nav-actions">
         <ThemeToggle compact />
-        <InstallButton compact />
         <a href="/activate" className="landing-login">Aktivasi</a>
         <a href="/app" className="landing-demo">Coba Demo</a>
       </div>
@@ -49,19 +48,23 @@ export default function LandingPage(){
           <InstallButton hero />
           <a className="netflix-more" href="#fitur"><span className="info-dot">i</span> Pelajari Arunika</a>
         </div>
-        <div className="landing-proof"><span><b>Local-first</b> data tetap di perangkat</span><span><b>PWA</b> bisa dipasang seperti aplikasi</span><span><b>Rp25.000</b> sekali bayar untuk Pro</span></div>
+        <div className="landing-proof">
+          <div className="landing-proof-item"><b>Local-first</b><span>Data tetap di perangkatmu</span></div>
+          <div className="landing-proof-item"><b>PWA</b><span>Pasang seperti aplikasi</span></div>
+          <div className="landing-proof-item"><b>Rp25.000</b><span>Sekali bayar untuk Pro</span></div>
+        </div>
       </div>
     </section>
 
     <section className="landing-stream-section" id="jelajah">
-      <div className="landing-section-head"><h2>Seperti punya perpustakaan streaming pribadi.</h2><p>Mode demo sudah diisi contoh sampul buku nyata agar pengalaman awal terasa hidup. Setelah Pro diaktifkan, koleksi contoh dibersihkan dan ruangnya menjadi milik pengguna sepenuhnya.</p></div>
+      <div className="landing-section-head"><span className="section-tag">KOLEKSI PRIBADIMU</span><h2>Seperti punya perpustakaan streaming pribadi.</h2><p>Jelajahi Demo dengan sampul nyata. Setelah Pro aktif, semua contoh dibersihkan dan ruang ini menjadi koleksimu sendiri.</p></div>
       <div className="landing-rail book-cover-rail">
         {previewBooks.map((book)=><div className="landing-media-card" key={book.title}><div className="landing-book-cover"><img src={book.image} alt={book.title}/></div><strong>{book.title}</strong><span>{book.meta}</span></div>)}
       </div>
     </section>
 
     <section className="landing-stream-section learning-preview-section" id="learning">
-      <div className="landing-section-head"><h2>Learning tracker yang langsung terasa nyata.</h2><p>Thumbnail demo menggunakan konten YouTube nyata sebagai contoh visual. Nantinya pengguna mengisi video, podcast, webinar, atau course mereka sendiri.</p></div>
+      <div className="landing-section-head"><span className="section-tag">BELAJAR VISUAL</span><h2>Learning tracker yang terasa hidup.</h2><p>Simpan video, podcast, webinar, atau course. Di Demo, thumbnail nyata menunjukkan bagaimana koleksimu akan terlihat saat sudah terisi.</p></div>
       <div className="landing-learning-grid">
         {previewLearning.map((item)=><article className="landing-learning-card" key={item.title}><div className="landing-video-thumb"><img src={item.image} alt={item.title}/><span className="landing-play"><Icon name="play" size={18}/></span></div><strong>{item.title}</strong><span>{item.meta} · YouTube</span></article>)}
       </div>
