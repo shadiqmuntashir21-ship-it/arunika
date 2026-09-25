@@ -1,0 +1,37 @@
+name: Prepare Vercel bundle
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create deployment bundle
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const files = [
+            'package.json','tsconfig.json','next-env.d.ts','next.config.mjs',
+            'app/layout.tsx','app/page.tsx','app/globals.css','app/app/page.tsx','app/pro/page.tsx','app/activate/page.tsx',
+            'components/ArunikaApp.tsx','components/ArunikaViews.tsx','components/Charts.tsx','components/Icon.tsx','components/Modal.tsx','components/ServiceWorkerRegister.tsx','components/app-types.ts',
+            'lib/db.ts','lib/demo-data.ts','lib/file.ts','lib/types.ts','lib/utils.ts',
+            'public/manifest.webmanifest','public/sw.js','public/icons/icon.svg','public/icons/icon-maskable.svg'
+          ];
+          const bundle = files.map(file => ({ file, data: fs.readFileSync(file, 'utf8') }));
+          fs.writeFileSync('vercel-deploy-bundle.json', JSON.stringify(bundle));
+          NODE
+          rm .github/workflows/prepare-vercel-bundle.yml
+      - name: Commit bundle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Prepare Vercel deployment bundle"
+          git push
