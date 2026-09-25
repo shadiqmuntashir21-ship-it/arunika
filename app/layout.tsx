@@ -11,12 +11,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#173f3a",
+  themeColor: "#070707",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover"
 };
 
+const themeBoot = `(function(){try{var t=localStorage.getItem("arunika-theme");document.documentElement.dataset.theme=t==="light"?"light":"night";}catch(e){document.documentElement.dataset.theme="night";}})();`;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="id"><body><ServiceWorkerRegister />{children}</body></html>;
+  return <html lang="id" data-theme="night" suppressHydrationWarning>
+    <head><script dangerouslySetInnerHTML={{ __html: themeBoot }} /></head>
+    <body><ServiceWorkerRegister />{children}</body>
+  </html>;
 }
