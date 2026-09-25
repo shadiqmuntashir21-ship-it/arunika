@@ -58,7 +58,6 @@ export function ArunikaApp() {
   const [learningFilter, setLearningFilter] = useState<LearningStatus | "all">("all");
   const [year, setYear] = useState(new Date().getFullYear());
   const [toast, setToast] = useState("");
-  const [installPrompt, setInstallPrompt] = useState<any>(null);
   const importRef = useRef<HTMLInputElement | null>(null);
 
   async function refresh() {
@@ -69,12 +68,6 @@ export function ArunikaApp() {
 
   useEffect(() => {
     refresh();
-    const handler = (event: Event) => {
-      event.preventDefault();
-      setInstallPrompt(event);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
   useEffect(() => {
@@ -259,14 +252,6 @@ export function ArunikaApp() {
     }
   }
 
-  async function installApp() {
-    if (installPrompt) {
-      await installPrompt.prompt();
-      setInstallPrompt(null);
-      return;
-    }
-    setToast("Di iPhone: Share → Add to Home Screen. Di Chrome desktop/Android: gunakan menu Install App.");
-  }
 
   return (
     <div className="app-shell stream-app">
@@ -306,7 +291,7 @@ export function ArunikaApp() {
         {tab === "knowledge" && <KnowledgeView data={snapshot} />}
         {tab === "insights" && <InsightsView data={snapshot} insights={insights} year={year} setYear={setYear} />}
         {tab === "wishlist" && <WishlistView books={snapshot.books.filter((b) => b.status === "wishlist")} learning={snapshot.learning.filter((l) => l.status === "wishlist")} onBook={(book: Book) => { setEditingBook(book); setBookModal(true); }} onLearning={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} />}
-        {tab === "settings" && <SettingsView settings={snapshot.settings} isPro={isPro} onSave={updateSettings} onExport={doExport} onImport={() => importRef.current?.click()} onInstall={installApp} />}
+        {tab === "settings" && <SettingsView settings={snapshot.settings} isPro={isPro} onSave={updateSettings} onExport={doExport} onImport={() => importRef.current?.click()} />}
 
         <input ref={importRef} className="hidden" type="file" accept="application/json" onChange={(e) => { const file = e.target.files?.[0]; if (file) doImport(file); e.currentTarget.value = ""; }} />
       </main>
