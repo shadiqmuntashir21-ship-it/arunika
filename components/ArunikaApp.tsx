@@ -8,7 +8,7 @@ import { Overview, BooksView, LearningView, SessionsView, HabitView, KnowledgeVi
 import { deleteOne, exportBackup, getOne, importBackup, loadSnapshot, putOne } from "@/lib/db";
 import { downloadJson, readFileAsDataUrl } from "@/lib/file";
 import type { BackupPayload, Book, BookStatus, HabitDay, LearningItem, LearningStatus, ReadingSession, Settings } from "@/lib/types";
-import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
+import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";\nimport { verifyArunikaLicense } from "@/lib/backend";
 
 type Tab = "overview" | "books" | "learning" | "sessions" | "habit" | "knowledge" | "insights" | "wishlist" | "settings";
 type Snapshot = Awaited<ReturnType<typeof loadSnapshot>>;
