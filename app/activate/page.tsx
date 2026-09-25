@@ -81,7 +81,7 @@ export default function ActivatePage(){
       <div className="auth-copy">
         <div className="eyebrow">AKTIVASI ARUNIKA PRO</div>
         <h1>Aktivasi nyata. Lisensi terhubung ke backend.</h1>
-        <p>Kode aktivasi diverifikasi ke server Arunika dan diikat ke perangkat ini. Kode aktivasi dan PIN diverifikasi ke server Arunika lalu lisensi diikat ke perangkat ini.</p>
+        <p>Kode aktivasi dan PIN diverifikasi ke server Arunika, lalu lisensi diikat ke perangkat ini.</p>
         <div className="auth-points">
           <span><Icon name="lock" size={18}/> Kode + PIN diverifikasi server</span>
           <span><Icon name="check" size={18}/> Maksimal perangkat mengikuti lisensi</span>
