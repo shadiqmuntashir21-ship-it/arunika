@@ -45,7 +45,7 @@ export default function LandingPage(){
           <a className="netflix-play" href="/app"><Icon name="play" size={20}/> Mulai Demo</a>
           <a className="netflix-more" href="#fitur"><span className="info-dot">i</span> Pelajari Arunika</a>
         </div>
-        <div className="landing-proof"><span><b>Local-first</b> data tetap di perangkat</span><span><b>PWA</b> bisa dipasang seperti aplikasi</span><span><b>Rp20.000</b> sekali bayar untuk Pro</span></div>
+        <div className="landing-proof"><span><b>Local-first</b> data tetap di perangkat</span><span><b>PWA</b> bisa dipasang seperti aplikasi</span><span><b>Rp25.000</b> sekali bayar untuk Pro</span></div>
       </div>
     </section>
 
@@ -90,7 +90,7 @@ export default function LandingPage(){
     <section className="landing-pro-section" id="pro">
       <div className="pro-cinema-card">
         <div><span className="section-tag">ARUNIKA PRO</span><h2>Kalau sudah cocok, buka semuanya.</h2><p>Koleksi tanpa batas, backup & restore, akses Pro, dan pengalaman PWA penuh. Aktivasi menggunakan kode lisensi + PIN. Saat aktivasi pertama berhasil, data contoh Demo dihapus agar akun Pro dimulai dari koleksi kosong.</p></div>
-        <div className="pro-price"><small>SEKALI BAYAR</small><strong>Rp20.000</strong><div className="pro-actions"><a href="/pro" className="netflix-play">Lihat Pro</a><a href="/activate" className="netflix-more">Aktivasi</a></div></div>
+        <div className="pro-price"><small>SEKALI BAYAR</small><strong>Rp25.000</strong><div className="pro-actions"><a href="/pro" className="netflix-play">Lihat Pro</a><a href="/activate" className="netflix-more">Aktivasi</a></div></div>
       </div>
     </section>
 
