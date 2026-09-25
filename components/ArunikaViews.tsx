@@ -317,11 +317,11 @@ function BookTile({ book, onEdit, onDelete }: { book: Book; onEdit:()=>void; onD
 function LearningTile({ item, onEdit, onDelete }: { item: LearningItem; onEdit:()=>void; onDelete:()=>void }) {
   const pct=percent(item.watchedMinutes,item.totalMinutes);
   return <article className="panel learning-tile">
-    <button className={item.url ? "learning-thumb learning-thumb-link" : "learning-thumb"} type="button" onClick={()=>item.url && openLearningUrl(item)} aria-label={item.url ? `Buka ${item.title}` : item.title}>
+    <div className={item.url ? "learning-thumb learning-thumb-link" : "learning-thumb"} role={item.url ? "button" : undefined} tabIndex={item.url ? 0 : -1} onClick={()=>item.url && openLearningUrl(item)} onKeyDown={(e)=>{if(item.url && (e.key==="Enter"||e.key===" ")){e.preventDefault();openLearningUrl(item)}}} aria-label={item.url ? `Buka ${item.title}` : undefined}>
       {item.thumbnail?<img src={item.thumbnail} alt={item.title}/>:<div className="learning-fallback"><Icon name="play" size={30}/><span>{item.type}</span></div>}
       {item.url?<div className="watch-overlay"><span className="round-play"><Icon name="play" size={18}/></span><strong>Tonton</strong></div>:null}
       <div className="tile-actions" onClick={(e)=>e.stopPropagation()}><button type="button" onClick={onEdit}><Icon name="edit" size={16}/></button><button type="button" className="danger" onClick={onDelete}><Icon name="trash" size={16}/></button></div>
-    </button>
+    </div>
     <div className="tile-body"><div className="tile-top"><span className={`status-pill ${item.status}`}>{learningStatusLabel(item.status)}</span><span>{item.source}</span></div><h3>{item.title}</h3><p>{item.channel} · {item.topic}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="tile-details"><span>{pct}%</span><span>{item.watchedMinutes}/{item.totalMinutes} mnt</span><span>{item.rating?`${item.rating}★`:"—"}</span></div>{item.url?<button className="watch-link" type="button" onClick={()=>openLearningUrl(item)}><Icon name="play" size={14}/> Tonton di {item.source||"sumber"}</button>:null}{item.highlights?<div className="review-snippet">{item.highlights}</div>:null}</div>
   </article>;
 }
