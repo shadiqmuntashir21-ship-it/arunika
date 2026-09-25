@@ -92,6 +92,7 @@ export const demoLearning: LearningItem[] = [
     type: "Video",
     highlights: "Active recall, spaced repetition, dan fokus pada pengujian diri membuat belajar jauh lebih aktif.",
     thumbnail: "https://i.ytimg.com/vi/Lt54CX9DmS4/hqdefault.jpg",
+    url: "https://www.youtube.com/watch?v=Lt54CX9DmS4",
     createdAt: now,
     updatedAt: now
   },
@@ -109,6 +110,7 @@ export const demoLearning: LearningItem[] = [
     type: "Video",
     highlights: "Sudut pandang lintas generasi bisa membantu melihat kebiasaan, teknologi, dan cara berkomunikasi secara lebih luas.",
     thumbnail: "https://i.ytimg.com/vi/aOZ5A9r_sAw/hqdefault.jpg",
+    url: "https://www.youtube.com/watch?v=aOZ5A9r_sAw",
     createdAt: now,
     updatedAt: now
   },
@@ -125,6 +127,7 @@ export const demoLearning: LearningItem[] = [
     type: "Video",
     highlights: "",
     thumbnail: "https://i.ytimg.com/vi/4AwyVTHEU3s/hqdefault.jpg",
+    url: "https://www.youtube.com/watch?v=4AwyVTHEU3s",
     createdAt: now,
     updatedAt: now
   },
@@ -143,6 +146,7 @@ export const demoLearning: LearningItem[] = [
     type: "Video",
     highlights: "Belajar yang terasa menantang dan aktif biasanya lebih efektif daripada konsumsi pasif.",
     thumbnail: "https://i.ytimg.com/vi/1bszFX_XcbU/hqdefault.jpg",
+    url: "https://www.youtube.com/watch?v=1bszFX_XcbU",
     createdAt: now,
     updatedAt: now
   }
