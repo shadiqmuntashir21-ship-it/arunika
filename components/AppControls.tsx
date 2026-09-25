@@ -46,46 +46,70 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
 
 export function InstallButton({ compact = false, hero = false }: { compact?: boolean; hero?: boolean }) {
   const [promptEvent, setPromptEvent] = useState<InstallPromptEvent | null>(null);
-  const [installed, setInstalled] = useState(false);
+  const [installed, setInstalled] = useState(true);
+  const [ready, setReady] = useState(false);
   const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
-    const standalone = window.matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
-    setInstalled(standalone);
+    const media = window.matchMedia("(display-mode: standalone)");
+    const navigatorStandalone = (navigator as Navigator & { standalone?: boolean }).standalone === true;
+    const remembered = localStorage.getItem("arunika-pwa-installed") === "1";
+
+    const syncInstalled = () => {
+      const standalone = media.matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+      setInstalled(standalone || remembered);
+      setReady(true);
+    };
+    syncInstalled();
 
     const handler = (event: Event) => {
       event.preventDefault();
       setPromptEvent(event as InstallPromptEvent);
+      setInstalled(false);
+      localStorage.removeItem("arunika-pwa-installed");
+      setReady(true);
     };
+
     const installedHandler = () => {
+      localStorage.setItem("arunika-pwa-installed", "1");
       setInstalled(true);
       setPromptEvent(null);
-      setFeedback("Arunika berhasil dipasang.");
+      setFeedback("");
+    };
+
+    const displayHandler = () => {
+      if (media.matches) {
+        localStorage.setItem("arunika-pwa-installed", "1");
+        setInstalled(true);
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handler);
     window.addEventListener("appinstalled", installedHandler);
+    media.addEventListener?.("change", displayHandler);
+
     return () => {
       window.removeEventListener("beforeinstallprompt", handler);
       window.removeEventListener("appinstalled", installedHandler);
+      media.removeEventListener?.("change", displayHandler);
     };
   }, []);
 
   useEffect(() => {
     if (!feedback) return;
-    const t = window.setTimeout(() => setFeedback(""), 4200);
+    const t = window.setTimeout(() => setFeedback(""), 4600);
     return () => window.clearTimeout(t);
   }, [feedback]);
 
   async function install() {
-    if (installed) {
-      setFeedback("Arunika sudah terpasang sebagai aplikasi.");
-      return;
-    }
     if (promptEvent) {
       await promptEvent.prompt();
       const choice = await promptEvent.userChoice;
-      if (choice.outcome === "accepted") setFeedback("Memasang Arunika…");
+      if (choice.outcome === "accepted") {
+        localStorage.setItem("arunika-pwa-installed", "1");
+        setInstalled(true);
+        setFeedback("");
+      }
       setPromptEvent(null);
       return;
     }
@@ -94,15 +118,17 @@ export function InstallButton({ compact = false, hero = false }: { compact?: boo
     if (/iphone|ipad|ipod/.test(ua)) {
       setFeedback("iPhone/iPad: tekan Share lalu pilih Add to Home Screen.");
     } else {
-      setFeedback("Buka menu browser lalu pilih Install Arunika / Install App. Di Chrome, ikon install juga dapat muncul di address bar.");
+      setFeedback("Di Chrome/Android: buka menu browser lalu pilih Install Arunika. Jika tersedia, ikon install juga muncul di address bar.");
     }
   }
+
+  if (!ready || installed) return null;
 
   const className = hero ? "install-app-btn hero-install" : compact ? "install-app-btn compact" : "install-app-btn";
   return <>
     <button type="button" className={className} onClick={install}>
-      <Icon name={installed ? "check" : "download"} size={compact ? 15 : 18}/>
-      <span>{installed ? "Arunika Terpasang" : "Install Arunika"}</span>
+      <Icon name="download" size={compact ? 15 : 18}/>
+      <span>Install Arunika</span>
     </button>
     {feedback ? <div className="install-feedback" role="status">{feedback}</div> : null}
   </>;
