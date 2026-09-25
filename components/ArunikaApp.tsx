@@ -33,7 +33,7 @@ function emptyBook(): Book {
 
 function emptyLearning(): LearningItem {
   const now = new Date().toISOString();
-  return { id: uid("learning"), title: "", channel: "", topic: "", watchedMinutes: 0, totalMinutes: 0, status: "watching", rating: 0, source: "YouTube", type: "Video", highlights: "", createdAt: now, updatedAt: now };
+  return { id: uid("learning"), title: "", channel: "", topic: "", watchedMinutes: 0, totalMinutes: 0, status: "watching", rating: 0, source: "YouTube", type: "Video", highlights: "", url: "", createdAt: now, updatedAt: now };
 }
 
 function emptySession(bookId = ""): ReadingSession {
@@ -295,11 +295,6 @@ export function ArunikaApp() {
       {mobileNav?<button className="drawer-backdrop" onClick={()=>setMobileNav(false)} aria-label="Tutup menu"/>:null}
 
       <main className="app-main stream-main">
-        {tab !== "overview" ? <section className="stream-page-title">
-          <div><span>{isPro ? "ARUNIKA PRO" : "MODE DEMO"}</span><h1>{navItems.find((n) => n.key === tab)?.label}</h1></div>
-          <div className="stream-page-actions"><button onClick={installApp}><Icon name="download" size={16}/> Install App</button></div>
-        </section> : null}
-
         {tab === "overview" && <Overview data={snapshot} metrics={metrics} insights={insights} onTab={setTab} onSession={() => { setEditingSession(emptySession(metrics.readingBooks[0]?.id || "")); setSessionModal(true); }} />}
         {tab === "books" && <BooksView books={filteredBooks} query={query} setQuery={setQuery} filter={bookFilter} setFilter={setBookFilter} onAdd={() => { setEditingBook(emptyBook()); setBookModal(true); }} onEdit={(book: Book) => { setEditingBook(book); setBookModal(true); }} onDelete={removeBook} />}
         {tab === "learning" && <LearningView items={filteredLearning} query={query} setQuery={setQuery} filter={learningFilter} setFilter={setLearningFilter} onAdd={() => { setEditingLearning(emptyLearning()); setLearningModal(true); }} onEdit={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} onDelete={removeLearning} />}
