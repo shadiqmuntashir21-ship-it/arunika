@@ -28,7 +28,7 @@ const money=(n:number)=>new Intl.NumberFormat("id-ID",{style:"currency",currency
 
 export default function ProPage(){
   const [methods,setMethods]=useState<Method[]>([]);
-  const [price,setPrice]=useState(20000);
+  const [price,setPrice]=useState(25000);
   const [buyerName,setBuyerName]=useState("");
   const [whatsapp,setWhatsapp]=useState("");
   const [email,setEmail]=useState("");
