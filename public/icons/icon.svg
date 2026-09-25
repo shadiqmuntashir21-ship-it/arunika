@@ -1,6 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="116" fill="#173f3a"/>
-  <circle cx="256" cy="208" r="142" fill="#e2ad58"/>
-  <rect x="82" y="284" width="348" height="150" rx="44" fill="#f5f2e9"/>
-  <text x="256" y="403" text-anchor="middle" font-size="152" font-family="Georgia,serif" font-weight="700" fill="#173f3a">A</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Arunika">
+  <defs>
+    <linearGradient id="r" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff2d38"/>
+      <stop offset=".48" stop-color="#e50914"/>
+      <stop offset="1" stop-color="#a9070e"/>
+    </linearGradient>
+    <linearGradient id="fold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7d050b"/>
+      <stop offset="1" stop-color="#d10812"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#070707"/>
+  <path d="M157 394 218 118c4-17 14-25 30-25h22l-61 301z" fill="url(#r)"/>
+  <path d="M260 93h18c15 0 26 9 31 25l62 276h-61l-54-235z" fill="url(#r)"/>
+  <path d="M203 279h112l12 51H192z" fill="#f11823"/>
+  <path d="M244 159 260 93h18c8 0 15 3 20 8l-34 150z" fill="url(#fold)" opacity=".96"/>
+  <path d="M157 394h52l9-44h-51z" fill="#b60810" opacity=".88"/>
 </svg>
