@@ -851,3 +851,620 @@ img{display:block;max-width:100%}
   .learning-form-preview{align-items:flex-start}
   .learning-form-preview img{width:105px}
 }
+
+
+/* =========================================================
+   ARUNIKA THEME SYSTEM — Terang / Malam
+   ========================================================= */
+html{
+  color-scheme:dark;
+  background:#070707;
+}
+html[data-theme="light"]{
+  color-scheme:light;
+  background:#f4f1ec;
+}
+body,
+.stream-landing,
+.app-shell.stream-app,
+.stream-main,
+.simple-page,
+.admin-page,
+.modal-card,
+.mobile-drawer{
+  transition:background-color .22s ease,color .22s ease,border-color .22s ease;
+}
+
+/* Shared controls */
+.theme-toggle,
+.install-app-btn{
+  border:1px solid rgba(255,255,255,.17);
+  background:rgba(28,28,28,.82);
+  color:#fff;
+  border-radius:5px;
+  min-height:38px;
+  padding:0 12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:11px;
+  font-weight:800;
+  white-space:nowrap;
+  cursor:pointer;
+  backdrop-filter:blur(14px);
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
+}
+.theme-toggle:hover,
+.install-app-btn:hover{
+  background:#292929;
+  border-color:rgba(255,255,255,.34);
+  transform:translateY(-1px);
+}
+.theme-toggle.compact,
+.install-app-btn.compact{
+  min-height:34px;
+  padding:0 10px;
+  font-size:10px;
+}
+.theme-symbol{
+  width:18px;
+  height:18px;
+  display:grid;
+  place-items:center;
+  font-size:16px;
+  line-height:1;
+}
+.hero-install{
+  min-height:44px;
+  border:1px solid rgba(255,255,255,.42);
+  background:rgba(18,18,18,.72);
+  padding:0 18px;
+  font-size:13px;
+}
+.install-feedback{
+  position:fixed;
+  z-index:260;
+  right:22px;
+  bottom:24px;
+  width:min(390px,calc(100vw - 28px));
+  padding:12px 14px;
+  border-radius:6px;
+  background:#fff;
+  color:#111;
+  box-shadow:0 18px 55px rgba(0,0,0,.45);
+  font-size:11px;
+  font-weight:700;
+  line-height:1.45;
+}
+.desktop-install{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.landing-nav-actions .install-app-btn{
+  border-color:rgba(255,255,255,.28);
+}
+
+/* ---------- LIGHT MODE ---------- */
+html[data-theme="light"] body{
+  background:#f4f1ec;
+  color:#181818;
+}
+html[data-theme="light"] .stream-landing,
+html[data-theme="light"] .app-shell.stream-app,
+html[data-theme="light"] .stream-main,
+html[data-theme="light"] .simple-page,
+html[data-theme="light"] .admin-page{
+  background:#f4f1ec;
+  color:#181818;
+}
+html[data-theme="light"] .panel{
+  background:#fff;
+  border-color:rgba(20,20,20,.09);
+  color:#181818;
+  box-shadow:0 8px 30px rgba(45,35,26,.06);
+}
+html[data-theme="light"] .eyebrow,
+html[data-theme="light"] .section-tag{
+  color:#6c6964;
+}
+html[data-theme="light"] .muted{
+  color:#77736e!important;
+}
+html[data-theme="light"] .stream-wordmark{
+  color:#e50914;
+}
+html[data-theme="light"] .stream-nav{
+  background:linear-gradient(180deg,rgba(249,247,243,.98),rgba(249,247,243,.91) 76%,rgba(249,247,243,.72));
+  border-bottom:1px solid rgba(20,20,20,.07);
+  box-shadow:0 2px 18px rgba(50,40,30,.04);
+}
+html[data-theme="light"] .stream-nav-links button,
+html[data-theme="light"] .nav-icon-btn,
+html[data-theme="light"] .desktop-install{
+  color:#403d39;
+}
+html[data-theme="light"] .stream-nav-links button:hover,
+html[data-theme="light"] .stream-nav-links button.active{
+  color:#0e0e0e;
+}
+html[data-theme="light"] .nav-icon-btn:hover{
+  background:rgba(0,0,0,.055);
+}
+html[data-theme="light"] .theme-toggle,
+html[data-theme="light"] .install-app-btn{
+  background:rgba(255,255,255,.86);
+  border-color:rgba(25,25,25,.13);
+  color:#1b1b1b;
+  box-shadow:0 4px 16px rgba(40,30,20,.04);
+}
+html[data-theme="light"] .theme-toggle:hover,
+html[data-theme="light"] .install-app-btn:hover{
+  background:#fff;
+  border-color:rgba(25,25,25,.25);
+}
+html[data-theme="light"] .stream-pro-active{
+  background:#dfeee5;
+  color:#20623f;
+}
+html[data-theme="light"] .profile-avatar{
+  box-shadow:0 4px 14px rgba(130,25,32,.15);
+}
+
+/* App hero in light mode */
+html[data-theme="light"] .stream-app .stream-hero{
+  background:
+    radial-gradient(circle at 77% 30%,rgba(229,9,20,.11),transparent 25%),
+    radial-gradient(circle at 65% 46%,rgba(122,104,84,.11),transparent 35%),
+    linear-gradient(112deg,#f8f5f0 6%,#eee9e2 57%,#e7e0d8 100%);
+}
+html[data-theme="light"] .stream-app .stream-hero:after{
+  background:linear-gradient(0deg,#f4f1ec 7%,rgba(244,241,236,.94) 22%,transparent);
+}
+html[data-theme="light"] .stream-app .stream-hero.no-cover:before{
+  color:rgba(30,20,15,.035);
+}
+html[data-theme="light"] .stream-hero h2,
+html[data-theme="light"] .stream-hero p,
+html[data-theme="light"] .hero-kicker,
+html[data-theme="light"] .hero-brandline{
+  color:#171717;
+  text-shadow:none;
+}
+html[data-theme="light"] .hero-meta{
+  color:#595652;
+}
+html[data-theme="light"] .hero-meta span+span:before{
+  color:#aaa39c;
+}
+html[data-theme="light"] .stream-hero-art-shade{
+  background:
+    linear-gradient(90deg,#f5f2ed 0%,rgba(245,242,237,.93) 13%,rgba(245,242,237,.35) 48%,rgba(245,242,237,.12) 76%,rgba(245,242,237,.65) 100%),
+    linear-gradient(0deg,#f4f1ec 0%,transparent 33%,rgba(255,255,255,.08) 80%);
+}
+html[data-theme="light"] .stream-hero-blur{
+  filter:blur(34px) brightness(.9) saturate(.72);
+  opacity:.62;
+}
+html[data-theme="light"] .stream-hero-poster{
+  box-shadow:0 28px 70px rgba(65,50,35,.22);
+}
+html[data-theme="light"] .hero-quick-stats{
+  background:rgba(255,255,255,.72);
+  border-color:rgba(20,20,20,.09);
+  box-shadow:0 10px 30px rgba(40,30,20,.08);
+}
+html[data-theme="light"] .hero-quick-stats div+div{
+  border-left-color:rgba(20,20,20,.09);
+}
+html[data-theme="light"] .hero-quick-stats span{
+  color:#77716a;
+}
+html[data-theme="light"] .progress,
+html[data-theme="light"] .media-progress,
+html[data-theme="light"] .fake-progress{
+  background:#d9d4ce;
+}
+html[data-theme="light"] .netflix-more,
+html[data-theme="light"] .ghost-btn{
+  background:rgba(50,47,43,.1);
+  color:#181818;
+}
+html[data-theme="light"] .netflix-more:hover,
+html[data-theme="light"] .ghost-btn:hover{
+  background:rgba(50,47,43,.16);
+}
+html[data-theme="light"] .netflix-play,
+html[data-theme="light"] .primary-btn{
+  background:#181818;
+  color:#fff;
+}
+html[data-theme="light"] .netflix-play:hover,
+html[data-theme="light"] .primary-btn:hover{
+  background:#353535;
+}
+
+/* Rails, catalog, learning */
+html[data-theme="light"] .media-card,
+html[data-theme="light"] .book-tile,
+html[data-theme="light"] .learning-tile{
+  background:#fff;
+  color:#191919;
+  box-shadow:0 7px 22px rgba(60,45,32,.08);
+}
+html[data-theme="light"] .media-card:hover,
+html[data-theme="light"] .book-tile:hover,
+html[data-theme="light"] .learning-tile:hover{
+  box-shadow:0 18px 42px rgba(60,45,32,.18);
+}
+html[data-theme="light"] .media-caption span,
+html[data-theme="light"] .tile-body>p,
+html[data-theme="light"] .tile-details,
+html[data-theme="light"] .review-snippet{
+  color:#77716b;
+}
+html[data-theme="light"] .review-snippet{
+  border-top-color:#ebe6e0;
+}
+html[data-theme="light"] .learning-thumb,
+html[data-theme="light"] .book-tile .book-cover{
+  background:#e9e4de;
+}
+html[data-theme="light"] .tile-actions button{
+  background:rgba(255,255,255,.92);
+  color:#222;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
+html[data-theme="light"] .tile-actions button:hover{
+  background:#181818;
+  color:#fff;
+}
+html[data-theme="light"] .poster-fallback,
+html[data-theme="light"] .learning-fallback,
+html[data-theme="light"] .learning-poster{
+  color:#fff;
+}
+html[data-theme="light"] .stream-mini-panel,
+html[data-theme="light"] .section-panel,
+html[data-theme="light"] .stat-card,
+html[data-theme="light"] .knowledge-card,
+html[data-theme="light"] .settings-card,
+html[data-theme="light"] .session-row,
+html[data-theme="light"] .calendar-panel{
+  background:#fff;
+  border-color:rgba(20,20,20,.08);
+  color:#181818;
+  box-shadow:0 7px 24px rgba(45,35,25,.045);
+}
+html[data-theme="light"] .stream-mini-head span,
+html[data-theme="light"] .stream-mini-head button,
+html[data-theme="light"] .stat-card span,
+html[data-theme="light"] .stat-card small{
+  color:#77716b;
+}
+html[data-theme="light"] .stat-icon,
+html[data-theme="light"] .tiny-art{
+  background:#f0ece7;
+  color:#2b2926;
+}
+html[data-theme="light"] .compact-row,
+html[data-theme="light"] .quote-card,
+html[data-theme="light"] .rank-list>div,
+html[data-theme="light"] .wish-list>button{
+  background:#f7f4ef;
+  color:#1c1c1c;
+}
+html[data-theme="light"] .compact-row span,
+html[data-theme="light"] .quote-card span,
+html[data-theme="light"] .wish-list span{
+  color:#7e7872;
+}
+html[data-theme="light"] .knowledge-preview blockquote{
+  color:#24211f;
+}
+html[data-theme="light"] .knowledge-preview p,
+html[data-theme="light"] .knowledge-card p{
+  color:#77716b;
+}
+html[data-theme="light"] .knowledge-card blockquote{
+  color:#292522;
+}
+html[data-theme="light"] .bar-track{
+  background:#e9e4de;
+}
+html[data-theme="light"] .donut-inner{
+  background:#fff;
+}
+html[data-theme="light"] .day{
+  background:#f7f4ef;
+}
+html[data-theme="light"] .day.active{
+  background:#fbe3e5;
+  border-color:rgba(229,9,20,.22);
+}
+html[data-theme="light"] .day span,
+html[data-theme="light"] .day small{
+  color:#817b75;
+}
+html[data-theme="light"] .day.active span{
+  color:#302a27;
+}
+
+/* Search, forms, modal */
+html[data-theme="light"] .toolbar{
+  background:#ede8e2;
+}
+html[data-theme="light"] .search-box,
+html[data-theme="light"] .toolbar select,
+html[data-theme="light"] .year-select,
+html[data-theme="light"] .field input,
+html[data-theme="light"] .field select,
+html[data-theme="light"] .field textarea,
+html[data-theme="light"] .modal-form input,
+html[data-theme="light"] .modal-form select,
+html[data-theme="light"] .modal-form textarea,
+html[data-theme="light"] .activation-card input,
+html[data-theme="light"] .checkout-form input{
+  background:#fff;
+  color:#171717;
+  border-color:#d9d3cc;
+}
+html[data-theme="light"] .search-box{
+  color:#77716b;
+}
+html[data-theme="light"] .field>span,
+html[data-theme="light"] .modal-head p,
+html[data-theme="light"] .checkout-form label>span,
+html[data-theme="light"] .payment-label{
+  color:#77716b;
+}
+html[data-theme="light"] .modal-backdrop{
+  background:rgba(30,26,23,.45);
+}
+html[data-theme="light"] .modal-card{
+  background:#fbf9f6;
+  color:#181818;
+  border-color:#dcd6cf;
+  box-shadow:0 30px 90px rgba(45,35,25,.24);
+}
+html[data-theme="light"] .icon-btn{
+  color:#222;
+}
+html[data-theme="light"] .icon-btn:hover{
+  background:rgba(0,0,0,.06);
+}
+html[data-theme="light"] .session-calc,
+html[data-theme="light"] .learning-form-preview{
+  background:#f0ece7;
+  border-color:#ded8d1;
+  color:#4d4945;
+}
+
+/* Landing light */
+html[data-theme="light"] .landing-stream-nav{
+  background:linear-gradient(180deg,rgba(248,246,242,.98),rgba(248,246,242,.79),transparent);
+}
+html[data-theme="light"] .landing-stream-nav nav a,
+html[data-theme="light"] .landing-login{
+  color:#4b4743;
+}
+html[data-theme="light"] .landing-stream-nav nav a:hover,
+html[data-theme="light"] .landing-login:hover{
+  color:#111;
+}
+html[data-theme="light"] .landing-cinema-hero{
+  background:#f4f1ec;
+}
+html[data-theme="light"] .cinema-grid{
+  opacity:.36;
+}
+html[data-theme="light"] .cinema-vignette{
+  background:
+    linear-gradient(90deg,rgba(247,244,239,.99) 3%,rgba(247,244,239,.88) 41%,rgba(247,244,239,.28) 72%,rgba(247,244,239,.75)),
+    linear-gradient(0deg,#f4f1ec 0%,transparent 38%,rgba(255,255,255,.18));
+}
+html[data-theme="light"] .landing-cinema-copy h1,
+html[data-theme="light"] .landing-cinema-copy>p,
+html[data-theme="light"] .landing-cinema-copy .hero-brandline{
+  color:#181818;
+  text-shadow:none;
+}
+html[data-theme="light"] .landing-cinema-copy h1 em{
+  color:#5c5650;
+}
+html[data-theme="light"] .landing-proof{
+  color:#6e6963;
+}
+html[data-theme="light"] .landing-proof b{
+  color:#1d1b19;
+}
+html[data-theme="light"] .landing-stream-section{
+  background:#f4f1ec;
+}
+html[data-theme="light"] .landing-section-head p,
+html[data-theme="light"] .feature-showcase-copy>p{
+  color:#746f69;
+}
+html[data-theme="light"] .landing-media-card>span,
+html[data-theme="light"] .landing-learning-card>span{
+  color:#77716b;
+}
+html[data-theme="light"] .landing-book-cover,
+html[data-theme="light"] .landing-video-thumb{
+  box-shadow:0 12px 30px rgba(48,36,25,.12);
+}
+html[data-theme="light"] .landing-feature-showcase{
+  background:#eae5de;
+}
+html[data-theme="light"] .feature-pill-grid span{
+  background:rgba(255,255,255,.72);
+  color:#292624;
+  border:1px solid rgba(30,25,20,.06);
+}
+html[data-theme="light"] .feature-screen{
+  background:#fff;
+  border-color:#d8d1ca;
+  box-shadow:0 30px 70px rgba(50,37,25,.14);
+}
+html[data-theme="light"] .screen-nav i{
+  background:#ccc4bc;
+}
+html[data-theme="light"] .landing-pro-section{
+  background:#f4f1ec;
+}
+html[data-theme="light"] .pro-cinema-card{
+  background:
+    radial-gradient(circle at 87% 12%,rgba(229,9,20,.13),transparent 29%),
+    linear-gradient(135deg,#fff,#eae4dd);
+  border-color:#dfd7cf;
+  color:#181818;
+}
+html[data-theme="light"] .pro-cinema-card p{
+  color:#716b65;
+}
+html[data-theme="light"] .stream-footer{
+  border-top-color:#ddd6ce;
+}
+html[data-theme="light"] .stream-footer p,
+html[data-theme="light"] .stream-footer small{
+  color:#77716b;
+}
+
+/* Checkout / activation / admin light */
+html[data-theme="light"] .pro-checkout-hero>div:first-child>p,
+html[data-theme="light"] .auth-copy>p,
+html[data-theme="light"] .pro-copy>p{
+  color:#716b65;
+}
+html[data-theme="light"] .checkout-card,
+html[data-theme="light"] .activation-card,
+html[data-theme="light"] .admin-login-card,
+html[data-theme="light"] .admin-table-card,
+html[data-theme="light"] .license-stock-card{
+  background:#fff;
+  border-color:#ded7d0;
+  color:#181818;
+}
+html[data-theme="light"] .payment-choice{
+  background:#f7f4f0;
+  border-color:#ddd6cf;
+  color:#181818;
+}
+html[data-theme="light"] .payment-choice:hover,
+html[data-theme="light"] .payment-choice.active{
+  background:#fff;
+  border-color:#88817a;
+}
+html[data-theme="light"] .payment-summary>div,
+html[data-theme="light"] .transfer-box,
+html[data-theme="light"] .checkout-message,
+html[data-theme="light"] .admin-notice{
+  background:#f4f0eb;
+  border-color:#ddd6cf;
+  color:#383431;
+}
+html[data-theme="light"] .admin-topbar{
+  border-bottom-color:#ddd6cf;
+}
+html[data-theme="light"] .admin-actions button,
+html[data-theme="light"] .admin-tabs button,
+html[data-theme="light"] .table-actions button{
+  background:#fff;
+  color:#49443f;
+  border-color:#d9d2ca;
+}
+html[data-theme="light"] .admin-tabs button.active,
+html[data-theme="light"] .table-actions .approve{
+  background:#181818;
+  border-color:#181818;
+  color:#fff;
+}
+html[data-theme="light"] .admin-stat{
+  background:#fff;
+}
+html[data-theme="light"] .admin-table th,
+html[data-theme="light"] .admin-table td{
+  border-bottom-color:#e8e2dc;
+}
+html[data-theme="light"] .admin-hero p,
+html[data-theme="light"] .admin-stat span,
+html[data-theme="light"] .admin-card-head>span{
+  color:#77716b;
+}
+
+/* Drawers / mobile */
+html[data-theme="light"] .mobile-drawer{
+  background:#fbf9f6;
+  color:#181818;
+  box-shadow:30px 0 80px rgba(60,45,30,.18);
+}
+html[data-theme="light"] .mobile-drawer nav button{
+  color:#5e5953;
+}
+html[data-theme="light"] .mobile-drawer nav button.active{
+  background:#efeae4;
+  color:#111;
+}
+html[data-theme="light"] .mobile-bottom-nav.stream-bottom-nav{
+  background:rgba(250,248,245,.96);
+  border-top-color:#ddd6cf;
+}
+html[data-theme="light"] .stream-bottom-nav button{
+  color:#8b857e;
+}
+html[data-theme="light"] .stream-bottom-nav button.active{
+  color:#111;
+}
+
+@media(max-width:900px){
+  .landing-nav-actions .theme-label,
+  .landing-nav-actions .install-app-btn.compact span{
+    display:none;
+  }
+  .landing-nav-actions .theme-toggle.compact,
+  .landing-nav-actions .install-app-btn.compact{
+    width:36px;
+    padding:0;
+  }
+}
+@media(max-width:640px){
+  .landing-nav-actions{
+    gap:6px;
+  }
+  .landing-nav-actions .install-app-btn.compact{
+    display:inline-flex;
+  }
+  .landing-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  .landing-actions .netflix-play,
+  .landing-actions .hero-install{
+    width:100%;
+  }
+  .landing-actions .netflix-more{
+    grid-column:1/-1;
+  }
+  .theme-toggle.compact .theme-label{
+    display:none;
+  }
+  .stream-nav-actions .theme-toggle.compact{
+    width:34px;
+    padding:0;
+  }
+  .install-feedback{
+    right:14px;
+    left:14px;
+    bottom:78px;
+    width:auto;
+  }
+}
+
+/* Slightly soften every surface when themes switch */
+@media (prefers-reduced-motion:no-preference){
+  .panel,.media-card,.book-tile,.learning-tile,.stream-nav,.landing-stream-nav,
+  .theme-toggle,.install-app-btn,.modal-card,.toolbar,.day{
+    transition:background-color .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease,transform .18s ease;
+  }
+}
