@@ -267,38 +267,37 @@ export function ArunikaApp() {
   }
 
   return (
-    <div className="app-shell">
-      <aside className={`sidebar ${mobileNav ? "open" : ""}`}>
-        <div className="brand-row">
-          <div className="brand-symbol">A</div>
-          <div><strong>ARUNIKA</strong><span>Reading & learning journal</span></div>
+    <div className="app-shell stream-app">
+      <header className="stream-nav">
+        <div className="stream-nav-left">
+          <button className="mobile-menu stream-menu-btn" onClick={() => setMobileNav((v) => !v)} aria-label="Menu"><Icon name="menu" /></button>
+          <button className="stream-wordmark" onClick={() => setTab("overview")} aria-label="Beranda Arunika">ARUNIKA</button>
+          <nav className="stream-nav-links" aria-label="Navigasi utama">
+            {navItems.slice(0, 8).map((item) => (
+              <button key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}>{item.label}</button>
+            ))}
+          </nav>
         </div>
-        <nav>
-          {navItems.map((item) => (
-            <button key={item.key} className={tab === item.key ? "nav-item active" : "nav-item"} onClick={() => { setTab(item.key); setMobileNav(false); }}>
-              <Icon name={item.icon} /><span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-pro">
-          <div className="pro-icon"><Icon name={isPro ? "check" : "crown"} /></div>
-          <div><strong>{isPro ? "Arunika Pro aktif" : "Mode Demo"}</strong><p>{isPro ? "Semua fitur lokal terbuka." : "Coba dulu. Pro hanya Rp20.000."}</p></div>
-          {!isPro ? <a className="small-link" href="/pro">Lihat Pro <Icon name="arrow" size={15}/></a> : null}
+        <div className="stream-nav-actions">
+          <button className="nav-icon-btn" title="Cari" onClick={() => { setTab("books"); setTimeout(() => document.querySelector<HTMLInputElement>(".search-box input")?.focus(), 100); }}><Icon name="search" /></button>
+          <button className="desktop-install" onClick={installApp}>Install</button>
+          {!isPro ? <a className="stream-pro-pill" href="/pro"><Icon name="crown" size={15}/> PRO</a> : <span className="stream-pro-active"><Icon name="check" size={14}/> PRO</span>}
+          <button className="profile-avatar" onClick={() => setTab("settings")} title="Profil">{snapshot.settings.name.slice(0, 1).toUpperCase()}</button>
         </div>
-      </aside>
+      </header>
 
-      <main className="app-main">
-        <header className="topbar">
-          <button className="mobile-menu icon-btn" onClick={() => setMobileNav((v) => !v)} aria-label="Menu"><Icon name="menu" /></button>
-          <div>
-            <div className="eyebrow">{isPro ? "PRO MODE" : "DEMO MODE"}</div>
-            <h1>{navItems.find((n) => n.key === tab)?.label}</h1>
-          </div>
-          <div className="top-actions">
-            <button className="ghost-btn desktop-only" onClick={installApp}>Install App</button>
-            <a className="avatar" href="/activate" title="Aktivasi Pro">{snapshot.settings.name.slice(0, 1).toUpperCase()}</a>
-          </div>
-        </header>
+      <aside className={`mobile-drawer ${mobileNav ? "open" : ""}`}>
+        <div className="drawer-head"><span className="stream-wordmark">ARUNIKA</span><button className="icon-btn" onClick={()=>setMobileNav(false)}><Icon name="x"/></button></div>
+        <nav>{navItems.map((item)=><button key={item.key} className={tab===item.key?"active":""} onClick={()=>{setTab(item.key);setMobileNav(false)}}><Icon name={item.icon}/><span>{item.label}</span></button>)}</nav>
+        {!isPro?<a className="drawer-pro" href="/pro"><Icon name="crown"/> Upgrade Arunika Pro <span>Rp20.000</span></a>:null}
+      </aside>
+      {mobileNav?<button className="drawer-backdrop" onClick={()=>setMobileNav(false)} aria-label="Tutup menu"/>:null}
+
+      <main className="app-main stream-main">
+        {tab !== "overview" ? <section className="stream-page-title">
+          <div><span>{isPro ? "ARUNIKA PRO" : "MODE DEMO"}</span><h1>{navItems.find((n) => n.key === tab)?.label}</h1></div>
+          <div className="stream-page-actions"><button onClick={installApp}><Icon name="download" size={16}/> Install App</button></div>
+        </section> : null}
 
         {tab === "overview" && <Overview data={snapshot} metrics={metrics} insights={insights} onTab={setTab} onSession={() => { setEditingSession(emptySession(metrics.readingBooks[0]?.id || "")); setSessionModal(true); }} />}
         {tab === "books" && <BooksView books={filteredBooks} query={query} setQuery={setQuery} filter={bookFilter} setFilter={setBookFilter} onAdd={() => { setEditingBook(emptyBook()); setBookModal(true); }} onEdit={(book: Book) => { setEditingBook(book); setBookModal(true); }} onDelete={removeBook} />}
@@ -313,8 +312,8 @@ export function ArunikaApp() {
         <input ref={importRef} className="hidden" type="file" accept="application/json" onChange={(e) => { const file = e.target.files?.[0]; if (file) doImport(file); e.currentTarget.value = ""; }} />
       </main>
 
-      <nav className="mobile-bottom-nav">
-        {navItems.slice(0, 5).map((item) => <button key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}><Icon name={item.icon} size={18}/><span>{item.label}</span></button>)}
+      <nav className="mobile-bottom-nav stream-bottom-nav">
+        {navItems.filter((item)=>["overview","books","learning","habit","wishlist"].includes(item.key)).map((item) => <button key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}><Icon name={item.icon} size={19}/><span>{item.label}</span></button>)}
       </nav>
 
       <BookForm open={bookModal} book={editingBook} setBook={setEditingBook} onClose={() => setBookModal(false)} onSubmit={saveBook} />
@@ -325,5 +324,4 @@ export function ArunikaApp() {
       {toast ? <div className="toast">{toast}</div> : null}
     </div>
   );
-}
 
