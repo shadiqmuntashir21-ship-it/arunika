@@ -39,6 +39,7 @@ export interface LearningItem {
   type: LearningType;
   highlights: string;
   thumbnail?: string;
+  url?: string;
   createdAt: string;
   updatedAt: string;
 }
