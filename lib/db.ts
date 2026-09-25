@@ -63,13 +63,13 @@ async function count(storeName: StoreName) {
 export async function seedIfNeeded() {
   const existing = await getOne<Settings>("settings", "settings");
   if (existing) {
-    if (!existing.activated && (existing.demoVersion || 0) < 2) {
+    if (!existing.activated && (existing.demoVersion || 0) < 3) {
       await Promise.all([
         ...demoBooks.map((item) => putOne("books", item)),
         ...demoLearning.map((item) => putOne("learning", item)),
         ...demoSessions.map((item) => putOne("sessions", item)),
         ...demoHabit.map((item) => putOne("habit", item)),
-        putOne("settings", { ...existing, demoVersion: 2 })
+        putOne("settings", { ...existing, demoVersion: 3 })
       ]);
     }
     return;
@@ -79,7 +79,7 @@ export async function seedIfNeeded() {
     ...demoLearning.map((item) => putOne("learning", item)),
     ...demoSessions.map((item) => putOne("sessions", item)),
     ...demoHabit.map((item) => putOne("habit", item)),
-    putOne("settings", { ...demoSettings, demoVersion: 2 })
+    putOne("settings", { ...demoSettings, demoVersion: 3 })
   ]);
 }
 
