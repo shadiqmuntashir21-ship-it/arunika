@@ -64,7 +64,7 @@ export default function AdminPage(){
     try{
       const res=await adminOrders(token,action,{orderId});
       if(!res?.ok)throw new Error(res?.message||res?.code||"Aksi gagal.");
-      if(action==="assignLicense")setMessage(`Lisensi ${res.licenseCode||""} berhasil ditetapkan.${res.emailSent?" Email aktivasi terkirim.":res.emailError?" Email belum terkirim: "+res.emailError:""}`);
+      if(action==="assignLicense")setMessage(`Lisensi ${res.licenseCode||""}${res.activationPin?" · PIN "+res.activationPin:""} berhasil ditetapkan.${res.emailSent?" Email aktivasi terkirim.":res.emailError?" Email belum terkirim: "+res.emailError:""}`);
       else if(action==="resendEmail")setMessage(res.emailSent?"Email aktivasi dikirim ulang.":"Email gagal dikirim: "+(res.emailError||""));
       else setMessage("Pesanan diperbarui.");
       await load();
