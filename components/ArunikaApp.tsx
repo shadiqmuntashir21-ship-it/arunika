@@ -324,4 +324,4 @@ export function ArunikaApp() {
       {toast ? <div className="toast">{toast}</div> : null}
     </div>
   );
-
+}
