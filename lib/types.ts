@@ -73,6 +73,7 @@ export interface Settings {
   licenseCode?: string;
   pin?: string;
   theme: "arunika";
+  demoVersion?: number;
 }
 
 export interface BackupPayload {
