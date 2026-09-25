@@ -9,6 +9,23 @@ import type { Book, HabitDay, LearningItem, ReadingSession, Settings } from "@/l
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
 import type { Snapshot } from "./app-types";
 
+function youtubeIdFromUrl(value: string) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  const match = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/);
+  return match?.[1] || "";
+}
+
+function youtubeThumbnailFromUrl(value: string) {
+  const id = youtubeIdFromUrl(value);
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "";
+}
+
+function openLearningUrl(item: LearningItem) {
+  if (!item.url || typeof window === "undefined") return;
+  window.open(item.url, "_blank", "noopener,noreferrer");
+}
+
 export function Overview({ data, metrics, insights, onTab, onSession }: any) {
   const featured: Book | undefined = metrics.readingBooks[0] || data.books[0];
   const continueReading = data.books.filter((b: Book) => b.status === "reading").slice(0, 8);
@@ -19,21 +36,22 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
 
   return (
     <div className="stream-home">
-      <section
-        className={"stream-hero " + (featured?.cover ? "has-cover" : "no-cover")}
-        style={featured?.cover ? {
-          backgroundImage: `linear-gradient(90deg, rgba(7,7,9,.98) 0%, rgba(7,7,9,.86) 32%, rgba(7,7,9,.25) 68%, rgba(7,7,9,.84) 100%), linear-gradient(0deg, #070709 0%, transparent 45%), url("${featured.cover}")`
-        } : undefined}
-      >
+      <section className={"stream-hero " + (featured?.cover ? "has-cover" : "no-cover")}>
+        {featured?.cover ? <div className="stream-hero-art" aria-hidden="true">
+          <img className="stream-hero-blur" src={featured.cover} alt=""/>
+          <div className="stream-hero-art-shade"/>
+          <img className="stream-hero-poster" src={featured.cover} alt=""/>
+        </div> : null}
+
         <div className="stream-hero-content">
-          <div className="hero-brandline"><span className="hero-a">A</span><span>ARUNIKA ORIGINAL</span></div>
+          <div className="hero-brandline"><span className="hero-a">A</span><span>ARUNIKA FEATURED</span></div>
           <div className="hero-kicker">Pilihan untuk {data.settings.name}</div>
           <h2>{featured?.title || "Mulai perjalanan membacamu."}</h2>
           {featured ? <div className="hero-meta"><b>{heroPct}% dibaca</b><span>{featured.genre || "Buku"}</span><span>{featured.type}</span><span>{featured.rating ? `${featured.rating}★` : "Belum dinilai"}</span></div> : null}
           <p>{featured?.review || "Catat buku, sesi membaca, video, podcast, webinar, dan insight yang ingin kamu bawa lebih jauh."}</p>
           <div className="stream-hero-actions">
             <button className="netflix-play" onClick={onSession}><Icon name="play" size={20}/> {featured ? "Lanjut Baca" : "Mulai Mencatat"}</button>
-            <button className="netflix-more" onClick={() => onTab("books")}><span className="info-dot">i</span> Info Selengkapnya</button>
+            <button className="netflix-more" onClick={() => onTab("books")}><span className="info-dot">i</span> Detail Buku</button>
           </div>
           {featured ? <div className="hero-progress"><div className="progress"><span style={{width:`${heroPct}%`}}/></div><small>{featured.pagesRead} / {featured.totalPages} halaman</small></div> : null}
         </div>
@@ -60,7 +78,7 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
           {!continueReading.length ? <button className="media-card empty-media" onClick={() => onTab("books")}><Icon name="plus"/><span>Tambahkan buku</span></button> : null}
         </MediaRail>
 
-        <MediaRail title="10 Pilihan untuk Perjalananmu" action={() => onTab("wishlist")} topTen>
+        <MediaRail title="Pilihan untuk Koleksimu" action={() => onTab("wishlist")} topTen>
           {picks.map((book: Book,index:number) => (
             <button className="top-card" key={book.id} onClick={() => onTab("books")}>
               <span className="top-number">{index+1}</span>
@@ -74,10 +92,11 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
 
         <MediaRail title="Belajar Berikutnya" action={() => onTab("learning")}>
           {learningQueue.map((item: LearningItem) => (
-            <button className="media-card learning-media" key={item.id} onClick={() => onTab("learning")}>
+            <button className="media-card learning-media" key={item.id} onClick={() => item.url ? openLearningUrl(item) : onTab("learning")}>
               <div className="media-art landscape">
                 {item.thumbnail ? <img src={item.thumbnail} alt={item.title}/> : <div className="learning-poster"><Icon name="play" size={28}/><span>{item.type}</span></div>}
-                <span className="media-badge">{item.source}</span>
+                <div className="media-overlay"><span className="round-play"><Icon name="play" size={18}/></span></div>
+                <span className="media-badge">{item.url ? "Buka " : ""}{item.source}</span>
               </div>
               <div className="media-progress"><span style={{width:`${percent(item.watchedMinutes,item.totalMinutes)}%`}}/></div>
               <div className="media-caption"><strong>{item.title}</strong><span>{item.channel} · {item.topic}</span></div>
@@ -105,7 +124,6 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
     </div>
   );
 }
-
 function MediaRail({title,action,children,topTen=false}:{title:string;action:()=>void;children:any;topTen?:boolean}){
   return <section className={"media-rail "+(topTen?"top-ten-rail":"")}>
     <div className="rail-heading"><h3>{title}</h3><button onClick={action}>Lihat Semua <Icon name="arrow" size={14}/></button></div>
@@ -222,7 +240,7 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport, onIn
     <section className="settings-layout"><div className="panel settings-card"><SectionHead eyebrow="Profile & target" title="Preferensi membaca"/><div className="form-grid"><Field label="Nama"><input value={name} onChange={e=>setName(e.target.value)}/></Field><Field label="Target halaman / hari"><input type="number" min="1" value={daily} onChange={e=>setDaily(Number(e.target.value))}/></Field><Field label="Target buku / tahun"><input type="number" min="1" value={yearly} onChange={e=>setYearly(Number(e.target.value))}/></Field></div><button className="primary-btn" onClick={()=>onSave({name,dailyPageTarget:daily,yearlyBookTarget:yearly})}>Simpan pengaturan</button></div>
       <div className="panel settings-card"><SectionHead eyebrow="App" title="Install Arunika"/><p className="muted">Pasang sebagai aplikasi di home screen untuk pengalaman lebih fokus dan cepat.</p><button className="ghost-btn" onClick={onInstall}>Install / lihat panduan</button></div>
       <div className="panel settings-card"><SectionHead eyebrow="Data" title="Backup & restore"/><p className="muted">Data pribadi tetap lokal. Export JSON membuat salinan yang bisa disimpan sendiri.</p><div className="button-row"><button className="ghost-btn" onClick={onExport}><Icon name="download" size={17}/> Export</button><button className="ghost-btn" onClick={onImport}><Icon name="upload" size={17}/> Import</button></div>{!isPro?<div className="pro-lock"><Icon name="lock" size={16}/> Backup & restore tersedia di Pro.</div>:null}</div>
-      <div className="panel settings-card accent"><SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/><p>{isPro?`Lisensi ${settings.licenseCode||"lokal"} aktif di perangkat ini.`:"Demo menyimpan data lokal dan membatasi jumlah koleksi. Upgrade Pro Rp20.000 untuk membuka mode penuh."}</p>{!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp20.000</a>:null}</div>
+      <div className="panel settings-card accent"><SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/><p>{isPro?`Lisensi ${settings.licenseCode||"lokal"} aktif di perangkat ini.`:"Demo menyimpan data lokal dan membatasi jumlah koleksi. Upgrade Pro Rp25.000 untuk membuka mode penuh."}</p>{!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp25.000</a>:null}</div>
     </section>
   </div>;
 }
@@ -234,9 +252,33 @@ export function BookForm({ open, book, setBook, onClose, onSubmit }: any) {
 
 export function LearningForm({ open, item, setItem, onClose, onSubmit }: any) {
   async function thumb(file?:File){if(file)setItem({...item,thumbnail:await readFileAsDataUrl(file)});}
-  return <Modal open={open} title={item.title?"Edit learning":"Tambah learning"} subtitle="Video, webinar, podcast, course, atau artikel." onClose={onClose} wide><form className="modal-form" onSubmit={onSubmit}><div className="form-grid two"><Field label="Judul *"><input required value={item.title} onChange={e=>setItem({...item,title:e.target.value})}/></Field><Field label="Channel / Brand"><input value={item.channel} onChange={e=>setItem({...item,channel:e.target.value})}/></Field><Field label="Topik"><input value={item.topic} onChange={e=>setItem({...item,topic:e.target.value})}/></Field><Field label="Jenis"><select value={item.type} onChange={e=>setItem({...item,type:e.target.value})}><option>Video</option><option>Podcast</option><option>Webinar</option><option>Course</option><option>Article</option></select></Field><Field label="Durasi ditonton (menit)"><input type="number" min="0" value={item.watchedMinutes} onChange={e=>setItem({...item,watchedMinutes:Number(e.target.value)})}/></Field><Field label="Total durasi (menit)"><input type="number" min="0" value={item.totalMinutes} onChange={e=>setItem({...item,totalMinutes:Number(e.target.value)})}/></Field><Field label="Tanggal mulai"><input type="date" value={item.startDate||""} onChange={e=>setItem({...item,startDate:e.target.value})}/></Field><Field label="Tanggal selesai"><input type="date" value={item.finishDate||""} onChange={e=>setItem({...item,finishDate:e.target.value})}/></Field><Field label="Status"><select value={item.status} onChange={e=>setItem({...item,status:e.target.value})}><option value="watching">Ditonton</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select></Field><Field label="Rating"><select value={item.rating} onChange={e=>setItem({...item,rating:Number(e.target.value)})}>{[0,1,2,3,4,5].map(n=><option value={n} key={n}>{n?`${n} bintang`:"Belum dinilai"}</option>)}</select></Field><Field label="Sumber"><input value={item.source} onChange={e=>setItem({...item,source:e.target.value})} placeholder="YouTube / Spotify / Zoom"/></Field><Field label="Thumbnail"><input type="file" accept="image/*" onChange={e=>thumb(e.target.files?.[0])}/></Field><Field label="Highlights / takeaway" wide><textarea rows={5} value={item.highlights} onChange={e=>setItem({...item,highlights:e.target.value})}/></Field></div><ModalActions onClose={onClose}/></form></Modal>;
+  function setUrl(value:string){
+    const autoThumb=youtubeThumbnailFromUrl(value);
+    setItem({...item,url:value,thumbnail:autoThumb || item.thumbnail,source:autoThumb && (!item.source || item.source==="YouTube") ? "YouTube" : item.source});
+  }
+  return <Modal open={open} title={item.title?"Edit learning":"Tambah learning"} subtitle="Video, webinar, podcast, course, atau artikel." onClose={onClose} wide>
+    <form className="modal-form" onSubmit={onSubmit}>
+      <div className="form-grid two">
+        <Field label="Judul *"><input required value={item.title} onChange={e=>setItem({...item,title:e.target.value})}/></Field>
+        <Field label="Channel / Brand"><input value={item.channel} onChange={e=>setItem({...item,channel:e.target.value})}/></Field>
+        <Field label="URL konten" wide><input type="url" value={item.url||""} onChange={e=>setUrl(e.target.value)} placeholder="https://youtube.com/watch?v=..."/></Field>
+        <Field label="Topik"><input value={item.topic} onChange={e=>setItem({...item,topic:e.target.value})}/></Field>
+        <Field label="Jenis"><select value={item.type} onChange={e=>setItem({...item,type:e.target.value})}><option>Video</option><option>Podcast</option><option>Webinar</option><option>Course</option><option>Article</option></select></Field>
+        <Field label="Durasi ditonton (menit)"><input type="number" min="0" value={item.watchedMinutes} onChange={e=>setItem({...item,watchedMinutes:Number(e.target.value)})}/></Field>
+        <Field label="Total durasi (menit)"><input type="number" min="0" value={item.totalMinutes} onChange={e=>setItem({...item,totalMinutes:Number(e.target.value)})}/></Field>
+        <Field label="Tanggal mulai"><input type="date" value={item.startDate||""} onChange={e=>setItem({...item,startDate:e.target.value})}/></Field>
+        <Field label="Tanggal selesai"><input type="date" value={item.finishDate||""} onChange={e=>setItem({...item,finishDate:e.target.value})}/></Field>
+        <Field label="Status"><select value={item.status} onChange={e=>setItem({...item,status:e.target.value})}><option value="watching">Ditonton</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select></Field>
+        <Field label="Rating"><select value={item.rating} onChange={e=>setItem({...item,rating:Number(e.target.value)})}>{[0,1,2,3,4,5].map(n=><option value={n} key={n}>{n?`${n} bintang`:"Belum dinilai"}</option>)}</select></Field>
+        <Field label="Sumber"><input value={item.source} onChange={e=>setItem({...item,source:e.target.value})} placeholder="YouTube / Spotify / Zoom"/></Field>
+        <Field label="Thumbnail"><input type="file" accept="image/*" onChange={e=>thumb(e.target.files?.[0])}/></Field>
+        {item.thumbnail?<div className="learning-form-preview wide"><img src={item.thumbnail} alt="Preview thumbnail"/><div><strong>Preview</strong><span>{item.url?"Klik card nanti akan membuka sumber asli.":"Thumbnail tersimpan lokal bersama data learning."}</span></div></div>:null}
+        <Field label="Highlights / takeaway" wide><textarea rows={5} value={item.highlights} onChange={e=>setItem({...item,highlights:e.target.value})}/></Field>
+      </div>
+      <ModalActions onClose={onClose}/>
+    </form>
+  </Modal>;
 }
-
 export function SessionForm({ open, session, setSession, books, onClose, onSubmit }: any) {
   const pages=Math.max(0,session.endPage-session.startPage);
   return <Modal open={open} title="Catat sesi membaca" subtitle="Progress buku dan habit harian akan diperbarui otomatis." onClose={onClose}><form className="modal-form" onSubmit={onSubmit}><div className="form-grid"><Field label="Buku"><select required value={session.bookId} onChange={e=>setSession({...session,bookId:e.target.value})}><option value="">Pilih buku</option>{books.map((b:Book)=><option value={b.id} key={b.id}>{b.title}</option>)}</select></Field><Field label="Tanggal"><input type="date" value={session.date} onChange={e=>setSession({...session,date:e.target.value})}/></Field><div className="form-grid two"><Field label="Halaman awal"><input type="number" min="0" value={session.startPage} onChange={e=>setSession({...session,startPage:Number(e.target.value)})}/></Field><Field label="Halaman akhir"><input type="number" min="0" value={session.endPage} onChange={e=>setSession({...session,endPage:Number(e.target.value)})}/></Field></div><div className="session-calc"><strong>{pages} halaman</strong><span>akan ditambahkan ke habit hari ini</span></div><Field label="Durasi (menit)"><input type="number" min="0" value={session.minutes} onChange={e=>setSession({...session,minutes:Number(e.target.value)})}/></Field><Field label="Catatan sesi"><textarea rows={3} value={session.notes} onChange={e=>setSession({...session,notes:e.target.value})}/></Field><Field label="Highlight"><textarea rows={3} value={session.highlight} onChange={e=>setSession({...session,highlight:e.target.value})}/></Field></div><ModalActions onClose={onClose}/></form></Modal>;
@@ -274,5 +316,12 @@ function BookTile({ book, onEdit, onDelete }: { book: Book; onEdit:()=>void; onD
 
 function LearningTile({ item, onEdit, onDelete }: { item: LearningItem; onEdit:()=>void; onDelete:()=>void }) {
   const pct=percent(item.watchedMinutes,item.totalMinutes);
-  return <article className="panel learning-tile"><div className="learning-thumb">{item.thumbnail?<img src={item.thumbnail} alt={item.title}/>:<div className="learning-fallback"><Icon name="play" size={30}/><span>{item.type}</span></div>}<div className="tile-actions"><button onClick={onEdit}><Icon name="edit" size={16}/></button><button className="danger" onClick={onDelete}><Icon name="trash" size={16}/></button></div></div><div className="tile-body"><div className="tile-top"><span className={`status-pill ${item.status}`}>{learningStatusLabel(item.status)}</span><span>{item.source}</span></div><h3>{item.title}</h3><p>{item.channel} · {item.topic}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="tile-details"><span>{pct}%</span><span>{item.watchedMinutes}/{item.totalMinutes} mnt</span><span>{item.rating?`${item.rating}★`:"—"}</span></div>{item.highlights?<div className="review-snippet">{item.highlights}</div>:null}</div></article>;
+  return <article className="panel learning-tile">
+    <button className={item.url ? "learning-thumb learning-thumb-link" : "learning-thumb"} type="button" onClick={()=>item.url && openLearningUrl(item)} aria-label={item.url ? `Buka ${item.title}` : item.title}>
+      {item.thumbnail?<img src={item.thumbnail} alt={item.title}/>:<div className="learning-fallback"><Icon name="play" size={30}/><span>{item.type}</span></div>}
+      {item.url?<div className="watch-overlay"><span className="round-play"><Icon name="play" size={18}/></span><strong>Tonton</strong></div>:null}
+      <div className="tile-actions" onClick={(e)=>e.stopPropagation()}><button type="button" onClick={onEdit}><Icon name="edit" size={16}/></button><button type="button" className="danger" onClick={onDelete}><Icon name="trash" size={16}/></button></div>
+    </button>
+    <div className="tile-body"><div className="tile-top"><span className={`status-pill ${item.status}`}>{learningStatusLabel(item.status)}</span><span>{item.source}</span></div><h3>{item.title}</h3><p>{item.channel} · {item.topic}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="tile-details"><span>{pct}%</span><span>{item.watchedMinutes}/{item.totalMinutes} mnt</span><span>{item.rating?`${item.rating}★`:"—"}</span></div>{item.url?<button className="watch-link" type="button" onClick={()=>openLearningUrl(item)}><Icon name="play" size={14}/> Tonton di {item.source||"sumber"}</button>:null}{item.highlights?<div className="review-snippet">{item.highlights}</div>:null}</div>
+  </article>;
 }
