@@ -18,7 +18,7 @@ Arunika adalah PWA reading journal & learning tracker yang dibangun dengan Next.
 - IndexedDB local-first
 - Backup/restore JSON (Pro)
 - PWA manifest + service worker + install flow
-- Demo vs Pro UI, harga Rp20.000
+- Demo vs Pro UI, harga Rp25.000
 - Aktivasi kode lisensi + PIN (local placeholder; siap diganti backend universal)
 - Responsive mobile + desktop
 
