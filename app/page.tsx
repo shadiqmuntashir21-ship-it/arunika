@@ -1,4 +1,5 @@
 import { Icon } from "@/components/Icon";
+import { InstallButton, ThemeToggle } from "@/components/AppControls";
 
 const previewBooks = [
   { title: "Atomic Habits", meta: "James Clear", image: "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg" },
@@ -27,6 +28,8 @@ export default function LandingPage(){
         <a href="#pro">Pro</a>
       </nav>
       <div className="landing-nav-actions">
+        <ThemeToggle compact />
+        <InstallButton compact />
         <a href="/activate" className="landing-login">Aktivasi</a>
         <a href="/app" className="landing-demo">Coba Demo</a>
       </div>
@@ -43,6 +46,7 @@ export default function LandingPage(){
         <p>Arunika mengubah reading journal menjadi pengalaman aplikasi yang visual: lanjutkan bacaan, simpan insight, track learning, dan lihat perkembanganmu seperti menjelajah koleksi pribadi.</p>
         <div className="stream-hero-actions landing-actions">
           <a className="netflix-play" href="/app"><Icon name="play" size={20}/> Mulai Demo</a>
+          <InstallButton hero />
           <a className="netflix-more" href="#fitur"><span className="info-dot">i</span> Pelajari Arunika</a>
         </div>
         <div className="landing-proof"><span><b>Local-first</b> data tetap di perangkat</span><span><b>PWA</b> bisa dipasang seperti aplikasi</span><span><b>Rp25.000</b> sekali bayar untuk Pro</span></div>
