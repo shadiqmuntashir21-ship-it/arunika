@@ -74,7 +74,7 @@ export const demoBooks: Book[] = [
     cover: "/demo/books/essentialism.jpg",
     createdAt: now,
     updatedAt: now
-  ,
+  },
   {
     id: "book-make-time",
     title: "Make Time",
