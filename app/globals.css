@@ -6200,7 +6200,7 @@ html[data-theme="light"] .stream-app .nav-icon-btn{color:#29332c}
 /* =========================================================
    PRO HANDS-ON TOUR
    ========================================================= */
-.product-tour-card.modal-action{z-index:90;opacity:.18;pointer-events:none}
+.product-tour-card.modal-action{z-index:90;opacity:1;pointer-events:auto}
 .product-tour-dim.modal-action{z-index:80;opacity:.25}
 .tour-required{
   min-width:132px;
