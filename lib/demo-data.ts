@@ -1,4 +1,4 @@
-import type { Book, HabitDay, LearningItem, ReadingSession, Settings } from "./types";
+import type { Book, HabitDay, LearningItem, LearningSession, ReadingSession, Settings } from "./types";
 
 const now = new Date().toISOString();
 
@@ -188,6 +188,34 @@ export const demoSessions: ReadingSession[] = [
   }
 ];
 
+
+export const demoLearningSessions: LearningSession[] = [
+  {
+    id: "learn-session-1",
+    learningId: "learn-ali-masterclass",
+    date: "2026-09-23",
+    minutes: 24,
+    notes: "Fokus pada active recall dan testing effect.",
+    createdAt: now
+  },
+  {
+    id: "learn-session-2",
+    learningId: "learn-raditya-genz",
+    date: "2026-09-24",
+    minutes: 18,
+    notes: "Mencatat perspektif lintas generasi yang menarik.",
+    createdAt: now
+  },
+  {
+    id: "learn-session-3",
+    learningId: "learn-ali-masterclass",
+    date: "2026-09-25",
+    minutes: 32,
+    notes: "Melanjutkan bagian spaced repetition dan practice testing.",
+    createdAt: now
+  }
+];
+
 export const demoHabit: HabitDay[] = [
   { id: "habit-23", date: "2026-09-23", readToday: true, pages: 16, minutes: 28 },
   { id: "habit-24", date: "2026-09-24", readToday: true, pages: 12, minutes: 22 },
@@ -198,6 +226,8 @@ export const demoSettings: Settings = {
   id: "settings",
   name: "Pembaca Arunika",
   dailyPageTarget: 20,
+  dailyReadingMinutesTarget: 30,
+  dailyLearningMinutesTarget: 30,
   yearlyBookTarget: 15,
   onboardingDone: false,
   activated: false,
