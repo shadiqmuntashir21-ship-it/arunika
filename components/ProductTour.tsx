@@ -127,7 +127,7 @@ export function ProductTour({
       <div className="product-tour-footer">
         <span>{index+1} / {steps.length}</span>
         <div>
-          {index>0&&!waiting?<button className="tour-back" type="button" onClick={back}>Sebelumnya</button>:null}
+          {waiting?<button className="tour-back" type="button" onClick={()=>setWaiting(false)}>Coba lagi</button>:index>0?<button className="tour-back" type="button" onClick={back}>Sebelumnya</button>:null}
           {step.requiredEvent
             ? <button className="tour-next tour-required" type="button" disabled>{waiting?"Menunggu disimpan…":"Lakukan langkah di layar"}</button>
             : <button className="tour-next" type="button" onClick={next}>{index===steps.length-1?"Selesai":"Lanjut"} <Icon name="arrow" size={14}/></button>}
