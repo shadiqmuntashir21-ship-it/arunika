@@ -12,7 +12,7 @@ function applyTheme(theme: "night" | "light") {
   document.documentElement.dataset.theme = theme;
   localStorage.setItem("arunika-theme", theme);
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", theme === "light" ? "#f4f1ec" : "#070707");
+  if (meta) meta.setAttribute("content", theme === "light" ? "#f3f5f1" : "#070707");
 }
 
 export function ThemeToggle({ compact = false }: { compact?: boolean }) {
@@ -46,59 +46,50 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
 
 export function InstallButton({ compact = false, hero = false }: { compact?: boolean; hero?: boolean }) {
   const [promptEvent, setPromptEvent] = useState<InstallPromptEvent | null>(null);
-  const [installed, setInstalled] = useState(true);
+  const [installed, setInstalled] = useState(false);
   const [ready, setReady] = useState(false);
   const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
     const media = window.matchMedia("(display-mode: standalone)");
-    const navigatorStandalone = (navigator as Navigator & { standalone?: boolean }).standalone === true;
-    const remembered = localStorage.getItem("arunika-pwa-installed") === "1";
+    const isStandalone = () =>
+      media.matches ||
+      (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
-    const syncInstalled = () => {
-      const standalone = media.matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
-      setInstalled(standalone || remembered);
+    const sync = () => {
+      setInstalled(isStandalone());
       setReady(true);
     };
-    syncInstalled();
+    sync();
 
-    const handler = (event: Event) => {
+    const promptHandler = (event: Event) => {
       event.preventDefault();
       setPromptEvent(event as InstallPromptEvent);
       setInstalled(false);
-      localStorage.removeItem("arunika-pwa-installed");
       setReady(true);
     };
 
     const installedHandler = () => {
-      localStorage.setItem("arunika-pwa-installed", "1");
       setInstalled(true);
       setPromptEvent(null);
       setFeedback("");
     };
 
-    const displayHandler = () => {
-      if (media.matches) {
-        localStorage.setItem("arunika-pwa-installed", "1");
-        setInstalled(true);
-      }
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
+    window.addEventListener("beforeinstallprompt", promptHandler);
     window.addEventListener("appinstalled", installedHandler);
-    media.addEventListener?.("change", displayHandler);
+    media.addEventListener?.("change", sync);
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", handler);
+      window.removeEventListener("beforeinstallprompt", promptHandler);
       window.removeEventListener("appinstalled", installedHandler);
-      media.removeEventListener?.("change", displayHandler);
+      media.removeEventListener?.("change", sync);
     };
   }, []);
 
   useEffect(() => {
     if (!feedback) return;
-    const t = window.setTimeout(() => setFeedback(""), 4600);
-    return () => window.clearTimeout(t);
+    const timer = window.setTimeout(() => setFeedback(""), 7000);
+    return () => window.clearTimeout(timer);
   }, [feedback]);
 
   async function install() {
@@ -106,9 +97,10 @@ export function InstallButton({ compact = false, hero = false }: { compact?: boo
       await promptEvent.prompt();
       const choice = await promptEvent.userChoice;
       if (choice.outcome === "accepted") {
-        localStorage.setItem("arunika-pwa-installed", "1");
         setInstalled(true);
         setFeedback("");
+      } else {
+        setFeedback("Instalasi dibatalkan. Kamu tetap bisa memasang Arunika kapan saja dari tombol Install.");
       }
       setPromptEvent(null);
       return;
@@ -116,9 +108,11 @@ export function InstallButton({ compact = false, hero = false }: { compact?: boo
 
     const ua = navigator.userAgent.toLowerCase();
     if (/iphone|ipad|ipod/.test(ua)) {
-      setFeedback("iPhone/iPad: tekan Share lalu pilih Add to Home Screen.");
+      setFeedback("iPhone/iPad: tekan Share di Safari → Add to Home Screen → Add.");
+    } else if (/android/.test(ua)) {
+      setFeedback("Android/Chrome: buka menu ⋮ → Install app / Add to Home screen. Jika prompt sudah siap, tombol ini akan membuka instalasi langsung.");
     } else {
-      setFeedback("Di Chrome/Android: buka menu browser lalu pilih Install Arunika. Jika tersedia, ikon install juga muncul di address bar.");
+      setFeedback("Chrome/Edge desktop: klik ikon Install di address bar atau menu browser → Install Arunika.");
     }
   }
 
@@ -128,7 +122,7 @@ export function InstallButton({ compact = false, hero = false }: { compact?: boo
   return <>
     <button type="button" className={className} onClick={install}>
       <Icon name="download" size={compact ? 15 : 18}/>
-      <span>Install Arunika</span>
+      <span>{promptEvent ? "Install Arunika" : "Pasang Arunika"}</span>
     </button>
     {feedback ? <div className="install-feedback" role="status">{feedback}</div> : null}
   </>;
