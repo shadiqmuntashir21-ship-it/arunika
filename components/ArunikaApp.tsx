@@ -13,6 +13,7 @@ import { verifyArunikaLicense } from "@/lib/backend";
 import { InstallButton, ThemeToggle } from "./AppControls";
 import { ProductTour } from "./ProductTour";
 import { dailyTracker, monthActivityMinutes, monthlyTracker } from "@/lib/tracker";
+import { TOUR_IDS, tourBookExample, tourLearningExample, tourLearningSessionExample, tourReadingSessionExample, tourWishlistExample } from "@/lib/tour";
 
 type Tab = "overview" | "books" | "learning" | "sessions" | "habit" | "knowledge" | "insights" | "wishlist" | "settings";
 type Snapshot = Awaited<ReturnType<typeof loadSnapshot>>;
@@ -57,6 +58,8 @@ export function ArunikaApp() {
   const [learningSessionModal, setLearningSessionModal] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
+  const [tourStep, setTourStep] = useState("");
+  const [tourSignal, setTourSignal] = useState<{type:string;nonce:number}|null>(null);
   const [editingBook, setEditingBook] = useState<Book>(emptyBook());
   const [editingLearning, setEditingLearning] = useState<LearningItem>(emptyLearning());
   const [editingSession, setEditingSession] = useState<ReadingSession>(emptySession());
@@ -85,6 +88,49 @@ export function ArunikaApp() {
     const requested = new URLSearchParams(window.location.search).get("tab") as Tab | null;
     if (requested && navItems.some((item) => item.key === requested)) setTab(requested);
   }, []);
+
+  useEffect(() => {
+    if (!data?.settings.activated) return;
+    if (localStorage.getItem("arunika-pro-tour-active") === "1") setTourOpen(true);
+  }, [data?.settings.activated]);
+
+  async function cleanupTourSandbox() {
+    await Promise.all([
+      deleteOne("sessions", TOUR_IDS.readingSession),
+      deleteOne("learningSessions", TOUR_IDS.learningSession),
+      deleteOne("books", TOUR_IDS.book),
+      deleteOne("books", TOUR_IDS.wishlist),
+      deleteOne("learning", TOUR_IDS.learning)
+    ]);
+  }
+
+  async function beginTour() {
+    if (data?.settings.activated) {
+      await cleanupTourSandbox();
+      await putOne("books", tourWishlistExample());
+      localStorage.setItem("arunika-pro-tour-active", "1");
+      localStorage.setItem("arunika-pro-tour-step", "0");
+      await refresh();
+    }
+    setTourOpen(true);
+  }
+
+  async function finishTour() {
+    if (data?.settings.activated) {
+      await cleanupTourSandbox();
+      localStorage.removeItem("arunika-pro-tour-active");
+      localStorage.removeItem("arunika-pro-tour-step");
+      localStorage.setItem("arunika-tour-seen", "1");
+      await refresh();
+    }
+    setTourOpen(false);
+    setTourStep("");
+    setTab("overview");
+  }
+
+  function signalTour(type:string){
+    setTourSignal({type,nonce:Date.now()});
+  }
 
   useEffect(() => {
     if (!toast) return;
@@ -178,6 +224,7 @@ export function ArunikaApp() {
     await putOne("books", book);
     setBookModal(false);
     setToast("Buku tersimpan.");
+    if (book.id === TOUR_IDS.book) signalTour("book-saved");
     refresh();
   }
 
@@ -189,6 +236,7 @@ export function ArunikaApp() {
     await putOne("learning", item);
     setLearningModal(false);
     setToast("Learning item tersimpan.");
+    if (item.id === TOUR_IDS.learning) signalTour("learning-saved");
     refresh();
   }
 
@@ -209,6 +257,7 @@ export function ArunikaApp() {
     }
     setSessionModal(false);
     setToast("Sesi baca dicatat. Tracker harian diperbarui otomatis.");
+    if (editingSession.id === TOUR_IDS.readingSession) signalTour("reading-saved");
     refresh();
   }
 
@@ -236,6 +285,7 @@ export function ArunikaApp() {
 
     setLearningSessionModal(false);
     setToast("Sesi belajar dicatat. Tracker harian diperbarui otomatis.");
+    if (editingLearningSession.id === TOUR_IDS.learningSession) signalTour("learning-session-saved");
     refresh();
   }
 
@@ -273,7 +323,7 @@ export function ArunikaApp() {
     await putOne("settings", { ...snapshot.settings, onboardingDone: true });
     setOnboarding(false);
     await refresh();
-    if (startTour) setTourOpen(true);
+    if (startTour) await beginTour();
   }
 
   async function updateSettings(patch: Partial<Settings>) {
@@ -333,14 +383,14 @@ export function ArunikaApp() {
 
       <main className="app-main stream-main">
         {tab === "overview" && <Overview data={snapshot} metrics={metrics} insights={insights} onTab={setTab} onSession={() => { setEditingSession(emptySession(metrics.readingBooks[0]?.id || "")); setSessionModal(true); }} />}
-        {tab === "books" && <BooksView books={filteredBooks} query={query} setQuery={setQuery} filter={bookFilter} setFilter={setBookFilter} onAdd={() => { setEditingBook(emptyBook()); setBookModal(true); }} onEdit={(book: Book) => { setEditingBook(book); setBookModal(true); }} onDelete={removeBook} />}
-        {tab === "learning" && <LearningView items={filteredLearning} query={query} setQuery={setQuery} filter={learningFilter} setFilter={setLearningFilter} onAdd={() => { setEditingLearning(emptyLearning()); setLearningModal(true); }} onEdit={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} onDelete={removeLearning} onSession={(item: LearningItem) => { setEditingLearningSession(emptyLearningSession(item.id)); setLearningSessionModal(true); }} />}
-        {tab === "sessions" && <SessionsView sessions={snapshot.sessions} books={snapshot.books} onAdd={(bookId: string) => { setEditingSession(emptySession(bookId)); setSessionModal(true); }} onDelete={removeReadingSession} />}
+        {tab === "books" && <BooksView books={filteredBooks} query={query} setQuery={setQuery} filter={bookFilter} setFilter={setBookFilter} onAdd={() => { setEditingBook(tourOpen && tourStep==="add-book" ? tourBookExample() : emptyBook()); setBookModal(true); }} onEdit={(book: Book) => { setEditingBook(book); setBookModal(true); }} onDelete={removeBook} />}
+        {tab === "learning" && <LearningView items={filteredLearning} query={query} setQuery={setQuery} filter={learningFilter} setFilter={setLearningFilter} onAdd={() => { setEditingLearning(tourOpen && tourStep==="add-learning" ? tourLearningExample() : emptyLearning()); setLearningModal(true); }} onEdit={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} onDelete={removeLearning} onSession={(item: LearningItem) => { setEditingLearningSession(tourOpen && tourStep==="learning-session" && item.id===TOUR_IDS.learning ? tourLearningSessionExample() : emptyLearningSession(item.id)); setLearningSessionModal(true); }} />}
+        {tab === "sessions" && <SessionsView sessions={snapshot.sessions} books={snapshot.books} onAdd={(bookId: string) => { setEditingSession(tourOpen && tourStep==="reading-session" ? tourReadingSessionExample() : emptySession(bookId)); setSessionModal(true); }} onDelete={removeReadingSession} />}
         {tab === "habit" && <HabitView data={snapshot} onRead={(bookId: string) => { setEditingSession(emptySession(bookId)); setSessionModal(true); }} onLearn={(learningId: string) => { setEditingLearningSession(emptyLearningSession(learningId)); setLearningSessionModal(true); }} onDeleteRead={removeReadingSession} onDeleteLearn={removeLearningSession} />}
         {tab === "knowledge" && <KnowledgeView data={snapshot} />}
         {tab === "insights" && <InsightsView data={snapshot} insights={insights} year={year} setYear={setYear} />}
         {tab === "wishlist" && <WishlistView books={snapshot.books.filter((b) => b.status === "wishlist")} learning={snapshot.learning.filter((l) => l.status === "wishlist")} onBook={(book: Book) => { setEditingBook(book); setBookModal(true); }} onLearning={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} />}
-        {tab === "settings" && <SettingsView settings={snapshot.settings} isPro={isPro} onSave={updateSettings} onExport={doExport} onImport={() => importRef.current?.click()} onStartTour={() => setTourOpen(true)} />}
+        {tab === "settings" && <SettingsView settings={snapshot.settings} isPro={isPro} onSave={updateSettings} onExport={doExport} onImport={() => importRef.current?.click()} onStartTour={() => beginTour()} />}
 
         <input ref={importRef} className="hidden" type="file" accept="application/json" onChange={(e) => { const file = e.target.files?.[0]; if (file) doImport(file); e.currentTarget.value = ""; }} />
       </main>
@@ -354,7 +404,7 @@ export function ArunikaApp() {
       <SessionForm open={sessionModal} session={editingSession} setSession={setEditingSession} books={snapshot.books.filter((b) => b.status !== "finished" || b.id === editingSession.bookId)} onClose={() => setSessionModal(false)} onSubmit={saveSession} />
       <LearningSessionForm open={learningSessionModal} session={editingLearningSession} setSession={setEditingLearningSession} items={snapshot.learning.filter((item) => item.status !== "finished" || item.id === editingLearningSession.learningId)} onClose={() => setLearningSessionModal(false)} onSubmit={saveLearningSession} />
       <Onboarding open={onboarding} isPro={isPro} onTour={() => finishWelcome(true)} onSkip={() => finishWelcome(false)} />
-      <ProductTour open={tourOpen} onClose={() => setTourOpen(false)} onNavigate={navigateTour} />
+      <ProductTour open={tourOpen} isPro={isPro} signal={tourSignal} onClose={() => finishTour()} onNavigate={navigateTour} onStepChange={setTourStep} />
       {toast ? <div className="toast">{toast}</div> : null}
     </div>
   );
