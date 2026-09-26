@@ -43,6 +43,7 @@ export default function ActivatePage(){
           clearStore("books"),
           clearStore("learning"),
           clearStore("sessions"),
+          clearStore("learningSessions"),
           clearStore("habit")
         ]);
         await putOne("settings",{
