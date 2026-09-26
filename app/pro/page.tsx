@@ -28,7 +28,7 @@ const money=(n:number)=>new Intl.NumberFormat("id-ID",{style:"currency",currency
 
 export default function ProPage(){
   const [methods,setMethods]=useState<Method[]>([]);
-  const [price,setPrice]=useState(25000);
+  const [price,setPrice]=useState(49000);
   const [buyerName,setBuyerName]=useState("");
   const [whatsapp,setWhatsapp]=useState("");
   const [email,setEmail]=useState("");
@@ -46,7 +46,7 @@ export default function ProPage(){
         const cfg=await purchasePublic("config");
         if(cfg?.ok){
           setMethods(cfg.paymentMethods||[]);
-          setPrice(Number(cfg.config?.price)||20000);
+          setPrice(Number(cfg.config?.price)||49000);
           if(cfg.paymentMethods?.[0]?.id)setMethodId(cfg.paymentMethods[0].id);
         }
         const saved=localStorage.getItem("arunika_purchase");
@@ -120,14 +120,14 @@ export default function ProPage(){
         <div className="eyebrow">ARUNIKA PRO</div>
         <h1>Upgrade sekali. Gunakan untuk perjalanan belajarmu.</h1>
         <p>Arunika Pro membuka koleksi tanpa batas dan akses penuh aplikasi. Pembayaran dan lisensi sekarang sudah terhubung ke backend Arunika.</p>
-        <div className="price-line"><strong>{money(price)}</strong><span>sekali bayar</span></div>
+        <div className="price-line promo-price-line"><del>{money(100000)}</del><strong>{money(price)}</strong><span>sekali bayar · tanpa biaya bulanan</span></div>
         <ul className="pro-feature-list">{features.map(f=><li key={f}><Icon name="check" size={17}/>{f}</li>)}</ul>
         <a className="ghost-btn" href="/activate">Saya sudah punya kode aktivasi</a>
       </div>
 
       <div className="panel checkout-card">
         {!order ? <>
-          <div className="checkout-head"><div><span className="eyebrow">CHECKOUT</span><h2>Beli Arunika Pro</h2></div><div className="checkout-price">{money(price)}</div></div>
+          <div className="checkout-head"><div><span className="eyebrow">CHECKOUT</span><h2>Beli Arunika Pro</h2></div><div className="checkout-price promo-checkout-price"><del>{money(100000)}</del><strong>{money(price)}</strong></div></div>
           <form onSubmit={createOrder} className="checkout-form">
             <label><span>Nama lengkap</span><input required value={buyerName} onChange={e=>setBuyerName(e.target.value)} placeholder="Nama pembeli"/></label>
             <label><span>WhatsApp</span><input required value={whatsapp} onChange={e=>setWhatsapp(e.target.value)} placeholder="08xxxxxxxxxx" inputMode="tel"/></label>
