@@ -110,9 +110,9 @@ export function ProductTour({
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     const selector = `[data-tour="${step.tab}"]`;
-    const target = document.querySelector<HTMLElement>(selector);
-    target?.classList.add("tour-focus");
-    return () => target?.classList.remove("tour-focus");
+    const targets = Array.from(document.querySelectorAll<HTMLElement>(selector));
+    targets.forEach((target) => target.classList.add("tour-focus"));
+    return () => targets.forEach((target) => target.classList.remove("tour-focus"));
   }, [open, index, step.tab, onNavigate]);
 
   const progress = useMemo(() => Math.round(((index + 1) / steps.length) * 100), [index]);
