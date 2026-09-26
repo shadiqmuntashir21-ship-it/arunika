@@ -6226,3 +6226,300 @@ html[data-theme="light"] .stream-app .nav-icon-btn{color:#29332c}
     opacity:0;
   }
 }
+
+
+/* =========================================================
+   DEMO TOUR V4 + ABOVE-THE-FOLD LANDING + ICON SIMPLIFICATION
+   ========================================================= */
+
+/* Demo mode: keep the guided walkthrough impossible to miss without adding icon clutter */
+.header-tour-btn,
+.drawer-tour-btn,
+.demo-mode-strip button{
+  border:0;
+  border-radius:6px;
+  font:inherit;
+  font-weight:850;
+  cursor:pointer;
+}
+.header-tour-btn{
+  height:36px;
+  padding:0 11px;
+  background:#202020;
+  color:#fff;
+  font-size:9px;
+}
+.header-tour-btn:hover{background:#2b2b2b}
+.drawer-tour-btn{
+  min-height:40px;
+  width:100%;
+  padding:0 12px;
+  background:#e50914;
+  color:#fff;
+  font-size:9px;
+}
+.demo-mode-strip{
+  margin:16px clamp(20px,3.3vw,52px) 0;
+  min-height:54px;
+  padding:10px 12px 10px 15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  border:1px solid #2a2a2a;
+  border-radius:8px;
+  background:#111;
+  color:#fff;
+}
+.demo-mode-strip>div{
+  min-width:0;
+  display:flex;
+  align-items:baseline;
+  gap:9px;
+}
+.demo-mode-strip strong{
+  flex:0 0 auto;
+  font-size:10px;
+  letter-spacing:.01em;
+}
+.demo-mode-strip span{
+  overflow:hidden;
+  color:#7f7f7f;
+  font-size:9px;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.demo-mode-strip button{
+  flex:0 0 auto;
+  min-height:34px;
+  padding:0 11px;
+  background:#fff;
+  color:#111;
+  font-size:8px;
+}
+html[data-theme="light"] .header-tour-btn{
+  background:#e7ece7;
+  color:#1d2820;
+}
+html[data-theme="light"] .demo-mode-strip{
+  border-color:#dce3dd;
+  background:#fff;
+  color:#18201b;
+}
+html[data-theme="light"] .demo-mode-strip span{color:#6c766e}
+html[data-theme="light"] .demo-mode-strip button{
+  background:#18201b;
+  color:#fff;
+}
+
+/* Remove decorative icon circles that repeat labels. Functional action/navigation icons stay. */
+.stream-app .monthly-metric-icon,
+.stream-app .stat-icon{
+  display:none!important;
+}
+.stream-app .monthly-metric{
+  gap:0;
+}
+.stream-app .stat-card{
+  display:block;
+}
+.stream-app .stat-card>div{
+  width:100%;
+}
+.conversion-landing .conversion-benefit-icon{
+  display:none;
+}
+.conversion-landing .conversion-benefit-card h3{
+  margin-top:2px;
+}
+
+/* Landing first screen: Demo, Pro and Install must all be visible without scrolling on desktop. */
+.conversion-landing .conversion-hero{
+  min-height:calc(100svh - 64px);
+  height:auto;
+  padding-top:clamp(82px,10vh,112px);
+  padding-bottom:58px;
+  display:flex;
+  align-items:center;
+}
+.conversion-landing .conversion-hero-copy{
+  width:min(760px,62vw);
+  max-width:760px;
+}
+.conversion-landing .conversion-hero-copy h1{
+  max-width:12.8ch;
+  margin-bottom:14px;
+  font-size:clamp(48px,5.1vw,70px);
+  line-height:.94;
+  letter-spacing:-.065em;
+}
+.conversion-landing .conversion-hero-copy>p{
+  max-width:620px;
+  margin-bottom:0;
+  font-size:13px;
+  line-height:1.58;
+}
+.conversion-landing .hero-offer-card{
+  margin-top:17px;
+  padding:10px 12px;
+}
+.conversion-landing .offer-price-row{
+  margin-top:4px;
+}
+.conversion-landing .offer-price-row strong{
+  font-size:24px;
+}
+.conversion-landing .above-fold-actions{
+  margin-top:13px;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.conversion-landing .above-fold-actions>a,
+.conversion-landing .above-fold-actions>button{
+  min-height:43px;
+  padding-inline:14px;
+  border-radius:6px;
+  white-space:nowrap;
+}
+.conversion-landing .demo-primary{
+  background:#fff!important;
+  color:#111!important;
+}
+.conversion-landing .demo-primary:hover{
+  background:#e8e8e8!important;
+}
+.conversion-landing .conversion-buy{
+  background:#e50914!important;
+  color:#fff!important;
+}
+.conversion-landing .hero-activate-link{
+  display:inline-block;
+  margin-top:10px;
+  color:#8e8e8e;
+  font-size:9px;
+  font-weight:750;
+  text-decoration:none;
+}
+.conversion-landing .hero-activate-link:hover{color:#fff}
+.conversion-landing .conversion-proof{
+  margin-top:18px;
+}
+
+/* Local showcase media paint immediately into stable frames. */
+.conversion-landing img[src^="/demo/"],
+.stream-app img[src^="/demo/"]{
+  background:#141414;
+}
+.conversion-landing .landing-book-cover img,
+.stream-app .book-cover img,
+.stream-app .book-media img{
+  object-fit:contain!important;
+}
+.conversion-landing .landing-video-thumb img,
+.stream-app .learning-thumb img,
+.stream-app .learning-media img{
+  object-fit:cover!important;
+}
+
+/* Tour card is primary UI during walkthrough: clean text, minimal decoration. */
+.product-tour-card{
+  border-radius:10px;
+}
+.product-tour-icon{
+  width:30px;
+  height:30px;
+  border-radius:6px;
+}
+.product-tour-card h2{
+  font-size:23px;
+}
+.product-tour-hint{
+  background:#1b1b1b;
+}
+.product-tour-top>button{
+  min-height:30px;
+  padding:0 4px;
+}
+.tour-next,
+.tour-back{
+  min-height:36px;
+}
+
+/* Short desktop screens still keep CTAs in the first viewport. */
+@media(min-width:901px) and (max-height:790px){
+  .conversion-landing .conversion-hero{
+    padding-top:76px;
+    padding-bottom:34px;
+  }
+  .conversion-landing .conversion-hero-copy h1{
+    font-size:clamp(44px,4.7vw,60px);
+  }
+  .conversion-landing .conversion-hero-copy>p{
+    font-size:11px;
+  }
+  .conversion-landing .hero-offer-card{
+    margin-top:11px;
+  }
+  .conversion-landing .conversion-proof{
+    margin-top:11px;
+  }
+}
+
+/* Mobile keeps Demo tour visible but compact. */
+@media(max-width:900px){
+  .header-tour-btn{display:none}
+}
+@media(max-width:640px){
+  .demo-mode-strip{
+    margin:10px 14px 0;
+    min-height:0;
+    padding:10px;
+    align-items:flex-start;
+  }
+  .demo-mode-strip>div{
+    display:grid;
+    gap:3px;
+  }
+  .demo-mode-strip span{
+    max-width:55vw;
+    white-space:normal;
+    line-height:1.4;
+  }
+  .demo-mode-strip button{
+    min-height:36px;
+  }
+
+  .conversion-landing .conversion-hero{
+    min-height:calc(100svh - 60px);
+    padding:82px 18px 42px;
+    align-items:flex-end;
+  }
+  .conversion-landing .conversion-hero-copy{
+    width:100%;
+    max-width:none;
+  }
+  .conversion-landing .conversion-hero-copy h1{
+    max-width:11.5ch;
+    font-size:clamp(38px,10.8vw,46px);
+    line-height:.95;
+  }
+  .conversion-landing .conversion-hero-copy>p{
+    max-width:34em;
+    font-size:11px;
+  }
+  .conversion-landing .above-fold-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    width:100%;
+  }
+  .conversion-landing .above-fold-actions>a,
+  .conversion-landing .above-fold-actions>button{
+    width:100%;
+    justify-content:center;
+  }
+  .conversion-landing .conversion-proof{
+    display:none;
+  }
+}
