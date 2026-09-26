@@ -349,8 +349,8 @@ export function ArunikaApp() {
 
       <BookForm open={bookModal} book={editingBook} setBook={setEditingBook} onClose={() => setBookModal(false)} onSubmit={saveBook} />
       <LearningForm open={learningModal} item={editingLearning} setItem={setEditingLearning} onClose={() => setLearningModal(false)} onSubmit={saveLearning} />
-      <SessionForm open={sessionModal} session={editingSession} setSession={setEditingSession} books={snapshot.books.filter((b) => b.status === "reading" || b.id === editingSession.bookId)} onClose={() => setSessionModal(false)} onSubmit={saveSession} />
-      <LearningSessionForm open={learningSessionModal} session={editingLearningSession} setSession={setEditingLearningSession} items={snapshot.learning.filter((item) => item.status === "watching" || item.id === editingLearningSession.learningId)} onClose={() => setLearningSessionModal(false)} onSubmit={saveLearningSession} />
+      <SessionForm open={sessionModal} session={editingSession} setSession={setEditingSession} books={snapshot.books.filter((b) => b.status !== "finished" || b.id === editingSession.bookId)} onClose={() => setSessionModal(false)} onSubmit={saveSession} />
+      <LearningSessionForm open={learningSessionModal} session={editingLearningSession} setSession={setEditingLearningSession} items={snapshot.learning.filter((item) => item.status !== "finished" || item.id === editingLearningSession.learningId)} onClose={() => setLearningSessionModal(false)} onSubmit={saveLearningSession} />
       <Onboarding open={onboarding} settings={snapshot.settings} onFinish={finishOnboarding} />
       {toast ? <div className="toast">{toast}</div> : null}
     </div>
