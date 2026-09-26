@@ -70,7 +70,7 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
       <div className="stream-rows">
         <MediaRail title="Lanjutkan Membaca" action={() => onTab("books")}>
           {continueReading.map((book: Book) => (
-            <button className="media-card wide-card" key={book.id} onClick={() => onTab("books")}>
+            <button className="media-card wide-card book-media" key={book.id} onClick={() => onTab("books")}>
               <div className="media-art">
                 {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "ARUNIKA"}</small></div>}
                 <div className="media-overlay"><span className="round-play"><Icon name="book" size={18}/></span></div>
@@ -115,7 +115,7 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
           {picks.map((book: Book,index:number) => (
             <button className="top-card" key={book.id} onClick={() => onTab("books")}>
               <span className="top-number">{index+1}</span>
-              <div className="top-poster">
+              <div className="top-poster book-poster">
                 {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "BOOK"}</small></div>}
                 <div className="top-info"><strong>{book.title}</strong><span>{book.author}</span></div>
               </div>
