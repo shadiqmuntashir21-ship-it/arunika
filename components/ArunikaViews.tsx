@@ -227,6 +227,13 @@ export function HabitView({ data, onRead, onLearn, onDeleteRead, onDeleteLearn }
   const defaultBook = data.books.find((book:Book)=>book.status==="reading")?.id || "";
   const defaultLearning = data.learning.find((item:LearningItem)=>item.status==="watching")?.id || "";
 
+  function moveMonth(delta:number){
+    const next=new Date(year,month+delta,1);
+    setCursor(next);
+    const nextKey=`${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,"0")}-01`;
+    setSelectedDate(nextKey);
+  }
+
   return <div className="page-stack habit-page">
     <PageIntro eyebrow="Daily habit tracker" title="Ritme baca & belajar" text="Pilih tanggal untuk melihat jumlah buku, halaman, video, serta durasi baca dan belajar. Semua dihitung dari sesi yang kamu catat." button={<div className="habit-intro-actions"><button className="ghost-btn" onClick={()=>onRead(defaultBook)}><Icon name="book" size={17}/> Catat baca</button><button className="primary-btn" onClick={()=>onLearn(defaultLearning)}><Icon name="play" size={17}/> Catat belajar</button></div>} />
 
@@ -258,9 +265,9 @@ export function HabitView({ data, onRead, onLearn, onDeleteRead, onDeleteLearn }
 
     <section className="panel calendar-panel habit-calendar-panel">
       <div className="calendar-head">
-        <button className="icon-btn" onClick={()=>setCursor(new Date(year,month-1,1))}>‹</button>
+        <button className="icon-btn" onClick={()=>moveMonth(-1)}>‹</button>
         <div><div className="eyebrow">HABIT CALENDAR</div><h3>{monthTitle}</h3><p>{monthSummary.activeDays} hari aktif · {formatMinutes(monthSummary.totalMinutes)} aktivitas</p></div>
-        <button className="icon-btn" onClick={()=>setCursor(new Date(year,month+1,1))}>›</button>
+        <button className="icon-btn" onClick={()=>moveMonth(1)}>›</button>
       </div>
       <div className="calendar-legend"><span><i className="tracker-dot reading"/>Baca</span><span><i className="tracker-dot learning"/>Belajar</span></div>
       <div className="week-row">{["Sen","Sel","Rab","Kam","Jum","Sab","Min"].map(d=><span key={d}>{d}</span>)}</div>
