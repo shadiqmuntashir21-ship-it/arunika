@@ -5,7 +5,7 @@ import { BarChart, Donut, GenreBars } from "./Charts";
 import { Icon } from "./Icon";
 import { Modal } from "./Modal";
 import { readFileAsDataUrl } from "@/lib/file";
-import type { Book, HabitDay, LearningItem, LearningSession, ReadingSession, Settings } from "@/lib/types";
+import type { Book, LearningItem, LearningSession, ReadingSession, Settings } from "@/lib/types";
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
 import type { Snapshot } from "./app-types";
 import { dailyTracker, monthlyTracker } from "@/lib/tracker";
@@ -456,12 +456,26 @@ export function SessionForm({ open, session, setSession, books, onClose, onSubmi
   </Modal>;
 }
 
-export function HabitForm({ open, existing, onClose, onSave }: any) {
-  const [date,setDate]=useState(todayISO());const existingDay=existing.find((h:HabitDay)=>h.date===date);const [pages,setPages]=useState(existingDay?.pages||0);const [minutes,setMinutes]=useState(existingDay?.minutes||0);const [read,setRead]=useState(existingDay?.readToday??true);
-  useEffect(()=>{const h=existing.find((x:HabitDay)=>x.date===date);setPages(h?.pages||0);setMinutes(h?.minutes||0);setRead(h?.readToday??true)},[date,existing]);
-  return <Modal open={open} title="Isi habit membaca" subtitle="Catat aktivitas membaca harian." onClose={onClose}><div className="modal-form"><Field label="Tanggal"><input type="date" value={date} onChange={e=>setDate(e.target.value)}/></Field><label className="switch-row"><input type="checkbox" checked={read} onChange={e=>setRead(e.target.checked)}/><span><strong>Baca buku hari ini?</strong><small>Tandai jika kamu sempat membaca.</small></span></label><Field label="Berapa menit?"><input type="number" min="0" value={minutes} onChange={e=>setMinutes(Number(e.target.value))}/></Field><Field label="Berapa halaman?"><input type="number" min="0" value={pages} onChange={e=>setPages(Number(e.target.value))}/></Field><div className="modal-actions"><button className="ghost-btn" onClick={onClose}>Batal</button><button className="primary-btn" onClick={()=>onSave(date,pages,minutes,read)}>Simpan habit</button></div></div></Modal>;
+export function LearningSessionForm({ open, session, setSession, items, onClose, onSubmit }: any) {
+  return <Modal open={open} title="Catat sesi belajar" subtitle="Satu sesi cukup isi konten, tanggal, dan durasinya. Tracker Habit akan diperbarui otomatis." onClose={onClose}>
+    <form className="modal-form" onSubmit={onSubmit}>
+      <div className="form-grid compact-form">
+        <Field label="Konten belajar"><select required value={session.learningId} onChange={e=>setSession({...session,learningId:e.target.value})}><option value="">Pilih video / learning</option>{items.map((item:LearningItem)=><option value={item.id} key={item.id}>{item.title}</option>)}</select></Field>
+        <div className="form-grid two">
+          <Field label="Tanggal"><input type="date" value={session.date} onChange={e=>setSession({...session,date:e.target.value})}/></Field>
+          <Field label="Durasi (menit)"><input type="number" min="1" required value={session.minutes} onChange={e=>setSession({...session,minutes:Number(e.target.value)})}/></Field>
+        </div>
+      </div>
+      <details className="form-advanced">
+        <summary>Catatan tambahan</summary>
+        <div className="form-grid advanced-grid">
+          <Field label="Catatan sesi"><textarea rows={3} value={session.notes} onChange={e=>setSession({...session,notes:e.target.value})} placeholder="Insight singkat dari sesi ini…"/></Field>
+        </div>
+      </details>
+      <ModalActions onClose={onClose}/>
+    </form>
+  </Modal>;
 }
-
 export function Onboarding({ open, settings, onFinish }: any) {
   const [step,setStep]=useState(0);
   const [name,setName]=useState(settings.name||"");
@@ -498,7 +512,7 @@ function BookTile({ book, onEdit, onDelete }: { book: Book; onEdit:()=>void; onD
   return <article className="panel book-tile"><div className="book-cover">{book.cover?<img src={book.cover} alt={book.title}/>:<div className="cover-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre||"ARUNIKA"}</small></div>}<div className="tile-actions"><button onClick={onEdit}><Icon name="edit" size={16}/></button><button className="danger" onClick={onDelete}><Icon name="trash" size={16}/></button></div></div><div className="tile-body"><div className="tile-top"><span className={`status-pill ${book.status}`}>{bookStatusLabel(book.status)}</span><span className="rating">{book.rating?`${"★".repeat(book.rating)}${"☆".repeat(5-book.rating)}`:"Belum rating"}</span></div><h3>{book.title}</h3><p>{book.author}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="tile-details"><span>{pct}%</span><span>{book.pagesRead}/{book.totalPages} hlm</span><span>{book.type}</span></div>{book.review?<div className="review-snippet">{book.review}</div>:null}</div></article>;
 }
 
-function LearningTile({ item, onEdit, onDelete }: { item: LearningItem; onEdit:()=>void; onDelete:()=>void }) {
+function LearningTile({ item, onEdit, onDelete, onSession }: { item: LearningItem; onEdit:()=>void; onDelete:()=>void; onSession:()=>void }) {
   const pct=percent(item.watchedMinutes,item.totalMinutes);
   return <article className="panel learning-tile">
     <div className={item.url ? "learning-thumb learning-thumb-link" : "learning-thumb"} role={item.url ? "button" : undefined} tabIndex={item.url ? 0 : -1} onClick={()=>item.url && openLearningUrl(item)} onKeyDown={(e)=>{if(item.url && (e.key==="Enter"||e.key===" ")){e.preventDefault();openLearningUrl(item)}}} aria-label={item.url ? `Buka ${item.title}` : undefined}>
@@ -506,6 +520,17 @@ function LearningTile({ item, onEdit, onDelete }: { item: LearningItem; onEdit:(
       {item.url?<div className="watch-overlay"><span className="round-play"><Icon name="play" size={18}/></span><strong>Tonton</strong></div>:null}
       <div className="tile-actions" onClick={(e)=>e.stopPropagation()}><button type="button" onClick={onEdit}><Icon name="edit" size={16}/></button><button type="button" className="danger" onClick={onDelete}><Icon name="trash" size={16}/></button></div>
     </div>
-    <div className="tile-body"><div className="tile-top"><span className={`status-pill ${item.status}`}>{learningStatusLabel(item.status)}</span><span>{item.source}</span></div><h3>{item.title}</h3><p>{item.channel} · {item.topic}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="tile-details"><span>{pct}%</span><span>{item.watchedMinutes}/{item.totalMinutes} mnt</span><span>{item.rating?`${item.rating}★`:"—"}</span></div>{item.url?<button className="watch-link" type="button" onClick={()=>openLearningUrl(item)}><Icon name="play" size={14}/> Tonton di {item.source||"sumber"}</button>:null}{item.highlights?<div className="review-snippet">{item.highlights}</div>:null}</div>
+    <div className="tile-body">
+      <div className="tile-top"><span className={`status-pill ${item.status}`}>{learningStatusLabel(item.status)}</span><span>{item.source}</span></div>
+      <h3>{item.title}</h3>
+      <p>{item.channel} · {item.topic}</p>
+      <div className="progress"><span style={{width:`${pct}%`}}/></div>
+      <div className="tile-details"><span>{pct}%</span><span>{item.watchedMinutes}/{item.totalMinutes} mnt</span><span>{item.rating?`${item.rating}★`:"—"}</span></div>
+      <div className="learning-card-actions">
+        <button className="session-log-btn" type="button" onClick={onSession}><Icon name="clock" size={14}/> Catat sesi</button>
+        {item.url?<button className="watch-link" type="button" onClick={()=>openLearningUrl(item)}><Icon name="play" size={14}/> Tonton</button>:null}
+      </div>
+      {item.highlights?<div className="review-snippet">{item.highlights}</div>:null}
+    </div>
   </article>;
 }
