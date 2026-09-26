@@ -17,7 +17,7 @@ export const demoBooks: Book[] = [
     type: "Fisik",
     ownership: "Buku sendiri",
     review: "Perubahan kecil yang konsisten jauh lebih kuat daripada motivasi sesaat.",
-    cover: "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg",
+    cover: "/demo/books/atomic-habits.jpg",
     createdAt: now,
     updatedAt: now
   },
@@ -36,7 +36,7 @@ export const demoBooks: Book[] = [
     type: "Fisik",
     ownership: "Buku sendiri",
     review: "Keputusan finansial sangat dipengaruhi perilaku, bukan hanya kemampuan berhitung.",
-    cover: "https://covers.openlibrary.org/b/isbn/9780857197689-L.jpg",
+    cover: "/demo/books/psychology-of-money.jpg",
     createdAt: now,
     updatedAt: now
   },
@@ -54,7 +54,7 @@ export const demoBooks: Book[] = [
     type: "Fisik",
     ownership: "Buku sendiri",
     review: "Latih kemampuan fokus mendalam agar pekerjaan bernilai tinggi mendapat ruang yang cukup.",
-    cover: "https://covers.openlibrary.org/b/isbn/9781455586691-L.jpg",
+    cover: "/demo/books/deep-work.jpg",
     createdAt: now,
     updatedAt: now
   },
@@ -71,10 +71,46 @@ export const demoBooks: Book[] = [
     type: "Fisik",
     ownership: "Buku sendiri",
     review: "",
-    cover: "https://covers.openlibrary.org/b/isbn/9780804137386-L.jpg",
+    cover: "/demo/books/essentialism.jpg",
     createdAt: now,
     updatedAt: now
-  }
+  ,
+  {
+    id: "book-make-time",
+    title: "Make Time",
+    author: "Jake Knapp & John Zeratsky",
+    genre: "Productivity",
+    pagesRead: 41,
+    totalPages: 304,
+    startDate: "2026-09-20",
+    status: "reading",
+    rating: 4,
+    price: 118000,
+    type: "Fisik",
+    ownership: "Buku sendiri",
+    review: "Highlight satu hal penting setiap hari lalu lindungi waktu untuk mengerjakannya.",
+    cover: "/demo/books/make-time.jpg",
+    createdAt: now,
+    updatedAt: now
+  },
+  {
+    id: "book-thinking",
+    title: "Thinking, Fast and Slow",
+    author: "Daniel Kahneman",
+    genre: "Psychology",
+    pagesRead: 0,
+    totalPages: 499,
+    status: "wishlist",
+    rating: 0,
+    price: 145000,
+    type: "Fisik",
+    ownership: "Buku sendiri",
+    review: "",
+    cover: "/demo/books/thinking-fast-slow.jpg",
+    createdAt: now,
+    updatedAt: now
+  },
+
 ];
 
 export const demoLearning: LearningItem[] = [
@@ -91,7 +127,7 @@ export const demoLearning: LearningItem[] = [
     source: "YouTube",
     type: "Video",
     highlights: "Active recall, spaced repetition, dan fokus pada pengujian diri membuat belajar jauh lebih aktif.",
-    thumbnail: "https://i.ytimg.com/vi/Lt54CX9DmS4/hqdefault.jpg",
+    thumbnail: "/demo/learning/ali-abdaal-study.jpg",
     url: "https://www.youtube.com/watch?v=Lt54CX9DmS4",
     createdAt: now,
     updatedAt: now
@@ -109,7 +145,7 @@ export const demoLearning: LearningItem[] = [
     source: "YouTube",
     type: "Video",
     highlights: "Sudut pandang lintas generasi bisa membantu melihat kebiasaan, teknologi, dan cara berkomunikasi secara lebih luas.",
-    thumbnail: "https://i.ytimg.com/vi/aOZ5A9r_sAw/hqdefault.jpg",
+    thumbnail: "/demo/learning/raditya-genz.jpg",
     url: "https://www.youtube.com/watch?v=aOZ5A9r_sAw",
     createdAt: now,
     updatedAt: now
@@ -126,7 +162,7 @@ export const demoLearning: LearningItem[] = [
     source: "YouTube",
     type: "Video",
     highlights: "",
-    thumbnail: "https://i.ytimg.com/vi/4AwyVTHEU3s/hqdefault.jpg",
+    thumbnail: "/demo/learning/huberman-focus.jpg",
     url: "https://www.youtube.com/watch?v=4AwyVTHEU3s",
     createdAt: now,
     updatedAt: now
@@ -145,7 +181,7 @@ export const demoLearning: LearningItem[] = [
     source: "YouTube",
     type: "Video",
     highlights: "Belajar yang terasa menantang dan aktif biasanya lebih efektif daripada konsumsi pasif.",
-    thumbnail: "https://i.ytimg.com/vi/1bszFX_XcbU/hqdefault.jpg",
+    thumbnail: "/demo/learning/huberman-study.jpg",
     url: "https://www.youtube.com/watch?v=1bszFX_XcbU",
     createdAt: now,
     updatedAt: now
