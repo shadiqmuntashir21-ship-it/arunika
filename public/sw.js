@@ -1,4 +1,4 @@
-const CACHE = "arunika-v7-pwa-tour";
+const CACHE = "arunika-v8-demo-assets";
 const CORE = [
   "/",
   "/app",
@@ -8,7 +8,17 @@ const CORE = [
   "/icons/icon.svg",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
-  "/icons/icon-maskable-512.png"
+  "/icons/icon-maskable-512.png",
+  "/demo/books/atomic-habits.jpg",
+  "/demo/books/psychology-of-money.jpg",
+  "/demo/books/deep-work.jpg",
+  "/demo/books/essentialism.jpg",
+  "/demo/books/make-time.jpg",
+  "/demo/books/thinking-fast-slow.jpg",
+  "/demo/learning/ali-abdaal-study.jpg",
+  "/demo/learning/raditya-genz.jpg",
+  "/demo/learning/huberman-focus.jpg",
+  "/demo/learning/huberman-study.jpg",
 ];
 
 self.addEventListener("install", (event) => {
