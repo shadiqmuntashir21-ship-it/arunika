@@ -34,6 +34,10 @@ export async function adminLicenses(token: string, action: string, payload: Reco
   return postFunction("admin-license", { action, productCode: PRODUCT_CODE, ...payload }, token);
 }
 
+export async function adminConfig(token: string, action: string, payload: Record<string,unknown> = {}) {
+  return postFunction("admin-config", { action, productCode: PRODUCT_CODE, ...payload }, token);
+}
+
 function hex(bytes: Uint8Array) {
   return Array.from(bytes).map((b)=>b.toString(16).padStart(2,"0")).join("");
 }
