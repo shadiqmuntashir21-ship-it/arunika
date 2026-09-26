@@ -4,13 +4,14 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { BarChart, Donut, GenreBars } from "./Charts";
 import { Icon } from "./Icon";
 import { Modal } from "./Modal";
-import { Overview, BooksView, LearningView, SessionsView, HabitView, KnowledgeView, InsightsView, WishlistView, SettingsView, BookForm, LearningForm, SessionForm, HabitForm, Onboarding } from "./ArunikaViews";
+import { Overview, BooksView, LearningView, SessionsView, HabitView, KnowledgeView, InsightsView, WishlistView, SettingsView, BookForm, LearningForm, SessionForm, LearningSessionForm, Onboarding } from "./ArunikaViews";
 import { deleteOne, exportBackup, getOne, importBackup, loadSnapshot, putOne } from "@/lib/db";
 import { downloadJson, readFileAsDataUrl } from "@/lib/file";
-import type { BackupPayload, Book, BookStatus, HabitDay, LearningItem, LearningStatus, ReadingSession, Settings } from "@/lib/types";
+import type { BackupPayload, Book, BookStatus, LearningItem, LearningSession, LearningStatus, ReadingSession, Settings } from "@/lib/types";
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
 import { verifyArunikaLicense } from "@/lib/backend";
 import { InstallButton, ThemeToggle } from "./AppControls";
+import { dailyTracker, monthActivityMinutes, monthlyTracker } from "@/lib/tracker";
 
 type Tab = "overview" | "books" | "learning" | "sessions" | "habit" | "knowledge" | "insights" | "wishlist" | "settings";
 type Snapshot = Awaited<ReturnType<typeof loadSnapshot>>;
@@ -41,6 +42,10 @@ function emptySession(bookId = ""): ReadingSession {
   return { id: uid("session"), bookId, date: todayISO(), startPage: 0, endPage: 0, minutes: 0, notes: "", highlight: "", createdAt: new Date().toISOString() };
 }
 
+function emptyLearningSession(learningId = ""): LearningSession {
+  return { id: uid("learning-session"), learningId, date: todayISO(), minutes: 0, notes: "", createdAt: new Date().toISOString() };
+}
+
 export function ArunikaApp() {
   const [data, setData] = useState<Snapshot | null>(null);
   const [tab, setTab] = useState<Tab>("overview");
@@ -48,11 +53,12 @@ export function ArunikaApp() {
   const [bookModal, setBookModal] = useState(false);
   const [learningModal, setLearningModal] = useState(false);
   const [sessionModal, setSessionModal] = useState(false);
-  const [habitModal, setHabitModal] = useState(false);
+  const [learningSessionModal, setLearningSessionModal] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
   const [editingBook, setEditingBook] = useState<Book>(emptyBook());
   const [editingLearning, setEditingLearning] = useState<LearningItem>(emptyLearning());
   const [editingSession, setEditingSession] = useState<ReadingSession>(emptySession());
+  const [editingLearningSession, setEditingLearningSession] = useState<LearningSession>(emptyLearningSession());
   const [query, setQuery] = useState("");
   const [bookFilter, setBookFilter] = useState<BookStatus | "all">("all");
   const [learningFilter, setLearningFilter] = useState<LearningStatus | "all">("all");
@@ -83,26 +89,26 @@ export function ArunikaApp() {
     const finishedLearning = data.learning.filter((l) => l.status === "finished");
     const totalPages = data.books.reduce((n, b) => n + b.pagesRead, 0);
     const learningMinutes = data.learning.reduce((n, l) => n + l.watchedMinutes, 0);
-    const todayHabit = data.habit.find((h) => h.date === todayISO());
-    const sortedHabit = [...data.habit].filter((h) => h.readToday).sort((a, b) => b.date.localeCompare(a.date));
+    const today = dailyTracker(data, todayISO());
+    const currentMonth = monthlyTracker(data, todayISO().slice(0, 7));
+
     let streak = 0;
-    if (sortedHabit.length) {
-      const cursor = new Date();
-      for (let i = 0; i < 370; i++) {
-        const key = cursor.toISOString().slice(0, 10);
-        const found = data.habit.some((h) => h.date === key && h.readToday);
-        if (!found) {
-          if (i === 0) {
-            cursor.setDate(cursor.getDate() - 1);
-            continue;
-          }
-          break;
+    const cursor = new Date();
+    for (let i = 0; i < 370; i++) {
+      const key = cursor.toISOString().slice(0, 10);
+      const active = dailyTracker(data, key).active;
+      if (!active) {
+        if (i === 0) {
+          cursor.setDate(cursor.getDate() - 1);
+          continue;
         }
-        streak++;
-        cursor.setDate(cursor.getDate() - 1);
+        break;
       }
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
     }
-    return { finishedBooks, readingBooks, finishedLearning, totalPages, learningMinutes, todayHabit, streak };
+
+    return { finishedBooks, readingBooks, finishedLearning, totalPages, learningMinutes, today, currentMonth, streak };
   }, [data]);
 
   const filteredBooks = useMemo(() => {
@@ -143,7 +149,7 @@ export function ArunikaApp() {
       }
     }
     const top = (map: Map<string, number>) => [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([label, value]) => ({ label, value }));
-    return { monthlyBooks, monthlyLearning, genres: top(genreCount), authors: top(authorCount), channels: top(channelCount) };
+    return { monthlyBooks, monthlyLearning, monthlyActivity: monthActivityMinutes(data, year), genres: top(genreCount), authors: top(authorCount), channels: top(channelCount) };
   }, [data, year]);
 
   if (!data || !metrics || !insights) return <div className="loading"><div className="loader-mark">A</div><p>Menyiapkan Arunika…</p></div>;
@@ -180,28 +186,61 @@ export function ArunikaApp() {
     e.preventDefault();
     if (!editingSession.bookId) return setToast("Pilih buku terlebih dahulu.");
     if (editingSession.endPage < editingSession.startPage) return setToast("Halaman akhir tidak boleh lebih kecil dari halaman awal.");
-    const pages = Math.max(0, editingSession.endPage - editingSession.startPage);
     await putOne("sessions", editingSession);
     const book = snapshot.books.find((b) => b.id === editingSession.bookId);
     if (book) {
-      await putOne("books", { ...book, pagesRead: Math.max(book.pagesRead, editingSession.endPage), updatedAt: new Date().toISOString() });
+      await putOne("books", {
+        ...book,
+        pagesRead: Math.max(book.pagesRead, editingSession.endPage),
+        startDate: book.startDate || editingSession.date,
+        status: book.status === "wishlist" ? "reading" : book.status,
+        updatedAt: new Date().toISOString()
+      });
     }
-    const currentHabit = snapshot.habit.find((h) => h.date === editingSession.date);
-    const habit: HabitDay = currentHabit
-      ? { ...currentHabit, readToday: true, pages: currentHabit.pages + pages, minutes: currentHabit.minutes + editingSession.minutes }
-      : { id: uid("habit"), date: editingSession.date, readToday: true, pages, minutes: editingSession.minutes };
-    await putOne("habit", habit);
     setSessionModal(false);
-    setToast("Sesi baca dicatat dan habit diperbarui.");
+    setToast("Sesi baca dicatat. Tracker harian diperbarui otomatis.");
     refresh();
   }
 
-  async function saveHabitEntry(date: string, pages: number, minutes: number, readToday: boolean) {
-    const existing = snapshot.habit.find((h) => h.date === date);
-    const item: HabitDay = existing ? { ...existing, pages, minutes, readToday } : { id: uid("habit"), date, pages, minutes, readToday };
-    await putOne("habit", item);
-    setHabitModal(false);
-    setToast("Habit harian disimpan.");
+  async function saveLearningSession(e: FormEvent) {
+    e.preventDefault();
+    if (!editingLearningSession.learningId) return setToast("Pilih konten belajar terlebih dahulu.");
+    if (editingLearningSession.minutes <= 0) return setToast("Masukkan durasi belajar.");
+    await putOne("learningSessions", editingLearningSession);
+
+    const item = snapshot.learning.find((entry) => entry.id === editingLearningSession.learningId);
+    if (item) {
+      const nextMinutes = item.totalMinutes > 0
+        ? Math.min(item.totalMinutes, item.watchedMinutes + editingLearningSession.minutes)
+        : item.watchedMinutes + editingLearningSession.minutes;
+      const completed = item.totalMinutes > 0 && nextMinutes >= item.totalMinutes;
+      await putOne("learning", {
+        ...item,
+        watchedMinutes: nextMinutes,
+        startDate: item.startDate || editingLearningSession.date,
+        finishDate: completed ? (item.finishDate || editingLearningSession.date) : item.finishDate,
+        status: completed ? "finished" : (item.status === "wishlist" ? "watching" : item.status),
+        updatedAt: new Date().toISOString()
+      });
+    }
+
+    setLearningSessionModal(false);
+    setToast("Sesi belajar dicatat. Tracker harian diperbarui otomatis.");
+    refresh();
+  }
+
+  async function removeReadingSession(id: string) {
+    const session = snapshot.sessions.find((entry) => entry.id === id);
+    if (!session || !confirm("Hapus sesi baca ini?")) return;
+    await deleteOne("sessions", id);
+    setToast("Sesi baca dihapus.");
+    refresh();
+  }
+
+  async function removeLearningSession(id: string) {
+    if (!confirm("Hapus sesi belajar ini?")) return;
+    await deleteOne("learningSessions", id);
+    setToast("Sesi belajar dihapus.");
     refresh();
   }
 
@@ -220,8 +259,16 @@ export function ArunikaApp() {
     refresh();
   }
 
-  async function finishOnboarding(name: string, dailyTarget: number, yearlyTarget: number) {
-    const settings: Settings = { ...snapshot.settings, name: name.trim() || "Pembaca Arunika", dailyPageTarget: dailyTarget || 20, yearlyBookTarget: yearlyTarget || 15, onboardingDone: true };
+  async function finishOnboarding(name: string, dailyTarget: number, readingMinutesTarget: number, learningMinutesTarget: number, yearlyTarget: number) {
+    const settings: Settings = {
+      ...snapshot.settings,
+      name: name.trim() || "Pembaca Arunika",
+      dailyPageTarget: dailyTarget || 20,
+      dailyReadingMinutesTarget: readingMinutesTarget || 30,
+      dailyLearningMinutesTarget: learningMinutesTarget || 30,
+      yearlyBookTarget: yearlyTarget || 15,
+      onboardingDone: true
+    };
     await putOne("settings", settings);
     setOnboarding(false);
     refresh();
@@ -285,9 +332,9 @@ export function ArunikaApp() {
       <main className="app-main stream-main">
         {tab === "overview" && <Overview data={snapshot} metrics={metrics} insights={insights} onTab={setTab} onSession={() => { setEditingSession(emptySession(metrics.readingBooks[0]?.id || "")); setSessionModal(true); }} />}
         {tab === "books" && <BooksView books={filteredBooks} query={query} setQuery={setQuery} filter={bookFilter} setFilter={setBookFilter} onAdd={() => { setEditingBook(emptyBook()); setBookModal(true); }} onEdit={(book: Book) => { setEditingBook(book); setBookModal(true); }} onDelete={removeBook} />}
-        {tab === "learning" && <LearningView items={filteredLearning} query={query} setQuery={setQuery} filter={learningFilter} setFilter={setLearningFilter} onAdd={() => { setEditingLearning(emptyLearning()); setLearningModal(true); }} onEdit={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} onDelete={removeLearning} />}
-        {tab === "sessions" && <SessionsView sessions={snapshot.sessions} books={snapshot.books} onAdd={(bookId: string) => { setEditingSession(emptySession(bookId)); setSessionModal(true); }} onDelete={async (id: string) => { if (confirm("Hapus sesi baca ini?")) { await deleteOne("sessions", id); refresh(); } }} />}
-        {tab === "habit" && <HabitView habit={snapshot.habit} settings={snapshot.settings} onAdd={() => setHabitModal(true)} />}
+        {tab === "learning" && <LearningView items={filteredLearning} query={query} setQuery={setQuery} filter={learningFilter} setFilter={setLearningFilter} onAdd={() => { setEditingLearning(emptyLearning()); setLearningModal(true); }} onEdit={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} onDelete={removeLearning} onSession={(item: LearningItem) => { setEditingLearningSession(emptyLearningSession(item.id)); setLearningSessionModal(true); }} />}
+        {tab === "sessions" && <SessionsView sessions={snapshot.sessions} books={snapshot.books} onAdd={(bookId: string) => { setEditingSession(emptySession(bookId)); setSessionModal(true); }} onDelete={removeReadingSession} />}
+        {tab === "habit" && <HabitView data={snapshot} onRead={(bookId: string) => { setEditingSession(emptySession(bookId)); setSessionModal(true); }} onLearn={(learningId: string) => { setEditingLearningSession(emptyLearningSession(learningId)); setLearningSessionModal(true); }} onDeleteRead={removeReadingSession} onDeleteLearn={removeLearningSession} />}
         {tab === "knowledge" && <KnowledgeView data={snapshot} />}
         {tab === "insights" && <InsightsView data={snapshot} insights={insights} year={year} setYear={setYear} />}
         {tab === "wishlist" && <WishlistView books={snapshot.books.filter((b) => b.status === "wishlist")} learning={snapshot.learning.filter((l) => l.status === "wishlist")} onBook={(book: Book) => { setEditingBook(book); setBookModal(true); }} onLearning={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} />}
@@ -303,7 +350,7 @@ export function ArunikaApp() {
       <BookForm open={bookModal} book={editingBook} setBook={setEditingBook} onClose={() => setBookModal(false)} onSubmit={saveBook} />
       <LearningForm open={learningModal} item={editingLearning} setItem={setEditingLearning} onClose={() => setLearningModal(false)} onSubmit={saveLearning} />
       <SessionForm open={sessionModal} session={editingSession} setSession={setEditingSession} books={snapshot.books.filter((b) => b.status === "reading" || b.id === editingSession.bookId)} onClose={() => setSessionModal(false)} onSubmit={saveSession} />
-      <HabitForm open={habitModal} existing={snapshot.habit} onClose={() => setHabitModal(false)} onSave={saveHabitEntry} />
+      <LearningSessionForm open={learningSessionModal} session={editingLearningSession} setSession={setEditingLearningSession} items={snapshot.learning.filter((item) => item.status === "watching" || item.id === editingLearningSession.learningId)} onClose={() => setLearningSessionModal(false)} onSubmit={saveLearningSession} />
       <Onboarding open={onboarding} settings={snapshot.settings} onFinish={finishOnboarding} />
       {toast ? <div className="toast">{toast}</div> : null}
     </div>
