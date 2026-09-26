@@ -41,3 +41,5 @@ Buka `http://localhost:3000`.
 ## Data & backend
 
 Semua data journal pengguna tersimpan di IndexedDB pada perangkat. Supabase belum digunakan pada fase ini. Integrasi berikutnya cukup mengganti proses aktivasi/pembelian ke universal licensing backend tanpa memindahkan data personal journal ke server.
+
+<!-- vercel-sync: habit-tracker-v2 -->
