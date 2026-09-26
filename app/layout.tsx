@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: { default: "Arunika", template: "%s · Arunika" },
   description: "Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.",
   manifest: "/manifest.webmanifest",
-  icons: { icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/icons/icon.svg", type: "image/svg+xml" }], apple: [{ url: "/icons/icon.svg" }] }
+  icons: { icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" }], apple: [{ url: "/icons/apple-touch-icon.png", type: "image/png", sizes: "180x180" }] }
 };
 
 export const viewport: Viewport = {
