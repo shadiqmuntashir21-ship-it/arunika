@@ -1,0 +1,42 @@
+name: Materialize Demo media
+
+on:
+  push:
+    branches: [demo-tour-assets-v4]
+
+permissions:
+  contents: write
+
+jobs:
+  assets:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: demo-tour-assets-v4
+      - name: Download local Demo media
+        run: |
+          set -euo pipefail
+          mkdir -p public/demo/books public/demo/learning
+          curl -L --fail --retry 3 'https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg' -o public/demo/books/atomic-habits.jpg
+          curl -L --fail --retry 3 'https://covers.openlibrary.org/b/isbn/9780857197689-L.jpg' -o public/demo/books/psychology-of-money.jpg
+          curl -L --fail --retry 3 'https://covers.openlibrary.org/b/isbn/9781455586691-L.jpg' -o public/demo/books/deep-work.jpg
+          curl -L --fail --retry 3 'https://covers.openlibrary.org/b/isbn/9780804137386-L.jpg' -o public/demo/books/essentialism.jpg
+          curl -L --fail --retry 3 'https://covers.openlibrary.org/b/isbn/9780525572428-L.jpg' -o public/demo/books/make-time.jpg
+          curl -L --fail --retry 3 'https://covers.openlibrary.org/b/isbn/9780374533557-L.jpg' -o public/demo/books/thinking-fast-slow.jpg
+          curl -L --fail --retry 3 'https://i.ytimg.com/vi/Lt54CX9DmS4/hqdefault.jpg' -o public/demo/learning/ali-abdaal-study.jpg
+          curl -L --fail --retry 3 'https://i.ytimg.com/vi/aOZ5A9r_sAw/hqdefault.jpg' -o public/demo/learning/raditya-genz.jpg
+          curl -L --fail --retry 3 'https://i.ytimg.com/vi/4AwyVTHEU3s/hqdefault.jpg' -o public/demo/learning/huberman-focus.jpg
+          curl -L --fail --retry 3 'https://i.ytimg.com/vi/1bszFX_XcbU/hqdefault.jpg' -o public/demo/learning/huberman-study.jpg
+          test $(stat -c%s public/demo/books/atomic-habits.jpg) -gt 10000
+          test $(stat -c%s public/demo/learning/ali-abdaal-study.jpg) -gt 10000
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/materialize-demo-media.yml
+      - name: Commit assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/demo .github/workflows/materialize-demo-media.yml
+          git commit -m 'Store Demo covers and thumbnails locally'
+          git push origin HEAD:demo-tour-assets-v4
