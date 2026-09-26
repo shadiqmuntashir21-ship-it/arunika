@@ -56,18 +56,31 @@ export interface ReadingSession {
   createdAt: string;
 }
 
+export interface LearningSession {
+  id: string;
+  learningId: string;
+  date: string;
+  minutes: number;
+  notes: string;
+  createdAt: string;
+}
+
 export interface HabitDay {
   id: string;
   date: string;
   readToday: boolean;
   pages: number;
   minutes: number;
+  learningMinutes?: number;
+  videos?: number;
 }
 
 export interface Settings {
   id: "settings";
   name: string;
   dailyPageTarget: number;
+  dailyReadingMinutesTarget: number;
+  dailyLearningMinutesTarget: number;
   yearlyBookTarget: number;
   onboardingDone: boolean;
   activated: boolean;
@@ -78,11 +91,12 @@ export interface Settings {
 }
 
 export interface BackupPayload {
-  version: 1;
+  version: 1 | 2;
   exportedAt: string;
   books: Book[];
   learning: LearningItem[];
   sessions: ReadingSession[];
+  learningSessions?: LearningSession[];
   habit: HabitDay[];
   settings: Settings;
 }
