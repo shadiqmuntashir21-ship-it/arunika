@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BarChart, Donut, GenreBars } from "./Charts";
 import { Icon } from "./Icon";
 import { Modal } from "./Modal";
+import { InstallButton, ThemeToggle } from "./AppControls";
 import { readFileAsDataUrl } from "@/lib/file";
 import type { Book, LearningItem, LearningSession, ReadingSession, Settings } from "@/lib/types";
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
@@ -348,14 +349,15 @@ export function WishlistView({ books, learning, onBook, onLearning }: any) {
   </div>;
 }
 
-export function SettingsView({ settings, isPro, onSave, onExport, onImport }: any) {
+export function SettingsView({ settings, isPro, onSave, onExport, onImport, onStartTour }: any) {
   const [name,setName]=useState(settings.name);
   const [daily,setDaily]=useState(settings.dailyPageTarget);
   const [readingMinutes,setReadingMinutes]=useState(settings.dailyReadingMinutesTarget||30);
   const [learningMinutes,setLearningMinutes]=useState(settings.dailyLearningMinutesTarget||30);
   const [yearly,setYearly]=useState(settings.yearlyBookTarget);
 
-  return <div className="page-stack"><PageIntro eyebrow="Settings" title="Atur target sesuai ritmemu" text="Target dibuat untuk membantu membangun kebiasaan, bukan sekadar mengejar jumlah buku atau video." />
+  return <div className="page-stack">
+    <PageIntro eyebrow="Settings" title="Atur Arunika sesuai ritmemu" text="Target, tampilan, instalasi aplikasi, tour fitur, dan backup tersedia di satu tempat." />
     <section className="settings-layout">
       <div className="panel settings-card target-settings-card">
         <SectionHead eyebrow="Profile & habit target" title="Target harian"/>
@@ -368,12 +370,28 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport }: an
         </div>
         <button className="primary-btn" onClick={()=>onSave({name,dailyPageTarget:daily,dailyReadingMinutesTarget:readingMinutes,dailyLearningMinutesTarget:learningMinutes,yearlyBookTarget:yearly})}>Simpan target</button>
       </div>
-      <div className="panel settings-card"><SectionHead eyebrow="Data" title="Backup & restore"/><p className="muted">Data pribadi tetap tersimpan lokal di perangkat. Export JSON membuat salinan yang bisa kamu simpan sendiri.</p><div className="button-row"><button className="ghost-btn" onClick={onExport}><Icon name="download" size={17}/> Export</button><button className="ghost-btn" onClick={onImport}><Icon name="upload" size={17}/> Import</button></div>{!isPro?<div className="pro-lock"><Icon name="lock" size={16}/> Backup & restore tersedia di Pro.</div>:null}</div>
-      <div className="panel settings-card accent"><SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/><p>{isPro?`Lisensi ${settings.licenseCode||"lokal"} aktif di perangkat ini.`:"Demo menyimpan data lokal dan membatasi jumlah koleksi. Upgrade Pro Rp49.000 untuk membuka mode penuh."}</p>{!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp49.000</a>:null}</div>
+
+      <div className="panel settings-card app-settings-card">
+        <SectionHead eyebrow="App experience" title="Tampilan & instalasi"/>
+        <p className="muted">Arunika selalu mulai dengan Dark Mode pada perangkat baru. Kamu tetap bisa beralih ke mode terang kapan saja.</p>
+        <div className="settings-app-actions"><ThemeToggle/><InstallButton/><button className="ghost-btn" onClick={onStartTour}><Icon name="sparkles" size={17}/> Jelajah Tour</button></div>
+      </div>
+
+      <div className="panel settings-card">
+        <SectionHead eyebrow="Data" title="Backup & restore"/>
+        <p className="muted">Data pribadi tetap tersimpan lokal di perangkat. Export JSON membuat salinan yang bisa kamu simpan sendiri.</p>
+        <div className="button-row"><button className="ghost-btn" onClick={onExport}><Icon name="download" size={17}/> Export</button><button className="ghost-btn" onClick={onImport}><Icon name="upload" size={17}/> Import</button></div>
+        {!isPro?<div className="pro-lock"><Icon name="lock" size={16}/> Backup & restore tersedia di Pro.</div>:null}
+      </div>
+
+      <div className="panel settings-card accent">
+        <SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/>
+        <p>{isPro?("Lisensi "+(settings.licenseCode||"lokal")+" aktif di perangkat ini."):"Jelajahi semua fitur dengan data contoh. Upgrade Pro Rp49.000 untuk mulai dari ruang pribadi tanpa batas koleksi Demo."}</p>
+        {!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp49.000</a>:null}
+      </div>
     </section>
   </div>;
 }
-
 export function BookForm({ open, book, setBook, onClose, onSubmit }: any) {
   async function cover(file?:File){if(file)setBook({...book,cover:await readFileAsDataUrl(file)});}
   return <Modal open={open} title={book.title?"Edit buku":"Tambah buku"} subtitle="Cukup isi yang penting. Detail lain bisa ditambahkan kapan saja." onClose={onClose} wide>
@@ -483,23 +501,30 @@ export function LearningSessionForm({ open, session, setSession, items, onClose,
     </form>
   </Modal>;
 }
-export function Onboarding({ open, settings, onFinish }: any) {
-  const [step,setStep]=useState(0);
-  const [name,setName]=useState(settings.name||"");
-  const [daily,setDaily]=useState(settings.dailyPageTarget||20);
-  const [readingMinutes,setReadingMinutes]=useState(settings.dailyReadingMinutesTarget||30);
-  const [learningMinutes,setLearningMinutes]=useState(settings.dailyLearningMinutesTarget||30);
-  const [yearly,setYearly]=useState(settings.yearlyBookTarget||15);
+export function Onboarding({ open, onTour, onSkip }: any) {
   if(!open)return null;
 
-  return <div className="onboarding"><div className="onboard-card panel"><div className="onboard-symbol">A</div><div className="eyebrow">SELAMAT DATANG DI ARUNIKA</div>
-    {step===0?<><h1>Bangun ritme membaca dan belajar yang konsisten.</h1><p>Catat sesi. Lihat progres. Tumbuh setiap hari tanpa mengejar angka berlebihan.</p><button className="primary-btn" onClick={()=>setStep(1)}>Atur target <Icon name="arrow" size={17}/></button></>
-    :<><h1>Mulai dari target yang realistis.</h1><div className="form-grid onboarding-target-grid">
-      <Field label="Nama panggilan"><input value={name} onChange={e=>setName(e.target.value)}/></Field>
-      <div className="form-grid two"><Field label="Halaman / hari"><input type="number" min="1" value={daily} onChange={e=>setDaily(Number(e.target.value))}/></Field><Field label="Baca / hari (menit)"><input type="number" min="1" value={readingMinutes} onChange={e=>setReadingMinutes(Number(e.target.value))}/></Field></div>
-      <div className="form-grid two"><Field label="Belajar / hari (menit)"><input type="number" min="1" value={learningMinutes} onChange={e=>setLearningMinutes(Number(e.target.value))}/></Field><Field label="Buku / tahun"><input type="number" min="1" value={yearly} onChange={e=>setYearly(Number(e.target.value))}/></Field></div>
-    </div><button className="primary-btn" onClick={()=>onFinish(name,daily,readingMinutes,learningMinutes,yearly)}>Masuk ke Arunika</button></>}
-  </div></div>;
+  return <div className="onboarding demo-welcome">
+    <div className="onboard-card panel demo-welcome-card">
+      <div className="demo-welcome-brand">
+        <div className="onboard-symbol">A</div>
+        <div><div className="eyebrow">SELAMAT DATANG DI ARUNIKA</div><span>MODE DEMO GRATIS</span></div>
+      </div>
+      <h1>Coba dulu seluruh pengalaman Arunika.</h1>
+      <p>Data contoh sudah kami siapkan agar kamu bisa langsung melihat bagaimana buku, learning, sesi, habit, knowledge, dan insight saling terhubung.</p>
+      <div className="demo-welcome-points">
+        <span><Icon name="book" size={17}/> Koleksi buku & progress nyata</span>
+        <span><Icon name="play" size={17}/> Learning tracker & sesi belajar</span>
+        <span><Icon name="calendar" size={17}/> Habit membaca + belajar</span>
+        <span><Icon name="bulb" size={17}/> Knowledge vault & insight</span>
+      </div>
+      <div className="demo-welcome-actions">
+        <button className="primary-btn large" onClick={onTour}><Icon name="sparkles" size={17}/> Jelajah dengan Tour</button>
+        <button className="ghost-btn large" onClick={onSkip}>Lewati Tour, Masuk Demo</button>
+      </div>
+      <small>Tour bisa dilewati kapan saja dan dapat dibuka ulang dari Pengaturan.</small>
+    </div>
+  </div>;
 }
 function Stat({ label, value, helper, icon }: any) { return <div className="panel stat-card"><div className="stat-icon"><Icon name={icon}/></div><div><span>{label}</span><strong>{value}</strong><small>{helper}</small></div></div>; }
 function SectionHead({ eyebrow, title, action }: any) { return <div className="section-head"><div><div className="eyebrow">{eyebrow}</div><h3>{title}</h3></div>{action}</div>; }
