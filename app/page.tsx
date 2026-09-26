@@ -90,6 +90,52 @@ export default function LandingPage(){
       <div><strong>Insight</strong><span>Rekap bulanan & knowledge vault</span></div>
     </section>
 
+    <section className="landing-product-stage" aria-label="Preview aplikasi Arunika">
+      <div className="product-stage-copy">
+        <span className="section-tag">LIHAT SEBELUM MEMBELI</span>
+        <h2>Satu ruang yang membuat membaca dan belajar terasa <em>teratur.</em></h2>
+        <p>Buka Demo gratis untuk mencoba pengalaman aslinya. Preview ini menunjukkan bagaimana progres, habit, dan knowledge tampil di Arunika.</p>
+        <div className="product-stage-actions">
+          <a className="netflix-play" href="/app"><Icon name="play" size={17}/> Jelajah Demo</a>
+          <a className="netflix-more" href="/pro"><Icon name="crown" size={17}/> Lihat Arunika Pro</a>
+        </div>
+      </div>
+      <div className="product-stage-device">
+        <div className="product-stage-window">
+          <div className="product-stage-topbar"><span className="stream-wordmark">ARUNIKA</span><div><i/><i/><i/></div></div>
+          <div className="product-stage-body">
+            <aside className="product-stage-sidebar">
+              <span className="active"><Icon name="home" size={14}/></span>
+              <span><Icon name="book" size={14}/></span>
+              <span><Icon name="play" size={14}/></span>
+              <span><Icon name="calendar" size={14}/></span>
+              <span><Icon name="bulb" size={14}/></span>
+            </aside>
+            <div className="product-stage-main">
+              <div className="stage-welcome"><small>SELAMAT DATANG KEMBALI</small><strong>Teruskan ritmemu.</strong></div>
+              <div className="stage-kpis">
+                <div><small>Buku selesai</small><strong>3</strong><span>bulan ini</span></div>
+                <div><small>Halaman</small><strong>428</strong><span>bulan ini</span></div>
+                <div><small>Durasi baca</small><strong>6j 24m</strong><span>bulan ini</span></div>
+                <div><small>Belajar</small><strong>4j 12m</strong><span>bulan ini</span></div>
+              </div>
+              <div className="stage-grid">
+                <article className="stage-now-reading">
+                  <div className="stage-book-art"><span>A</span></div>
+                  <div><small>LANJUTKAN MEMBACA</small><h3>Atomic Habits</h3><p>198 / 320 halaman</p><div className="stage-progress"><span/></div><button><Icon name="book" size={13}/> Catat sesi</button></div>
+                </article>
+                <article className="stage-habit-card">
+                  <div><small>HABIT MINGGU INI</small><strong>5 hari aktif</strong></div>
+                  <div className="stage-week">{[1,1,0,1,1,1,0].map((active,i)=><span className={active?"active":""} key={i}><i/></span>)}</div>
+                  <div className="stage-legend"><span><i className="reading"/>Baca</span><span><i className="learning"/>Belajar</span></div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section className="landing-benefit-section" id="manfaat">
       <div className="conversion-section-copy">
         <span className="section-tag">KENAPA ARUNIKA</span>
