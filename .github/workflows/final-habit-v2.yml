@@ -1,0 +1,41 @@
+name: Final build habit tracker v2
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - name: Bundle production files
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const files=[
+            'package.json','package-lock.json','tsconfig.json','next-env.d.ts','next.config.mjs',
+            'app/layout.tsx','app/page.tsx','app/globals.css','app/app/page.tsx','app/pro/page.tsx','app/activate/page.tsx','app/admin/page.tsx','app/icon.svg',
+            'components/AppControls.tsx','components/ArunikaApp.tsx','components/ArunikaViews.tsx','components/Charts.tsx','components/Icon.tsx','components/Modal.tsx','components/ServiceWorkerRegister.tsx','components/app-types.ts',
+            'lib/backend.ts','lib/db.ts','lib/demo-data.ts','lib/file.ts','lib/tracker.ts','lib/types.ts','lib/utils.ts',
+            'public/manifest.webmanifest','public/sw.js','public/favicon.svg','public/icons/icon.svg','public/icons/icon-maskable.svg'
+          ];
+          fs.writeFileSync('vercel-deploy-bundle.json',JSON.stringify(files.map(file=>({file,data:fs.readFileSync(file,'utf8')}))));
+          NODE
+          rm .github/workflows/final-habit-v2.yml
+      - name: Commit fresh production bundle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Prepare final habit tracker production bundle"
+          git push
