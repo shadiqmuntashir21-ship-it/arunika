@@ -68,6 +68,12 @@ export function ArunikaApp() {
   const [toast, setToast] = useState("");
   const importRef = useRef<HTMLInputElement | null>(null);
 
+  const navigateTour = useCallback((nextTab: Tab) => {
+    setTab(nextTab);
+    setMobileNav(false);
+  }, []);
+
+
   async function refresh() {
     const snapshot = await loadSnapshot();
     setData(snapshot);
@@ -269,11 +275,6 @@ export function ArunikaApp() {
     await refresh();
     if (startTour) setTourOpen(true);
   }
-
-  const navigateTour = useCallback((nextTab: Tab) => {
-    setTab(nextTab);
-    setMobileNav(false);
-  }, []);
 
   async function updateSettings(patch: Partial<Settings>) {
     await putOne("settings", { ...snapshot.settings, ...patch });
