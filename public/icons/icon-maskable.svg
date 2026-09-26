@@ -1,18 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Arunika">
   <defs>
-    <linearGradient id="r" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ff3540"/>
-      <stop offset=".5" stop-color="#e50914"/>
-      <stop offset="1" stop-color="#a9070e"/>
-    </linearGradient>
-    <linearGradient id="fold" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#76050a"/>
-      <stop offset="1" stop-color="#d00812"/>
-    </linearGradient>
+    <linearGradient id="redA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3340"/><stop offset=".42" stop-color="#e50914"/><stop offset="1" stop-color="#9f050c"/></linearGradient>
+    <linearGradient id="foldA" x1="0" y1="0" x2="1" y2=".15"><stop offset="0" stop-color="#7f050b"/><stop offset="1" stop-color="#c60912"/></linearGradient>
   </defs>
   <rect width="512" height="512" fill="#070707"/>
-  <path d="M170 374 222 139c4-15 13-22 27-22h19l-52 257z" fill="url(#r)"/>
-  <path d="M260 117h16c14 0 23 8 28 22l53 235h-52l-47-200z" fill="url(#r)"/>
-  <path d="M208 276h96l11 44H198z" fill="#f11823"/>
-  <path d="M246 174 260 117h16c7 0 13 2 18 7l-29 128z" fill="url(#fold)"/>
+  <path d="M150 390 222 126c3-10 10-15 21-15h32L207 390Z" fill="url(#redA)"/>
+  <path d="M268 111h24c10 0 18 6 21 16l72 263h-59l-64-233Z" fill="url(#redA)"/>
+  <path d="M195 275h125l13 50H182Z" fill="#f01824"/>
+  <path d="M256 156 268 111h24c7 0 13 2 17 7l-27 105Z" fill="url(#foldA)"/>
 </svg>
