@@ -1,0 +1,40 @@
+name: Final audit PWA tour premium
+
+on:
+  push:
+    branches: [pwa-tour-premium]
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pwa-tour-premium
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - name: Verify PWA assets
+        run: |
+          test -f public/icons/icon-192.png
+          test -f public/icons/icon-512.png
+          test -f public/icons/icon-maskable-512.png
+          test -f public/icons/apple-touch-icon.png
+          grep -q 'icon-192.png' public/manifest.webmanifest
+          grep -q 'display.*standalone' public/manifest.webmanifest
+          grep -q 'arunika-v7-pwa-tour' public/sw.js
+      - name: Cleanup one-shot workflow
+        run: rm .github/workflows/final-audit-pwa-tour.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Complete final PWA tour audit"
+          git push origin HEAD:pwa-tour-premium
