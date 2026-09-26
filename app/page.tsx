@@ -17,69 +17,162 @@ const previewLearning = [
   { title: "The Top Study Habits to Improve Learning", meta: "Huberman Lab Clips", image: "https://i.ytimg.com/vi/1bszFX_XcbU/hqdefault.jpg" }
 ];
 
+const benefits = [
+  { icon:"calendar", title:"Bangun habit, bukan sekadar koleksi", text:"Catat durasi baca dan belajar per hari, lihat streak, target, dan kalender aktivitasmu." },
+  { icon:"book", title:"Semua bacaan dalam satu tempat", text:"Simpan buku, progress halaman, sesi baca, review, wishlist, dan status selesai." },
+  { icon:"play", title:"Belajar dari video tetap terarah", text:"Simpan YouTube, podcast, webinar, atau course lalu catat durasi dan progresnya." },
+  { icon:"bulb", title:"Insight tidak hilang begitu saja", text:"Highlight, catatan, dan takeaway terkumpul di Knowledge Vault pribadi." },
+  { icon:"chart", title:"Lihat perkembanganmu dengan jelas", text:"Rekap bulanan menunjukkan buku, video, halaman, durasi baca, dan durasi belajar." },
+  { icon:"lock", title:"Local-first dan tetap milikmu", text:"Data personal utama disimpan di perangkatmu. Arunika tidak memerlukan akun untuk jurnal pribadi." }
+] as const;
+
+const faqs = [
+  ["Apakah ini langganan bulanan?","Tidak. Arunika Pro dibeli sekali. Harga promo saat ini Rp49.000."],
+  ["Data buku dan catatan saya disimpan di mana?","Arunika menggunakan pendekatan local-first. Buku, sesi, habit, insight, dan data personal utama disimpan di perangkatmu."],
+  ["Bisa dipasang seperti aplikasi?","Bisa. Arunika adalah PWA dan dapat dipasang dari browser yang mendukung instalasi aplikasi web."],
+  ["Bisa dipakai untuk video YouTube?","Bisa. Simpan URL YouTube di Learning Tracker, lalu buka kembali video aslinya langsung dari Arunika."],
+  ["Berapa perangkat untuk satu lisensi?","Lisensi Arunika Pro mendukung maksimal 2 perangkat sesuai konfigurasi lisensi saat ini."],
+  ["Bisa dicoba sebelum beli?","Bisa. Mode Demo berisi contoh buku, learning, habit, dan insight supaya kamu bisa merasakan aplikasinya terlebih dahulu."]
+];
+
 export default function LandingPage(){
-  return <main className="stream-landing">
+  return <main className="stream-landing conversion-landing">
     <header className="landing-stream-nav">
       <a href="/" className="stream-wordmark landing-wordmark">ARUNIKA</a>
       <nav>
-        <a href="#jelajah">Jelajah</a>
+        <a href="#manfaat">Manfaat</a>
+        <a href="#jelajah">Buku</a>
         <a href="#learning">Learning</a>
-        <a href="#fitur">Fitur</a>
+        <a href="#cara">Cara Kerja</a>
         <a href="#pro">Pro</a>
       </nav>
       <div className="landing-nav-actions">
         <ThemeToggle compact />
         <a href="/activate" className="landing-login">Aktivasi</a>
-        <a href="/app" className="landing-demo">Coba Demo</a>
+        <a href="/pro" className="landing-demo landing-buy">Dapatkan Pro</a>
       </div>
     </header>
 
-    <section className="landing-cinema-hero">
+    <section className="landing-cinema-hero conversion-hero">
       <div className="cinema-grid real-covers" aria-hidden="true">
         {previewBooks.map((book,index)=><div className={"cinema-poster p"+(index+1)} key={book.title}><img src={book.image} alt=""/><span className="cinema-poster-shade"/><small>{book.title}</small></div>)}
       </div>
       <div className="cinema-vignette"/>
-      <div className="landing-cinema-copy">
+      <div className="landing-cinema-copy conversion-hero-copy">
         <div className="hero-brandline"><span className="hero-a">A</span><span>READ · LEARN · GROW</span></div>
-        <h1>Semua yang kamu baca dan pelajari, <em>akhirnya punya tempat.</em></h1>
-        <p>Arunika mengubah reading journal menjadi pengalaman aplikasi yang visual: lanjutkan bacaan, simpan insight, track learning, dan lihat perkembanganmu seperti menjelajah koleksi pribadi.</p>
-        <div className="stream-hero-actions landing-actions">
-          <a className="netflix-play" href="/app"><Icon name="play" size={20}/> Mulai Demo</a>
+        <h1>Bukan cuma selesai baca. <em>Buat kebiasaan belajarmu benar-benar tumbuh.</em></h1>
+        <p>Arunika menyatukan buku, video, sesi, habit, insight, dan rekap bulanan dalam satu aplikasi local-first yang terasa seperti perpustakaan streaming pribadimu.</p>
+
+        <div className="hero-offer-card">
+          <span className="offer-label">HARGA PROMO ARUNIKA PRO</span>
+          <div className="offer-price-row"><del>Rp100.000</del><strong>Rp49.000</strong><span>sekali bayar</span></div>
+          <small>Tanpa langganan bulanan. Maksimal 2 perangkat.</small>
+        </div>
+
+        <div className="stream-hero-actions landing-actions conversion-actions">
+          <a className="netflix-play conversion-buy" href="/pro"><Icon name="crown" size={19}/> Dapatkan Pro Rp49.000</a>
+          <a className="netflix-more" href="/app"><Icon name="play" size={19}/> Coba Demo Gratis</a>
           <InstallButton hero />
-          <a className="netflix-more" href="#fitur"><span className="info-dot">i</span> Pelajari Arunika</a>
         </div>
-        <div className="landing-proof">
-          <div className="landing-proof-item"><b>Local-first</b><span>Data tetap di perangkatmu</span></div>
-          <div className="landing-proof-item"><b>PWA</b><span>Pasang seperti aplikasi</span></div>
-          <div className="landing-proof-item"><b>Rp25.000</b><span>Sekali bayar untuk Pro</span></div>
+
+        <div className="landing-proof conversion-proof">
+          <div className="landing-proof-item"><b>Local-first</b><span>Data jurnal tetap di perangkat</span></div>
+          <div className="landing-proof-item"><b>Habit tracker</b><span>Baca + belajar dalam satu kalender</span></div>
+          <div className="landing-proof-item"><b>Sekali bayar</b><span>Tidak ada biaya bulanan</span></div>
         </div>
+      </div>
+    </section>
+
+    <section className="landing-value-strip">
+      <div><strong>Buku</strong><span>Progress, sesi, review & wishlist</span></div>
+      <div><strong>Learning</strong><span>YouTube, podcast, webinar & course</span></div>
+      <div><strong>Habit</strong><span>Durasi baca + belajar harian</span></div>
+      <div><strong>Insight</strong><span>Rekap bulanan & knowledge vault</span></div>
+    </section>
+
+    <section className="landing-benefit-section" id="manfaat">
+      <div className="conversion-section-copy">
+        <span className="section-tag">KENAPA ARUNIKA</span>
+        <h2>Kamu tidak butuh lebih banyak konten. Kamu butuh sistem untuk benar-benar <em>menjalankannya.</em></h2>
+        <p>Buku yang dibeli, video yang disimpan, dan insight yang menarik sering berhenti sebagai niat. Arunika membantu menjadikannya ritme harian yang bisa dilihat dan dilanjutkan.</p>
+      </div>
+      <div className="conversion-benefit-grid">
+        {benefits.map(item=><article className="conversion-benefit-card" key={item.title}>
+          <span className="conversion-benefit-icon"><Icon name={item.icon as any} size={22}/></span>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </article>)}
       </div>
     </section>
 
     <section className="landing-stream-section" id="jelajah">
-      <div className="landing-section-head"><span className="section-tag">KOLEKSI PRIBADIMU</span><h2>Seperti punya perpustakaan streaming pribadi.</h2><p>Jelajahi Demo dengan sampul nyata. Setelah Pro aktif, semua contoh dibersihkan dan ruang ini menjadi koleksimu sendiri.</p></div>
+      <div className="landing-section-head">
+        <span className="section-tag">READING LOG</span>
+        <h2>Perpustakaan pribadi yang membuatmu ingin kembali membaca.</h2>
+        <p>Sampul, progress, status, sesi, dan review tampil visual. Bukan spreadsheet yang terasa seperti pekerjaan tambahan.</p>
+      </div>
       <div className="landing-rail book-cover-rail">
         {previewBooks.map((book)=><div className="landing-media-card" key={book.title}><div className="landing-book-cover"><img src={book.image} alt={book.title}/></div><strong>{book.title}</strong><span>{book.meta}</span></div>)}
+      </div>
+      <div className="inline-conversion-cta">
+        <div><strong>Sudah punya banyak buku yang ingin diselesaikan?</strong><span>Mulai dari satu sesi hari ini.</span></div>
+        <a href="/app">Coba Demo <Icon name="arrow" size={15}/></a>
       </div>
     </section>
 
     <section className="landing-stream-section learning-preview-section" id="learning">
-      <div className="landing-section-head"><span className="section-tag">BELAJAR VISUAL</span><h2>Learning tracker yang terasa hidup.</h2><p>Simpan video, podcast, webinar, atau course. Di Demo, thumbnail nyata menunjukkan bagaimana koleksimu akan terlihat saat sudah terisi.</p></div>
+      <div className="landing-section-head">
+        <span className="section-tag">LEARNING TRACKER</span>
+        <h2>Belajar dari video tanpa kehilangan jejak.</h2>
+        <p>Simpan konten yang sedang dipelajari, catat sesi menonton, lanjutkan progres, dan masukkan takeaway penting ke vault pribadimu.</p>
+      </div>
       <div className="landing-learning-grid">
         {previewLearning.map((item)=><article className="landing-learning-card" key={item.title}><div className="landing-video-thumb"><img src={item.image} alt={item.title}/><span className="landing-play"><Icon name="play" size={18}/></span></div><strong>{item.title}</strong><span>{item.meta} · YouTube</span></article>)}
       </div>
     </section>
 
+    <section className="conversion-habit-showcase">
+      <div className="conversion-section-copy">
+        <span className="section-tag">DAILY HABIT TRACKER</span>
+        <h2>Yang dibangun bukan cuma jumlah buku. <em>Tapi kebiasaannya.</em></h2>
+        <p>Setiap sesi baca dan belajar masuk ke tracker harian. Kamu bisa melihat berapa halaman, berapa video, dan berapa menit yang benar-benar kamu jalankan.</p>
+        <div className="habit-showcase-points">
+          <span><Icon name="check" size={16}/> Target halaman per hari</span>
+          <span><Icon name="check" size={16}/> Target durasi baca</span>
+          <span><Icon name="check" size={16}/> Target durasi belajar</span>
+          <span><Icon name="check" size={16}/> Kalender baca + nonton</span>
+        </div>
+      </div>
+      <div className="habit-preview-card">
+        <div className="habit-preview-head"><span>SEPTEMBER 2026</span><strong>Hari ini</strong></div>
+        <div className="habit-preview-stats">
+          <div><small>Buku</small><strong>2</strong></div>
+          <div><small>Halaman</small><strong>24</strong></div>
+          <div><small>Video</small><strong>1</strong></div>
+        </div>
+        <div className="habit-preview-duration">
+          <span><i className="preview-dot reading"/>Baca <strong>32 mnt</strong></span>
+          <span><i className="preview-dot learning"/>Belajar <strong>28 mnt</strong></span>
+        </div>
+        <div className="habit-preview-week">
+          {[["S",0],["S",1],["R",1],["K",0],["J",1],["S",1],["M",0]].map(([label,active],i)=><div className={active?"active":""} key={i}><span>{label}</span><i/></div>)}
+        </div>
+      </div>
+    </section>
+
     <section className="landing-feature-showcase" id="fitur">
-      <div className="feature-showcase-copy"><span className="section-tag">SATU APLIKASI</span><h2>Baca. Belajar. Simpan. Ulangi.</h2><p>Setiap fitur dibuat mengikuti alur nyata: temukan yang ingin dibaca, lanjutkan progress, catat sesi, simpan highlight, lalu lihat pola kebiasaan dan insight.</p>
+      <div className="feature-showcase-copy">
+        <span className="section-tag">SATU ALUR</span>
+        <h2>Baca. Belajar. Catat. Lihat progres.</h2>
+        <p>Semua fitur dibuat saling terhubung. Sesi yang kamu catat otomatis membentuk habit dan rekap, sehingga kamu tidak perlu mengisi angka yang sama berulang-ulang.</p>
         <div className="feature-pill-grid">
           {[
             ["book","Reading Log"],
             ["clock","Reading Session"],
-            ["play","Learning Tracker"],
+            ["play","Learning Session"],
             ["calendar","Habit Tracker"],
             ["bulb","Knowledge Vault"],
-            ["chart","Insights & Recap"]
+            ["chart","Monthly Recap"]
           ].map(([icon,label])=><span key={label}><Icon name={icon as any} size={18}/>{label}</span>)}
         </div>
       </div>
@@ -88,16 +181,68 @@ export default function LandingPage(){
         <div className="screen-feature real-screen-feature">
           <img src="https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg" alt="Atomic Habits"/>
           <div className="screen-feature-gradient"/>
-          <div className="screen-feature-copy"><small>LANJUTKAN MEMBACA</small><h3>Atomic Habits</h3><p>James Clear · Self Development</p><div className="fake-progress"><span/></div><button><Icon name="play" size={15}/> Lanjut Baca</button></div>
+          <div className="screen-feature-copy"><small>LANJUTKAN MEMBACA</small><h3>Atomic Habits</h3><p>James Clear · Self Development</p><div className="fake-progress"><span/></div><button><Icon name="book" size={15}/> Catat Baca</button></div>
         </div>
         <div className="screen-row">{previewLearning.map((item,i)=><div key={item.title} className={"screen-card sc"+(i+1)}><img src={item.image} alt=""/></div>)}</div>
       </div>
     </section>
 
-    <section className="landing-pro-section" id="pro">
-      <div className="pro-cinema-card">
-        <div><span className="section-tag">ARUNIKA PRO</span><h2>Kalau sudah cocok, buka semuanya.</h2><p>Koleksi tanpa batas, backup & restore, akses Pro, dan pengalaman PWA penuh. Aktivasi menggunakan kode lisensi + PIN. Saat aktivasi pertama berhasil, data contoh Demo dihapus agar akun Pro dimulai dari koleksi kosong.</p></div>
-        <div className="pro-price"><small>SEKALI BAYAR</small><strong>Rp25.000</strong><div className="pro-actions"><a href="/pro" className="netflix-play">Lihat Pro</a><a href="/activate" className="netflix-more">Aktivasi</a></div></div>
+    <section className="conversion-how-section" id="cara">
+      <div className="conversion-section-copy centered">
+        <span className="section-tag">MULAI TANPA RIBET</span>
+        <h2>Tiga langkah untuk mulai.</h2>
+        <p>Coba dulu aplikasinya. Kalau cocok, aktivasi Pro dan mulai isi koleksimu sendiri.</p>
+      </div>
+      <div className="conversion-steps">
+        <article><span>01</span><h3>Coba Demo</h3><p>Jelajahi semua tab dengan data contoh agar kamu tahu bagaimana Arunika bekerja.</p><a href="/app">Buka Demo <Icon name="arrow" size={14}/></a></article>
+        <article><span>02</span><h3>Ambil Pro</h3><p>Bayar Rp49.000 sekali. Setelah pembayaran dikonfirmasi, kode aktivasi dikirim ke email.</p><a href="/pro">Beli Pro <Icon name="arrow" size={14}/></a></article>
+        <article><span>03</span><h3>Mulai dari kosong</h3><p>Setelah aktivasi, data Demo dibersihkan dan ruang Arunika menjadi milik koleksimu sendiri.</p><a href="/activate">Sudah punya kode? <Icon name="arrow" size={14}/></a></article>
+      </div>
+    </section>
+
+    <section className="landing-pro-section conversion-pricing-section" id="pro">
+      <div className="conversion-price-card">
+        <div className="conversion-price-copy">
+          <span className="section-tag">ARUNIKA PRO</span>
+          <h2>Kalau satu aplikasi bisa membantu kebiasaan belajarmu lebih konsisten, <em>Rp49.000 terasa sederhana.</em></h2>
+          <p>Buka koleksi tanpa batas, tracker penuh, backup & restore, knowledge vault, insight, serta pengalaman PWA lengkap.</p>
+          <div className="conversion-price-features">
+            <span><Icon name="check" size={16}/> Koleksi buku tanpa batas</span>
+            <span><Icon name="check" size={16}/> Learning tracker tanpa batas</span>
+            <span><Icon name="check" size={16}/> Habit baca + belajar</span>
+            <span><Icon name="check" size={16}/> Backup & restore lokal</span>
+            <span><Icon name="check" size={16}/> Maksimal 2 perangkat</span>
+            <span><Icon name="check" size={16}/> PWA untuk HP & laptop</span>
+          </div>
+        </div>
+        <div className="conversion-price-box">
+          <span className="promo-chip">PROMO SAAT INI</span>
+          <del>Rp100.000</del>
+          <strong>Rp49.000</strong>
+          <small>sekali bayar · tanpa biaya bulanan</small>
+          <a href="/pro" className="netflix-play conversion-main-cta"><Icon name="crown" size={18}/> Dapatkan Arunika Pro</a>
+          <a href="/app" className="conversion-text-link">Masih ragu? Coba Demo dulu →</a>
+        </div>
+      </div>
+    </section>
+
+    <section className="conversion-faq-section">
+      <div className="conversion-section-copy centered">
+        <span className="section-tag">FAQ</span>
+        <h2>Sebelum kamu mulai.</h2>
+      </div>
+      <div className="conversion-faq-list">
+        {faqs.map(([q,a])=><details key={q}><summary>{q}<span>+</span></summary><p>{a}</p></details>)}
+      </div>
+    </section>
+
+    <section className="conversion-final-cta">
+      <span className="hero-a">A</span>
+      <h2>Apa yang kamu baca hari ini bisa hilang besok—atau jadi sesuatu yang tumbuh.</h2>
+      <p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p>
+      <div>
+        <a href="/pro" className="netflix-play"><Icon name="crown" size={18}/> Ambil Pro Rp49.000</a>
+        <a href="/app" className="netflix-more"><Icon name="play" size={18}/> Coba Demo</a>
       </div>
     </section>
 
