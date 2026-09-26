@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BarChart, Donut, GenreBars } from "./Charts";
 import { Icon } from "./Icon";
 import { Modal } from "./Modal";
@@ -11,6 +11,7 @@ import type { BackupPayload, Book, BookStatus, LearningItem, LearningSession, Le
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
 import { verifyArunikaLicense } from "@/lib/backend";
 import { InstallButton, ThemeToggle } from "./AppControls";
+import { ProductTour } from "./ProductTour";
 import { dailyTracker, monthActivityMinutes, monthlyTracker } from "@/lib/tracker";
 
 type Tab = "overview" | "books" | "learning" | "sessions" | "habit" | "knowledge" | "insights" | "wishlist" | "settings";
@@ -55,6 +56,7 @@ export function ArunikaApp() {
   const [sessionModal, setSessionModal] = useState(false);
   const [learningSessionModal, setLearningSessionModal] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book>(emptyBook());
   const [editingLearning, setEditingLearning] = useState<LearningItem>(emptyLearning());
   const [editingSession, setEditingSession] = useState<ReadingSession>(emptySession());
@@ -74,6 +76,8 @@ export function ArunikaApp() {
 
   useEffect(() => {
     refresh();
+    const requested = new URLSearchParams(window.location.search).get("tab") as Tab | null;
+    if (requested && navItems.some((item) => item.key === requested)) setTab(requested);
   }, []);
 
   useEffect(() => {
@@ -259,20 +263,17 @@ export function ArunikaApp() {
     refresh();
   }
 
-  async function finishOnboarding(name: string, dailyTarget: number, readingMinutesTarget: number, learningMinutesTarget: number, yearlyTarget: number) {
-    const settings: Settings = {
-      ...snapshot.settings,
-      name: name.trim() || "Pembaca Arunika",
-      dailyPageTarget: dailyTarget || 20,
-      dailyReadingMinutesTarget: readingMinutesTarget || 30,
-      dailyLearningMinutesTarget: learningMinutesTarget || 30,
-      yearlyBookTarget: yearlyTarget || 15,
-      onboardingDone: true
-    };
-    await putOne("settings", settings);
+  async function finishWelcome(startTour: boolean) {
+    await putOne("settings", { ...snapshot.settings, onboardingDone: true });
     setOnboarding(false);
-    refresh();
+    await refresh();
+    if (startTour) setTourOpen(true);
   }
+
+  const navigateTour = useCallback((nextTab: Tab) => {
+    setTab(nextTab);
+    setMobileNav(false);
+  }, []);
 
   async function updateSettings(patch: Partial<Settings>) {
     await putOne("settings", { ...snapshot.settings, ...patch });
@@ -308,7 +309,7 @@ export function ArunikaApp() {
           <button className="stream-wordmark" onClick={() => setTab("overview")} aria-label="Beranda Arunika">ARUNIKA</button>
           <nav className="stream-nav-links" aria-label="Navigasi utama">
             {navItems.slice(0, 8).map((item) => (
-              <button key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}>{item.label}</button>
+              <button data-tour={item.key} key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}>{item.label}</button>
             ))}
           </nav>
         </div>
@@ -324,8 +325,8 @@ export function ArunikaApp() {
       <aside className={`mobile-drawer ${mobileNav ? "open" : ""}`}>
         <div className="drawer-head"><span className="stream-wordmark">ARUNIKA</span><button className="icon-btn" onClick={()=>setMobileNav(false)}><Icon name="x"/></button></div>
         <div className="drawer-utility"><ThemeToggle /><InstallButton /></div>
-        <nav>{navItems.map((item)=><button key={item.key} className={tab===item.key?"active":""} onClick={()=>{setTab(item.key);setMobileNav(false)}}><Icon name={item.icon}/><span>{item.label}</span></button>)}</nav>
-        {!isPro?<a className="drawer-pro" href="/pro"><Icon name="crown"/> Upgrade Arunika Pro <span>Rp25.000</span></a>:null}
+        <nav>{navItems.map((item)=><button data-tour={item.key} key={item.key} className={tab===item.key?"active":""} onClick={()=>{setTab(item.key);setMobileNav(false)}}><Icon name={item.icon}/><span>{item.label}</span></button>)}</nav>
+        {!isPro?<a className="drawer-pro" href="/pro"><Icon name="crown"/> Upgrade Arunika Pro <span>Rp49.000</span></a>:null}
       </aside>
       {mobileNav?<button className="drawer-backdrop" onClick={()=>setMobileNav(false)} aria-label="Tutup menu"/>:null}
 
@@ -338,20 +339,21 @@ export function ArunikaApp() {
         {tab === "knowledge" && <KnowledgeView data={snapshot} />}
         {tab === "insights" && <InsightsView data={snapshot} insights={insights} year={year} setYear={setYear} />}
         {tab === "wishlist" && <WishlistView books={snapshot.books.filter((b) => b.status === "wishlist")} learning={snapshot.learning.filter((l) => l.status === "wishlist")} onBook={(book: Book) => { setEditingBook(book); setBookModal(true); }} onLearning={(item: LearningItem) => { setEditingLearning(item); setLearningModal(true); }} />}
-        {tab === "settings" && <SettingsView settings={snapshot.settings} isPro={isPro} onSave={updateSettings} onExport={doExport} onImport={() => importRef.current?.click()} />}
+        {tab === "settings" && <SettingsView settings={snapshot.settings} isPro={isPro} onSave={updateSettings} onExport={doExport} onImport={() => importRef.current?.click()} onStartTour={() => setTourOpen(true)} />}
 
         <input ref={importRef} className="hidden" type="file" accept="application/json" onChange={(e) => { const file = e.target.files?.[0]; if (file) doImport(file); e.currentTarget.value = ""; }} />
       </main>
 
       <nav className="mobile-bottom-nav stream-bottom-nav">
-        {navItems.filter((item)=>["overview","books","learning","habit","wishlist"].includes(item.key)).map((item) => <button key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}><Icon name={item.icon} size={19}/><span>{item.label}</span></button>)}
+        {navItems.filter((item)=>["overview","books","learning","habit","wishlist"].includes(item.key)).map((item) => <button data-tour={item.key} key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}><Icon name={item.icon} size={19}/><span>{item.label}</span></button>)}
       </nav>
 
       <BookForm open={bookModal} book={editingBook} setBook={setEditingBook} onClose={() => setBookModal(false)} onSubmit={saveBook} />
       <LearningForm open={learningModal} item={editingLearning} setItem={setEditingLearning} onClose={() => setLearningModal(false)} onSubmit={saveLearning} />
       <SessionForm open={sessionModal} session={editingSession} setSession={setEditingSession} books={snapshot.books.filter((b) => b.status !== "finished" || b.id === editingSession.bookId)} onClose={() => setSessionModal(false)} onSubmit={saveSession} />
       <LearningSessionForm open={learningSessionModal} session={editingLearningSession} setSession={setEditingLearningSession} items={snapshot.learning.filter((item) => item.status !== "finished" || item.id === editingLearningSession.learningId)} onClose={() => setLearningSessionModal(false)} onSubmit={saveLearningSession} />
-      <Onboarding open={onboarding} settings={snapshot.settings} onFinish={finishOnboarding} />
+      <Onboarding open={onboarding} onTour={() => finishWelcome(true)} onSkip={() => finishWelcome(false)} />
+      <ProductTour open={tourOpen} onClose={() => setTourOpen(false)} onNavigate={navigateTour} />
       {toast ? <div className="toast">{toast}</div> : null}
     </div>
   );
