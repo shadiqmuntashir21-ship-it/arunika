@@ -369,7 +369,7 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport }: an
         <button className="primary-btn" onClick={()=>onSave({name,dailyPageTarget:daily,dailyReadingMinutesTarget:readingMinutes,dailyLearningMinutesTarget:learningMinutes,yearlyBookTarget:yearly})}>Simpan target</button>
       </div>
       <div className="panel settings-card"><SectionHead eyebrow="Data" title="Backup & restore"/><p className="muted">Data pribadi tetap tersimpan lokal di perangkat. Export JSON membuat salinan yang bisa kamu simpan sendiri.</p><div className="button-row"><button className="ghost-btn" onClick={onExport}><Icon name="download" size={17}/> Export</button><button className="ghost-btn" onClick={onImport}><Icon name="upload" size={17}/> Import</button></div>{!isPro?<div className="pro-lock"><Icon name="lock" size={16}/> Backup & restore tersedia di Pro.</div>:null}</div>
-      <div className="panel settings-card accent"><SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/><p>{isPro?`Lisensi ${settings.licenseCode||"lokal"} aktif di perangkat ini.`:"Demo menyimpan data lokal dan membatasi jumlah koleksi. Upgrade Pro Rp25.000 untuk membuka mode penuh."}</p>{!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp25.000</a>:null}</div>
+      <div className="panel settings-card accent"><SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/><p>{isPro?`Lisensi ${settings.licenseCode||"lokal"} aktif di perangkat ini.`:"Demo menyimpan data lokal dan membatasi jumlah koleksi. Upgrade Pro Rp49.000 untuk membuka mode penuh."}</p>{!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp49.000</a>:null}</div>
     </section>
   </div>;
 }
