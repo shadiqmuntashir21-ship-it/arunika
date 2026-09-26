@@ -165,7 +165,7 @@ function MediaRail({title,action,children,topTen=false}:{title:string;action:()=
 export function BooksView({ books, query, setQuery, filter, setFilter, onAdd, onEdit, onDelete }: any) {
   return (
     <div className="page-stack">
-      <PageIntro eyebrow="Reading log" title="Perpustakaan buku" text="Kelola bacaan, progress, rating, harga, kepemilikan, review, dan cover buku dalam satu tempat." button={<button className="primary-btn" onClick={onAdd}><Icon name="plus" size={17}/> Tambah buku</button>} />
+      <PageIntro eyebrow="Reading log" title="Perpustakaan buku" text="Kelola bacaan, progress, rating, harga, kepemilikan, review, dan cover buku dalam satu tempat." button={<button data-tour-action="add-book" className="primary-btn" onClick={onAdd}><Icon name="plus" size={17}/> Tambah buku</button>} />
       <div className="toolbar panel">
         <label className="search-box"><Icon name="search" size={18}/><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Cari judul, penulis, atau genre…" /></label>
         <select value={filter} onChange={(e)=>setFilter(e.target.value)}><option value="all">Semua status</option><option value="reading">Sedang dibaca</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select>
@@ -181,7 +181,7 @@ export function BooksView({ books, query, setQuery, filter, setFilter, onAdd, on
 export function LearningView({ items, query, setQuery, filter, setFilter, onAdd, onEdit, onDelete, onSession }: any) {
   return (
     <div className="page-stack">
-      <PageIntro eyebrow="Learning log" title="Belajar, catat sesi, lihat ritmenya" text="Simpan video, webinar, podcast atau course. Catat durasi setiap sesi supaya aktivitas belajar otomatis masuk ke Habit." button={<button className="primary-btn" onClick={onAdd}><Icon name="plus" size={17}/> Tambah learning</button>} />
+      <PageIntro eyebrow="Learning log" title="Belajar, catat sesi, lihat ritmenya" text="Simpan video, webinar, podcast atau course. Catat durasi setiap sesi supaya aktivitas belajar otomatis masuk ke Habit." button={<button data-tour-action="add-learning" className="primary-btn" onClick={onAdd}><Icon name="plus" size={17}/> Tambah learning</button>} />
       <div className="toolbar panel">
         <label className="search-box"><Icon name="search" size={18}/><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Cari judul, channel, topik, sumber…" /></label>
         <select value={filter} onChange={(e)=>setFilter(e.target.value)}><option value="all">Semua status</option><option value="watching">On progress</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select>
@@ -198,7 +198,7 @@ export function SessionsView({ sessions, books, onAdd, onDelete }: any) {
   const sorted = [...sessions].sort((a: ReadingSession,b: ReadingSession)=>b.date.localeCompare(a.date));
   return (
     <div className="page-stack">
-      <PageIntro eyebrow="Reading sessions" title="Catat setiap sesi membaca" text="Masukkan halaman awal, halaman akhir, durasi, catatan, dan highlight. Progress buku dan habit harian akan diperbarui otomatis." button={<button className="primary-btn" onClick={()=>onAdd(books.find((b:Book)=>b.status==="reading")?.id || "")}><Icon name="plus" size={17}/> Sesi baru</button>} />
+      <PageIntro eyebrow="Reading sessions" title="Catat setiap sesi membaca" text="Masukkan halaman awal, halaman akhir, durasi, catatan, dan highlight. Progress buku dan habit harian akan diperbarui otomatis." button={<button data-tour-action="add-session" className="primary-btn" onClick={()=>onAdd(books.find((b:Book)=>b.status==="reading")?.id || "")}><Icon name="plus" size={17}/> Sesi baru</button>} />
       <div className="session-list">
         {sorted.map((session: ReadingSession) => {
           const book = books.find((b: Book)=>b.id===session.bookId);
@@ -235,7 +235,7 @@ export function HabitView({ data, onRead, onLearn, onDeleteRead, onDeleteLearn }
     setSelectedDate(nextKey);
   }
 
-  return <div className="page-stack habit-page">
+  return <div className="page-stack habit-page" data-tour-panel="habit">
     <PageIntro eyebrow="Daily habit tracker" title="Ritme baca & belajar" text="Pilih tanggal untuk melihat jumlah buku, halaman, video, serta durasi baca dan belajar. Semua dihitung dari sesi yang kamu catat." button={<div className="habit-intro-actions"><button className="ghost-btn" onClick={()=>onRead(defaultBook)}><Icon name="book" size={17}/> Catat baca</button><button className="primary-btn" onClick={()=>onLearn(defaultLearning)}><Icon name="play" size={17}/> Catat belajar</button></div>} />
 
     <section className="daily-tracker-grid">
@@ -344,7 +344,7 @@ export function InsightsView({ data, insights, year, setYear }: any) {
 }
 
 export function WishlistView({ books, learning, onBook, onLearning }: any) {
-  return <div className="page-stack"><PageIntro eyebrow="Waiting list" title="Yang ingin kamu baca & pelajari" text="Simpan buku dan konten belajar untuk nanti. Saat siap, ubah statusnya menjadi sedang dibaca atau ditonton." />
+  return <div className="page-stack" data-tour-panel="wishlist"><PageIntro eyebrow="Waiting list" title="Yang ingin kamu baca & pelajari" text="Simpan buku dan konten belajar untuk nanti. Saat siap, ubah statusnya menjadi sedang dibaca atau ditonton." />
     <section className="dashboard-grid"><div className="panel section-panel span-6"><SectionHead eyebrow="Books" title={`Buku (${books.length})`}/><div className="wish-list">{books.map((b:Book)=><button key={b.id} onClick={()=>onBook(b)}><div className="tiny-art"><Icon name="book" size={16}/></div><div><strong>{b.title}</strong><span>{b.author}</span></div><Icon name="arrow" size={16}/></button>)}{!books.length?<EmptyState icon="heart" title="Wishlist buku kosong" text="Tandai buku dengan status Waiting list."/>:null}</div></div><div className="panel section-panel span-6"><SectionHead eyebrow="Learning" title={`Learning (${learning.length})`}/><div className="wish-list">{learning.map((l:LearningItem)=><button key={l.id} onClick={()=>onLearning(l)}><div className="tiny-art"><Icon name="play" size={16}/></div><div><strong>{l.title}</strong><span>{l.channel} · {l.source}</span></div><Icon name="arrow" size={16}/></button>)}{!learning.length?<EmptyState icon="heart" title="Wishlist learning kosong" text="Tambahkan video atau podcast ke Waiting list."/>:null}</div></div></section>
   </div>;
 }
@@ -548,7 +548,7 @@ function BookTile({ book, onEdit, onDelete }: { book: Book; onEdit:()=>void; onD
 
 function LearningTile({ item, onEdit, onDelete, onSession }: { item: LearningItem; onEdit:()=>void; onDelete:()=>void; onSession:()=>void }) {
   const pct=percent(item.watchedMinutes,item.totalMinutes);
-  return <article className="panel learning-tile">
+  return <article className="panel learning-tile" data-tour-item={item.id==="arunika-tour-learning"?"tour-learning":undefined}>
     <div className={item.url ? "learning-thumb learning-thumb-link" : "learning-thumb"} role={item.url ? "button" : undefined} tabIndex={item.url ? 0 : -1} onClick={()=>item.url && openLearningUrl(item)} onKeyDown={(e)=>{if(item.url && (e.key==="Enter"||e.key===" ")){e.preventDefault();openLearningUrl(item)}}} aria-label={item.url ? `Buka ${item.title}` : undefined}>
       {item.thumbnail?<img src={item.thumbnail} alt={item.title}/>:<div className="learning-fallback"><Icon name="play" size={30}/><span>{item.type}</span></div>}
       {item.url?<div className="watch-overlay"><span className="round-play"><Icon name="play" size={18}/></span><strong>Tonton</strong></div>:null}
@@ -561,7 +561,7 @@ function LearningTile({ item, onEdit, onDelete, onSession }: { item: LearningIte
       <div className="progress"><span style={{width:`${pct}%`}}/></div>
       <div className="tile-details"><span>{pct}%</span><span>{item.watchedMinutes}/{item.totalMinutes} mnt</span><span>{item.rating?`${item.rating}★`:"—"}</span></div>
       <div className="learning-card-actions">
-        <button className="session-log-btn" type="button" onClick={onSession}><Icon name="clock" size={14}/> Catat sesi</button>
+        <button data-tour-action="log-learning" className="session-log-btn" type="button" onClick={onSession}><Icon name="clock" size={14}/> Catat sesi</button>
         {item.url?<button className="watch-link" type="button" onClick={()=>openLearningUrl(item)}><Icon name="play" size={14}/> Tonton</button>:null}
       </div>
       {item.highlights?<div className="review-snippet">{item.highlights}</div>:null}
