@@ -26,7 +26,7 @@ export function tourBookExample(): Book {
     type: "Fisik",
     ownership: "Buku sendiri",
     review: "Contoh buku untuk belajar memakai Arunika. Data ini akan dibersihkan setelah tour selesai.",
-    cover: "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg",
+    cover: "/demo/books/atomic-habits.jpg",
     createdAt: now,
     updatedAt: now
   };
@@ -60,7 +60,7 @@ export function tourLearningExample(): LearningItem {
     source: "YouTube",
     type: "Video",
     highlights: "Contoh learning untuk memahami alur Learning → Session → Habit → Knowledge.",
-    thumbnail: "https://i.ytimg.com/vi/Lt54CX9DmS4/hqdefault.jpg",
+    thumbnail: "/demo/learning/ali-abdaal-study.jpg",
     url: "https://www.youtube.com/watch?v=Lt54CX9DmS4",
     createdAt: now,
     updatedAt: now
@@ -93,7 +93,7 @@ export function tourWishlistExample(): Book {
     type: "Fisik",
     ownership: "Buku sendiri",
     review: "Contoh item Waiting List selama tour.",
-    cover: "https://covers.openlibrary.org/b/isbn/9781455586691-L.jpg",
+    cover: "/demo/books/deep-work.jpg",
     createdAt: now,
     updatedAt: now
   };
