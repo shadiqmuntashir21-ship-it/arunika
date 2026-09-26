@@ -2,19 +2,19 @@ import { Icon } from "@/components/Icon";
 import { InstallButton, ThemeToggle } from "@/components/AppControls";
 
 const previewBooks = [
-  { title: "Atomic Habits", meta: "James Clear", image: "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg" },
-  { title: "The Psychology of Money", meta: "Morgan Housel", image: "https://covers.openlibrary.org/b/isbn/9780857197689-L.jpg" },
-  { title: "Deep Work", meta: "Cal Newport", image: "https://covers.openlibrary.org/b/isbn/9781455586691-L.jpg" },
-  { title: "Essentialism", meta: "Greg McKeown", image: "https://covers.openlibrary.org/b/isbn/9780804137386-L.jpg" },
-  { title: "Make Time", meta: "Jake Knapp & John Zeratsky", image: "https://covers.openlibrary.org/b/isbn/9780525572428-L.jpg" },
-  { title: "Thinking, Fast and Slow", meta: "Daniel Kahneman", image: "https://covers.openlibrary.org/b/isbn/9780374533557-L.jpg" }
+  { title: "Atomic Habits", meta: "James Clear", image: "/demo/books/atomic-habits.jpg" },
+  { title: "The Psychology of Money", meta: "Morgan Housel", image: "/demo/books/psychology-of-money.jpg" },
+  { title: "Deep Work", meta: "Cal Newport", image: "/demo/books/deep-work.jpg" },
+  { title: "Essentialism", meta: "Greg McKeown", image: "/demo/books/essentialism.jpg" },
+  { title: "Make Time", meta: "Jake Knapp & John Zeratsky", image: "/demo/books/make-time.jpg" },
+  { title: "Thinking, Fast and Slow", meta: "Daniel Kahneman", image: "/demo/books/thinking-fast-slow.jpg" }
 ];
 
 const previewLearning = [
-  { title: "How to Study for Exams", meta: "Ali Abdaal", image: "https://i.ytimg.com/vi/Lt54CX9DmS4/hqdefault.jpg" },
-  { title: "Belajar Jadi Gen Z dari Aqeela", meta: "Raditya Dika", image: "https://i.ytimg.com/vi/aOZ5A9r_sAw/hqdefault.jpg" },
-  { title: "How to Focus to Change Your Brain", meta: "Huberman Lab Essentials", image: "https://i.ytimg.com/vi/4AwyVTHEU3s/hqdefault.jpg" },
-  { title: "The Top Study Habits to Improve Learning", meta: "Huberman Lab Clips", image: "https://i.ytimg.com/vi/1bszFX_XcbU/hqdefault.jpg" }
+  { title: "How to Study for Exams", meta: "Ali Abdaal", image: "/demo/learning/ali-abdaal-study.jpg" },
+  { title: "Belajar Jadi Gen Z dari Aqeela", meta: "Raditya Dika", image: "/demo/learning/raditya-genz.jpg" },
+  { title: "How to Focus to Change Your Brain", meta: "Huberman Lab Essentials", image: "/demo/learning/huberman-focus.jpg" },
+  { title: "The Top Study Habits to Improve Learning", meta: "Huberman Lab Clips", image: "/demo/learning/huberman-study.jpg" }
 ];
 
 const benefits = [
@@ -60,7 +60,7 @@ export default function LandingPage(){
       <div className="cinema-vignette"/>
       <div className="landing-cinema-copy conversion-hero-copy">
         <div className="hero-brandline"><span className="hero-a">A</span><span>READ · LEARN · GROW</span></div>
-        <h1>Bukan cuma selesai baca. <em>Buat kebiasaan belajarmu benar-benar tumbuh.</em></h1>
+        <h1>Catat yang dibaca. <em>Simpan yang dipelajari.</em> Tumbuh setiap hari.</h1>
         <p>Arunika menyatukan buku, video, sesi, habit, insight, dan rekap bulanan dalam satu aplikasi local-first yang terasa seperti perpustakaan streaming pribadimu.</p>
 
         <div className="hero-offer-card">
@@ -69,11 +69,12 @@ export default function LandingPage(){
           <small>Tanpa langganan bulanan. Maksimal 2 perangkat.</small>
         </div>
 
-        <div className="stream-hero-actions landing-actions conversion-actions">
-          <a className="netflix-play conversion-buy" href="/pro"><Icon name="crown" size={19}/> Dapatkan Pro Rp49.000</a>
-          <a className="netflix-more" href="/app"><Icon name="play" size={19}/> Coba Demo Gratis</a>
+        <div className="stream-hero-actions landing-actions conversion-actions above-fold-actions">
+          <a className="netflix-play demo-primary" href="/app"><Icon name="play" size={18}/> Jelajahi Demo</a>
+          <a className="netflix-more conversion-buy" href="/pro">Dapatkan Pro · Rp49.000</a>
           <InstallButton hero />
         </div>
+        <a className="hero-activate-link" href="/activate">Sudah punya kode? Aktivasi Arunika</a>
 
         <div className="landing-proof conversion-proof">
           <div className="landing-proof-item"><b>Local-first</b><span>Data jurnal tetap di perangkat</span></div>
@@ -225,7 +226,7 @@ export default function LandingPage(){
       <div className="feature-screen">
         <div className="screen-nav"><span className="stream-wordmark">ARUNIKA</span><i/><i/><i/></div>
         <div className="screen-feature real-screen-feature">
-          <img src="https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg" alt="Atomic Habits"/>
+          <img src="/demo/books/atomic-habits.jpg" alt="Atomic Habits"/>
           <div className="screen-feature-gradient"/>
           <div className="screen-feature-copy"><small>LANJUTKAN MEMBACA</small><h3>Atomic Habits</h3><p>James Clear · Self Development</p><div className="fake-progress"><span/></div><button><Icon name="book" size={15}/> Catat Baca</button></div>
         </div>
