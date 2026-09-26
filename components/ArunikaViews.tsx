@@ -5,9 +5,10 @@ import { BarChart, Donut, GenreBars } from "./Charts";
 import { Icon } from "./Icon";
 import { Modal } from "./Modal";
 import { readFileAsDataUrl } from "@/lib/file";
-import type { Book, HabitDay, LearningItem, ReadingSession, Settings } from "@/lib/types";
+import type { Book, HabitDay, LearningItem, LearningSession, ReadingSession, Settings } from "@/lib/types";
 import { bookStatusLabel, dateLabel, learningStatusLabel, monthKey, percent, rupiah, todayISO, uid } from "@/lib/utils";
 import type { Snapshot } from "./app-types";
+import { dailyTracker, monthlyTracker } from "@/lib/tracker";
 
 function youtubeIdFromUrl(value: string) {
   const raw = String(value || "").trim();
@@ -31,8 +32,10 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
   const continueReading = data.books.filter((b: Book) => b.status === "reading").slice(0, 8);
   const picks = [...data.books].filter((b: Book) => b.id !== featured?.id).slice(0, 10);
   const learningQueue = data.learning.filter((item: LearningItem) => item.status !== "finished").slice(0, 8);
-  const todayPages = metrics.todayHabit?.pages || 0;
+  const todayPages = metrics.today?.pages || 0;
   const heroPct = featured ? percent(featured.pagesRead, featured.totalPages) : 0;
+  const month = metrics.currentMonth;
+  const monthLabel = new Intl.DateTimeFormat("id-ID",{month:"long",year:"numeric"}).format(new Date());
 
   return (
     <div className="stream-home">
@@ -48,10 +51,10 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
           <div className="hero-kicker">Pilihan untuk {data.settings.name}</div>
           <h2>{featured?.title || "Mulai perjalanan membacamu."}</h2>
           {featured ? <div className="hero-meta"><b>{heroPct}% dibaca</b><span>{featured.genre || "Buku"}</span><span>{featured.type}</span><span>{featured.rating ? `${featured.rating}★` : "Belum dinilai"}</span></div> : null}
-          <p>{featured?.review || "Catat buku, sesi membaca, video, podcast, webinar, dan insight yang ingin kamu bawa lebih jauh."}</p>
+          <p>{featured?.review || "Catat sesi membaca dan belajar, lalu biarkan Arunika merangkum ritmemu setiap hari."}</p>
           <div className="stream-hero-actions">
-            <button className="netflix-play" onClick={onSession}><Icon name="play" size={20}/> {featured ? "Lanjut Baca" : "Mulai Mencatat"}</button>
-            <button className="netflix-more" onClick={() => onTab("books")}><span className="info-dot">i</span> Detail Buku</button>
+            <button className="netflix-play" onClick={onSession}><Icon name="book" size={20}/> {featured ? "Catat Baca" : "Mulai Mencatat"}</button>
+            <button className="netflix-more" onClick={() => onTab("habit")}><Icon name="calendar" size={19}/> Tracker Hari Ini</button>
           </div>
           {featured ? <div className="hero-progress"><div className="progress"><span style={{width:`${heroPct}%`}}/></div><small>{featured.pagesRead} / {featured.totalPages} halaman</small></div> : null}
         </div>
@@ -59,7 +62,7 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
         <div className="hero-quick-stats">
           <div><strong>{metrics.streak}</strong><span>hari streak</span></div>
           <div><strong>{todayPages}</strong><span>halaman hari ini</span></div>
-          <div><strong>{metrics.finishedBooks.length}</strong><span>buku selesai</span></div>
+          <div><strong>{metrics.today?.totalMinutes || 0}</strong><span>menit hari ini</span></div>
         </div>
       </section>
 
@@ -69,7 +72,7 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
             <button className="media-card wide-card" key={book.id} onClick={() => onTab("books")}>
               <div className="media-art">
                 {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "ARUNIKA"}</small></div>}
-                <div className="media-overlay"><span className="round-play"><Icon name="play" size={18}/></span></div>
+                <div className="media-overlay"><span className="round-play"><Icon name="book" size={18}/></span></div>
               </div>
               <div className="media-progress"><span style={{width:`${percent(book.pagesRead,book.totalPages)}%`}}/></div>
               <div className="media-caption"><strong>{book.title}</strong><span>{book.author}</span></div>
@@ -78,17 +81,19 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
           {!continueReading.length ? <button className="media-card empty-media" onClick={() => onTab("books")}><Icon name="plus"/><span>Tambahkan buku</span></button> : null}
         </MediaRail>
 
-        <MediaRail title="Pilihan untuk Koleksimu" action={() => onTab("wishlist")} topTen>
-          {picks.map((book: Book,index:number) => (
-            <button className="top-card" key={book.id} onClick={() => onTab("books")}>
-              <span className="top-number">{index+1}</span>
-              <div className="top-poster">
-                {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "BOOK"}</small></div>}
-                <div className="top-info"><strong>{book.title}</strong><span>{book.author}</span></div>
-              </div>
-            </button>
-          ))}
-        </MediaRail>
+        <section className="monthly-recap-section">
+          <div className="rail-heading monthly-recap-heading">
+            <div><span className="section-tag">REKAP BULAN INI</span><h3>{monthLabel}</h3></div>
+            <button onClick={() => onTab("habit")}>Lihat tracker <Icon name="arrow" size={14}/></button>
+          </div>
+          <div className="monthly-recap-grid">
+            <MonthlyMetric icon="check" label="Selesai" value={`${month.finishedBooks} buku · ${month.finishedLearning} video`} />
+            <MonthlyMetric icon="play" label="On progress" value={`${month.readingInProgress} buku · ${month.learningInProgress} video`} />
+            <MonthlyMetric icon="book" label="Halaman dibaca" value={String(month.pages)} helper="bulan ini" />
+            <MonthlyMetric icon="clock" label="Durasi baca" value={formatMinutes(month.readingMinutes)} />
+            <MonthlyMetric icon="play" label="Durasi belajar" value={formatMinutes(month.learningMinutes)} />
+          </div>
+        </section>
 
         <MediaRail title="Belajar Berikutnya" action={() => onTab("learning")}>
           {learningQueue.map((item: LearningItem) => (
@@ -105,14 +110,26 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
           {!learningQueue.length ? <button className="media-card empty-media" onClick={() => onTab("learning")}><Icon name="plus"/><span>Tambah learning</span></button> : null}
         </MediaRail>
 
+        <MediaRail title="Pilihan untuk Koleksimu" action={() => onTab("wishlist")} topTen>
+          {picks.map((book: Book,index:number) => (
+            <button className="top-card" key={book.id} onClick={() => onTab("books")}>
+              <span className="top-number">{index+1}</span>
+              <div className="top-poster">
+                {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "BOOK"}</small></div>}
+                <div className="top-info"><strong>{book.title}</strong><span>{book.author}</span></div>
+              </div>
+            </button>
+          ))}
+        </MediaRail>
+
         <section className="stream-dashboard-row">
           <article className="stream-mini-panel">
             <div className="stream-mini-head"><div><span>Target Tahunan</span><h3>{metrics.finishedBooks.length} dari {data.settings.yearlyBookTarget} buku</h3></div><button onClick={()=>onTab("insights")}>Lihat insight</button></div>
             <Donut value={metrics.finishedBooks.length} total={data.settings.yearlyBookTarget} label="target buku"/>
           </article>
           <article className="stream-mini-panel insight-preview">
-            <div className="stream-mini-head"><div><span>Aktivitas Tahun Ini</span><h3>Ritme membaca</h3></div><button onClick={()=>onTab("habit")}>Habit</button></div>
-            <BarChart data={insights.monthlyBooks}/>
+            <div className="stream-mini-head"><div><span>Aktivitas Tahun Ini</span><h3>Ritme baca & belajar</h3></div><button onClick={()=>onTab("habit")}>Habit</button></div>
+            <BarChart data={insights.monthlyActivity}/>
           </article>
           <article className="stream-mini-panel knowledge-preview">
             <div className="stream-mini-head"><div><span>Knowledge Vault</span><h3>Yang layak diingat</h3></div><button onClick={()=>onTab("knowledge")}>Buka vault</button></div>
@@ -123,6 +140,19 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
       </div>
     </div>
   );
+}
+
+function MonthlyMetric({icon,label,value,helper}:{icon:any;label:string;value:string;helper?:string}) {
+  return <article className="monthly-metric">
+    <span className="monthly-metric-icon"><Icon name={icon} size={18}/></span>
+    <div><small>{label}</small><strong>{value}</strong>{helper?<span>{helper}</span>:null}</div>
+  </article>;
+}
+
+function formatMinutes(minutes:number) {
+  if (minutes < 60) return `${minutes} mnt`;
+  const hours=Math.floor(minutes/60), rest=minutes%60;
+  return rest ? `${hours}j ${rest}m` : `${hours} jam`;
 }
 function MediaRail({title,action,children,topTen=false}:{title:string;action:()=>void;children:any;topTen?:boolean}){
   return <section className={"media-rail "+(topTen?"top-ten-rail":"")}>
@@ -147,16 +177,16 @@ export function BooksView({ books, query, setQuery, filter, setFilter, onAdd, on
   );
 }
 
-export function LearningView({ items, query, setQuery, filter, setFilter, onAdd, onEdit, onDelete }: any) {
+export function LearningView({ items, query, setQuery, filter, setFilter, onAdd, onEdit, onDelete, onSession }: any) {
   return (
     <div className="page-stack">
-      <PageIntro eyebrow="Learning log" title="Video, webinar, podcast & course" text="Track durasi, topik, sumber, progress, rating, dan highlights dari setiap konten yang kamu pelajari." button={<button className="primary-btn" onClick={onAdd}><Icon name="plus" size={17}/> Tambah learning</button>} />
+      <PageIntro eyebrow="Learning log" title="Belajar, catat sesi, lihat ritmenya" text="Simpan video, webinar, podcast atau course. Catat durasi setiap sesi supaya aktivitas belajar otomatis masuk ke Habit." button={<button className="primary-btn" onClick={onAdd}><Icon name="plus" size={17}/> Tambah learning</button>} />
       <div className="toolbar panel">
         <label className="search-box"><Icon name="search" size={18}/><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Cari judul, channel, topik, sumber…" /></label>
-        <select value={filter} onChange={(e)=>setFilter(e.target.value)}><option value="all">Semua status</option><option value="watching">Ditonton</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select>
+        <select value={filter} onChange={(e)=>setFilter(e.target.value)}><option value="all">Semua status</option><option value="watching">On progress</option><option value="finished">Selesai</option><option value="wishlist">Waiting list</option><option value="unfinished">Tidak selesai</option></select>
       </div>
       <div className="learning-grid">
-        {items.map((item: LearningItem) => <LearningTile key={item.id} item={item} onEdit={()=>onEdit(item)} onDelete={()=>onDelete(item.id)} />)}
+        {items.map((item: LearningItem) => <LearningTile key={item.id} item={item} onEdit={()=>onEdit(item)} onDelete={()=>onDelete(item.id)} onSession={()=>onSession(item)} />)}
         {!items.length ? <div className="panel full-row"><EmptyState icon="play" title="Belum ada learning item" text="Tambahkan video, webinar, podcast, course, atau artikel." /></div> : null}
       </div>
     </div>
@@ -179,30 +209,107 @@ export function SessionsView({ sessions, books, onAdd, onDelete }: any) {
   );
 }
 
-export function HabitView({ habit, settings, onAdd }: any) {
+export function HabitView({ data, onRead, onLearn, onDeleteRead, onDeleteLearn }: any) {
   const now = new Date();
   const [cursor, setCursor] = useState(new Date(now.getFullYear(), now.getMonth(), 1));
+  const [selectedDate,setSelectedDate]=useState(todayISO());
   const year = cursor.getFullYear(), month = cursor.getMonth();
   const days = new Date(year, month + 1, 0).getDate();
   const firstDay = (new Date(year, month, 1).getDay()+6)%7;
   const monthPrefix = `${year}-${String(month+1).padStart(2,"0")}`;
-  const monthData = habit.filter((h: HabitDay)=>monthKey(h.date)===monthPrefix);
-  const totalPages = monthData.reduce((n:number,h:HabitDay)=>n+h.pages,0);
-  const totalMinutes = monthData.reduce((n:number,h:HabitDay)=>n+h.minutes,0);
-  const readingDays = monthData.filter((h:HabitDay)=>h.readToday).length;
-  return <div className="page-stack">
-    <PageIntro eyebrow="Book habit tracker" title="Bangun ritme membaca" text="Isi apakah kamu membaca hari ini, berapa menit, dan berapa halaman. Lihat recap bulanan dalam kalender yang sederhana." button={<button className="primary-btn" onClick={onAdd}><Icon name="plus" size={17}/> Isi hari ini</button>} />
-    <section className="stat-grid three">
-      <Stat label="Total halaman" value={`${totalPages}`} helper="bulan ini" icon="book" />
-      <Stat label="Total menit" value={`${totalMinutes}`} helper="waktu membaca" icon="clock" />
-      <Stat label="Hari membaca" value={`${readingDays}/${days}`} helper={`target ${settings.dailyPageTarget} halaman/hari`} icon="calendar" />
+  const selected = dailyTracker(data, selectedDate);
+  const monthSummary = monthlyTracker(data, monthPrefix);
+  const readingForDay = data.sessions.filter((session:ReadingSession)=>session.date===selectedDate);
+  const learningForDay = data.learningSessions.filter((session:LearningSession)=>session.date===selectedDate);
+  const monthTitle = new Intl.DateTimeFormat("id-ID",{month:"long",year:"numeric"}).format(cursor);
+  const selectedLabel = new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date(selectedDate+"T00:00:00"));
+
+  const defaultBook = data.books.find((book:Book)=>book.status==="reading")?.id || "";
+  const defaultLearning = data.learning.find((item:LearningItem)=>item.status==="watching")?.id || "";
+
+  return <div className="page-stack habit-page">
+    <PageIntro eyebrow="Daily habit tracker" title="Ritme baca & belajar" text="Pilih tanggal untuk melihat jumlah buku, halaman, video, serta durasi baca dan belajar. Semua dihitung dari sesi yang kamu catat." button={<div className="habit-intro-actions"><button className="ghost-btn" onClick={()=>onRead(defaultBook)}><Icon name="book" size={17}/> Catat baca</button><button className="primary-btn" onClick={()=>onLearn(defaultLearning)}><Icon name="play" size={17}/> Catat belajar</button></div>} />
+
+    <section className="daily-tracker-grid">
+      <article className="daily-tracker-card activity-card">
+        <div className="tracker-card-head"><span>Aktivitas</span><small>{selectedDate===todayISO()?"Hari ini":selectedLabel}</small></div>
+        <div className="activity-values">
+          <div><strong>{selected.books}</strong><span>buku</span></div>
+          <div><strong>{selected.pages}</strong><span>halaman</span></div>
+          <div><strong>{selected.videos}</strong><span>video</span></div>
+        </div>
+      </article>
+
+      <article className="daily-tracker-card duration-card">
+        <div className="tracker-card-head"><span>Durasi</span><small>{selected.totalMinutes} menit total</small></div>
+        <div className="duration-values">
+          <div><i className="tracker-dot reading"/><span>Baca</span><strong>{formatMinutes(selected.readingMinutes)}</strong></div>
+          <div><i className="tracker-dot learning"/><span>Belajar</span><strong>{formatMinutes(selected.learningMinutes)}</strong></div>
+        </div>
+      </article>
+
+      <article className="daily-tracker-card target-card">
+        <div className="tracker-card-head"><span>Target harian</span><small>{[selected.pageTargetReached,selected.readingTargetReached,selected.learningTargetReached].filter(Boolean).length}/3 tercapai</small></div>
+        <TargetLine label="Halaman" value={selected.pages} target={data.settings.dailyPageTarget} unit="hlm"/>
+        <TargetLine label="Durasi baca" value={selected.readingMinutes} target={data.settings.dailyReadingMinutesTarget} unit="mnt"/>
+        <TargetLine label="Durasi belajar" value={selected.learningMinutes} target={data.settings.dailyLearningMinutesTarget} unit="mnt"/>
+      </article>
     </section>
-    <section className="panel calendar-panel">
-      <div className="calendar-head"><button className="icon-btn" onClick={()=>setCursor(new Date(year,month-1,1))}>‹</button><div><div className="eyebrow">HABIT CALENDAR</div><h3>{new Intl.DateTimeFormat("id-ID",{month:"long",year:"numeric"}).format(cursor)}</h3></div><button className="icon-btn" onClick={()=>setCursor(new Date(year,month+1,1))}>›</button></div>
+
+    <section className="panel calendar-panel habit-calendar-panel">
+      <div className="calendar-head">
+        <button className="icon-btn" onClick={()=>setCursor(new Date(year,month-1,1))}>‹</button>
+        <div><div className="eyebrow">HABIT CALENDAR</div><h3>{monthTitle}</h3><p>{monthSummary.activeDays} hari aktif · {formatMinutes(monthSummary.totalMinutes)} aktivitas</p></div>
+        <button className="icon-btn" onClick={()=>setCursor(new Date(year,month+1,1))}>›</button>
+      </div>
+      <div className="calendar-legend"><span><i className="tracker-dot reading"/>Baca</span><span><i className="tracker-dot learning"/>Belajar</span></div>
       <div className="week-row">{["Sen","Sel","Rab","Kam","Jum","Sab","Min"].map(d=><span key={d}>{d}</span>)}</div>
-      <div className="calendar-grid">{Array(firstDay).fill(null).map((_,i)=><div key={`e${i}`} className="day empty"/>)}{Array.from({length:days},(_,i)=>i+1).map(day=>{const date=`${monthPrefix}-${String(day).padStart(2,"0")}`;const h=habit.find((x:HabitDay)=>x.date===date);const active=Boolean(h?.readToday);return <div key={date} className={`day ${active?"active":""} ${date===todayISO()?"today":""}`}><strong>{day}</strong>{active?<><span>{h.pages} hlm</span><small>{h.minutes} mnt</small></>:<span>—</span>}</div>})}</div>
+      <div className="calendar-grid">
+        {Array(firstDay).fill(null).map((_,i)=><div key={`e${i}`} className="day empty"/>)}
+        {Array.from({length:days},(_,i)=>i+1).map(day=>{
+          const date=`${monthPrefix}-${String(day).padStart(2,"0")}`;
+          const summary=dailyTracker(data,date);
+          return <button type="button" key={date} className={`day habit-day ${summary.active?"active":""} ${date===todayISO()?"today":""} ${date===selectedDate?"selected":""}`} onClick={()=>setSelectedDate(date)}>
+            <strong>{day}</strong>
+            {summary.active?<div className="day-duration-list">
+              {summary.readingMinutes>0?<span className="day-duration reading"><i/><b>{summary.readingMinutes}</b><small>m</small></span>:null}
+              {summary.learningMinutes>0?<span className="day-duration learning"><i/><b>{summary.learningMinutes}</b><small>m</small></span>:null}
+            </div>:<span className="day-empty-mark">—</span>}
+          </button>
+        })}
+      </div>
+    </section>
+
+    <section className="selected-day-panel">
+      <div className="selected-day-head">
+        <div><span className="section-tag">DETAIL HARI</span><h3>{selectedLabel}</h3></div>
+        <div className="selected-day-total">{selected.totalMinutes} menit</div>
+      </div>
+      <div className="day-session-columns">
+        <article className="day-session-column">
+          <div className="day-session-title"><span><i className="tracker-dot reading"/>Sesi baca</span><strong>{selected.readingMinutes} mnt</strong></div>
+          {readingForDay.map((session:ReadingSession)=>{
+            const book=data.books.find((entry:Book)=>entry.id===session.bookId);
+            return <div className="day-session-row" key={session.id}><div><strong>{book?.title||"Buku"}</strong><span>{Math.max(0,session.endPage-session.startPage)} halaman · {session.minutes} menit</span></div><button className="icon-btn danger" onClick={()=>onDeleteRead(session.id)}><Icon name="trash" size={15}/></button></div>
+          })}
+          {!readingForDay.length?<p className="day-session-empty">Belum ada sesi baca pada tanggal ini.</p>:null}
+        </article>
+        <article className="day-session-column">
+          <div className="day-session-title"><span><i className="tracker-dot learning"/>Sesi belajar</span><strong>{selected.learningMinutes} mnt</strong></div>
+          {learningForDay.map((session:LearningSession)=>{
+            const item=data.learning.find((entry:LearningItem)=>entry.id===session.learningId);
+            return <div className="day-session-row" key={session.id}><div><strong>{item?.title||"Learning"}</strong><span>{session.minutes} menit · {item?.source||"Learning"}</span></div><button className="icon-btn danger" onClick={()=>onDeleteLearn(session.id)}><Icon name="trash" size={15}/></button></div>
+          })}
+          {!learningForDay.length?<p className="day-session-empty">Belum ada sesi belajar pada tanggal ini.</p>:null}
+        </article>
+      </div>
     </section>
   </div>;
+}
+
+function TargetLine({label,value,target,unit}:{label:string;value:number;target:number;unit:string}) {
+  const pct=Math.min(100,target>0?Math.round((value/target)*100):0);
+  return <div className="target-line"><div><span>{label}</span><b>{value}/{target} {unit}</b></div><div className="target-track"><span style={{width:`${pct}%`}}/></div></div>;
 }
 
 export function KnowledgeView({ data }: { data: Snapshot }) {
@@ -235,10 +342,26 @@ export function WishlistView({ books, learning, onBook, onLearning }: any) {
 }
 
 export function SettingsView({ settings, isPro, onSave, onExport, onImport }: any) {
-  const [name,setName]=useState(settings.name);const [daily,setDaily]=useState(settings.dailyPageTarget);const [yearly,setYearly]=useState(settings.yearlyBookTarget);
-  return <div className="page-stack"><PageIntro eyebrow="Settings" title="Atur Arunika sesuai ritmemu" text="Target baca, profil lokal, instalasi PWA, backup, dan status lisensi dapat dikelola dari sini." />
-    <section className="settings-layout"><div className="panel settings-card"><SectionHead eyebrow="Profile & target" title="Preferensi membaca"/><div className="form-grid"><Field label="Nama"><input value={name} onChange={e=>setName(e.target.value)}/></Field><Field label="Target halaman / hari"><input type="number" min="1" value={daily} onChange={e=>setDaily(Number(e.target.value))}/></Field><Field label="Target buku / tahun"><input type="number" min="1" value={yearly} onChange={e=>setYearly(Number(e.target.value))}/></Field></div><button className="primary-btn" onClick={()=>onSave({name,dailyPageTarget:daily,yearlyBookTarget:yearly})}>Simpan pengaturan</button></div>
-      <div className="panel settings-card"><SectionHead eyebrow="Data" title="Backup & restore"/><p className="muted">Data pribadi tetap lokal. Export JSON membuat salinan yang bisa disimpan sendiri.</p><div className="button-row"><button className="ghost-btn" onClick={onExport}><Icon name="download" size={17}/> Export</button><button className="ghost-btn" onClick={onImport}><Icon name="upload" size={17}/> Import</button></div>{!isPro?<div className="pro-lock"><Icon name="lock" size={16}/> Backup & restore tersedia di Pro.</div>:null}</div>
+  const [name,setName]=useState(settings.name);
+  const [daily,setDaily]=useState(settings.dailyPageTarget);
+  const [readingMinutes,setReadingMinutes]=useState(settings.dailyReadingMinutesTarget||30);
+  const [learningMinutes,setLearningMinutes]=useState(settings.dailyLearningMinutesTarget||30);
+  const [yearly,setYearly]=useState(settings.yearlyBookTarget);
+
+  return <div className="page-stack"><PageIntro eyebrow="Settings" title="Atur target sesuai ritmemu" text="Target dibuat untuk membantu membangun kebiasaan, bukan sekadar mengejar jumlah buku atau video." />
+    <section className="settings-layout">
+      <div className="panel settings-card target-settings-card">
+        <SectionHead eyebrow="Profile & habit target" title="Target harian"/>
+        <div className="form-grid two">
+          <Field label="Nama"><input value={name} onChange={e=>setName(e.target.value)}/></Field>
+          <Field label="Halaman / hari"><input type="number" min="1" value={daily} onChange={e=>setDaily(Number(e.target.value))}/></Field>
+          <Field label="Durasi baca / hari (menit)"><input type="number" min="1" value={readingMinutes} onChange={e=>setReadingMinutes(Number(e.target.value))}/></Field>
+          <Field label="Durasi belajar / hari (menit)"><input type="number" min="1" value={learningMinutes} onChange={e=>setLearningMinutes(Number(e.target.value))}/></Field>
+          <Field label="Buku / tahun"><input type="number" min="1" value={yearly} onChange={e=>setYearly(Number(e.target.value))}/></Field>
+        </div>
+        <button className="primary-btn" onClick={()=>onSave({name,dailyPageTarget:daily,dailyReadingMinutesTarget:readingMinutes,dailyLearningMinutesTarget:learningMinutes,yearlyBookTarget:yearly})}>Simpan target</button>
+      </div>
+      <div className="panel settings-card"><SectionHead eyebrow="Data" title="Backup & restore"/><p className="muted">Data pribadi tetap tersimpan lokal di perangkat. Export JSON membuat salinan yang bisa kamu simpan sendiri.</p><div className="button-row"><button className="ghost-btn" onClick={onExport}><Icon name="download" size={17}/> Export</button><button className="ghost-btn" onClick={onImport}><Icon name="upload" size={17}/> Import</button></div>{!isPro?<div className="pro-lock"><Icon name="lock" size={16}/> Backup & restore tersedia di Pro.</div>:null}</div>
       <div className="panel settings-card accent"><SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/><p>{isPro?`Lisensi ${settings.licenseCode||"lokal"} aktif di perangkat ini.`:"Demo menyimpan data lokal dan membatasi jumlah koleksi. Upgrade Pro Rp25.000 untuk membuka mode penuh."}</p>{!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp25.000</a>:null}</div>
     </section>
   </div>;
@@ -340,11 +463,23 @@ export function HabitForm({ open, existing, onClose, onSave }: any) {
 }
 
 export function Onboarding({ open, settings, onFinish }: any) {
-  const [step,setStep]=useState(0);const [name,setName]=useState(settings.name||"");const [daily,setDaily]=useState(settings.dailyPageTarget||20);const [yearly,setYearly]=useState(settings.yearlyBookTarget||15);
+  const [step,setStep]=useState(0);
+  const [name,setName]=useState(settings.name||"");
+  const [daily,setDaily]=useState(settings.dailyPageTarget||20);
+  const [readingMinutes,setReadingMinutes]=useState(settings.dailyReadingMinutesTarget||30);
+  const [learningMinutes,setLearningMinutes]=useState(settings.dailyLearningMinutesTarget||30);
+  const [yearly,setYearly]=useState(settings.yearlyBookTarget||15);
   if(!open)return null;
-  return <div className="onboarding"><div className="onboard-card panel"><div className="onboard-symbol">A</div><div className="eyebrow">SELAMAT DATANG DI ARUNIKA</div>{step===0?<><h1>Tempat perjalanan membaca dan belajarmu bertumbuh.</h1><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><button className="primary-btn" onClick={()=>setStep(1)}>Mulai setup <Icon name="arrow" size={17}/></button></>:<><h1>Atur target yang realistis.</h1><div className="form-grid"><Field label="Nama panggilan"><input value={name} onChange={e=>setName(e.target.value)}/></Field><div className="form-grid two"><Field label="Halaman / hari"><input type="number" min="1" value={daily} onChange={e=>setDaily(Number(e.target.value))}/></Field><Field label="Buku / tahun"><input type="number" min="1" value={yearly} onChange={e=>setYearly(Number(e.target.value))}/></Field></div></div><button className="primary-btn" onClick={()=>onFinish(name,daily,yearly)}>Masuk ke Arunika</button></>}</div></div>;
-}
 
+  return <div className="onboarding"><div className="onboard-card panel"><div className="onboard-symbol">A</div><div className="eyebrow">SELAMAT DATANG DI ARUNIKA</div>
+    {step===0?<><h1>Bangun ritme membaca dan belajar yang konsisten.</h1><p>Catat sesi. Lihat progres. Tumbuh setiap hari tanpa mengejar angka berlebihan.</p><button className="primary-btn" onClick={()=>setStep(1)}>Atur target <Icon name="arrow" size={17}/></button></>
+    :<><h1>Mulai dari target yang realistis.</h1><div className="form-grid onboarding-target-grid">
+      <Field label="Nama panggilan"><input value={name} onChange={e=>setName(e.target.value)}/></Field>
+      <div className="form-grid two"><Field label="Halaman / hari"><input type="number" min="1" value={daily} onChange={e=>setDaily(Number(e.target.value))}/></Field><Field label="Baca / hari (menit)"><input type="number" min="1" value={readingMinutes} onChange={e=>setReadingMinutes(Number(e.target.value))}/></Field></div>
+      <div className="form-grid two"><Field label="Belajar / hari (menit)"><input type="number" min="1" value={learningMinutes} onChange={e=>setLearningMinutes(Number(e.target.value))}/></Field><Field label="Buku / tahun"><input type="number" min="1" value={yearly} onChange={e=>setYearly(Number(e.target.value))}/></Field></div>
+    </div><button className="primary-btn" onClick={()=>onFinish(name,daily,readingMinutes,learningMinutes,yearly)}>Masuk ke Arunika</button></>}
+  </div></div>;
+}
 function Stat({ label, value, helper, icon }: any) { return <div className="panel stat-card"><div className="stat-icon"><Icon name={icon}/></div><div><span>{label}</span><strong>{value}</strong><small>{helper}</small></div></div>; }
 function SectionHead({ eyebrow, title, action }: any) { return <div className="section-head"><div><div className="eyebrow">{eyebrow}</div><h3>{title}</h3></div>{action}</div>; }
 function PageIntro({ eyebrow, title, text, button }: any) { return <section className="page-intro"><div><div className="eyebrow">{eyebrow}</div><h2>{title}</h2><p>{text}</p></div>{button}</section>; }
