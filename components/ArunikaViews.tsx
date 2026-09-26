@@ -501,17 +501,19 @@ export function LearningSessionForm({ open, session, setSession, items, onClose,
     </form>
   </Modal>;
 }
-export function Onboarding({ open, onTour, onSkip }: any) {
+export function Onboarding({ open, isPro, onTour, onSkip }: any) {
   if(!open)return null;
 
   return <div className="onboarding demo-welcome">
     <div className="onboard-card panel demo-welcome-card">
       <div className="demo-welcome-brand">
         <div className="onboard-symbol">A</div>
-        <div><div className="eyebrow">SELAMAT DATANG DI ARUNIKA</div><span>MODE DEMO GRATIS</span></div>
+        <div><div className="eyebrow">SELAMAT DATANG DI ARUNIKA</div><span>{isPro?"ARUNIKA PRO AKTIF":"MODE DEMO GRATIS"}</span></div>
       </div>
-      <h1>Coba dulu seluruh pengalaman Arunika.</h1>
-      <p>Data contoh sudah kami siapkan agar kamu bisa langsung melihat bagaimana buku, learning, sesi, habit, knowledge, dan insight saling terhubung.</p>
+      <h1>{isPro?"Ruang belajarmu sudah siap.":"Coba dulu seluruh pengalaman Arunika."}</h1>
+      <p>{isPro
+        ?"Data Demo sudah dibersihkan. Kamu bisa menjelajah fitur dulu lewat Tour, lalu mulai mengisi buku dan learning milikmu sendiri."
+        :"Data contoh sudah kami siapkan agar kamu bisa langsung melihat bagaimana buku, learning, sesi, habit, knowledge, dan insight saling terhubung."}</p>
       <div className="demo-welcome-points">
         <span><Icon name="book" size={17}/> Koleksi buku & progress nyata</span>
         <span><Icon name="play" size={17}/> Learning tracker & sesi belajar</span>
@@ -520,7 +522,7 @@ export function Onboarding({ open, onTour, onSkip }: any) {
       </div>
       <div className="demo-welcome-actions">
         <button className="primary-btn large" onClick={onTour}><Icon name="sparkles" size={17}/> Jelajah dengan Tour</button>
-        <button className="ghost-btn large" onClick={onSkip}>Lewati Tour, Masuk Demo</button>
+        <button className="ghost-btn large" onClick={onSkip}>{isPro?"Lewati Tour, Masuk Arunika":"Lewati Tour, Masuk Demo"}</button>
       </div>
       <small>Tour bisa dilewati kapan saja dan dapat dibuka ulang dari Pengaturan.</small>
     </div>
