@@ -116,6 +116,7 @@ export function ArunikaApp() {
   }
 
   async function finishTour() {
+    if (!data?.settings.activated) localStorage.setItem("arunika-demo-tour-seen","1");
     if (data?.settings.activated) {
       await cleanupTourSandbox();
       localStorage.removeItem("arunika-pro-tour-active");
@@ -365,19 +366,19 @@ export function ArunikaApp() {
           </nav>
         </div>
         <div className="stream-nav-actions">
-          <button className="nav-icon-btn" title="Cari" onClick={() => { setTab("books"); setTimeout(() => document.querySelector<HTMLInputElement>(".search-box input")?.focus(), 100); }}><Icon name="search" /></button>
+          {!isPro ? <button className="header-tour-btn" type="button" onClick={() => beginTour()}>Tour Fitur</button> : null}
           <div className="desktop-theme-control"><ThemeToggle compact /></div>
           <div className="desktop-install-control"><InstallButton compact /></div>
-          {!isPro ? <a className="stream-pro-pill" href="/pro"><Icon name="crown" size={15}/> PRO</a> : <span className="stream-pro-active"><Icon name="check" size={14}/> PRO</span>}
+          {!isPro ? <a className="stream-pro-pill" href="/pro">PRO</a> : <span className="stream-pro-active">PRO</span>}
           <button className="profile-avatar" onClick={() => setTab("settings")} title="Profil">{snapshot.settings.name.slice(0, 1).toUpperCase()}</button>
         </div>
       </header>
 
       <aside className={`mobile-drawer ${mobileNav ? "open" : ""}`}>
         <div className="drawer-head"><span className="stream-wordmark">ARUNIKA</span><button className="icon-btn" onClick={()=>setMobileNav(false)}><Icon name="x"/></button></div>
-        <div className="drawer-utility"><ThemeToggle /><InstallButton /></div>
+        <div className="drawer-utility"><ThemeToggle /><InstallButton />{!isPro?<button className="drawer-tour-btn" type="button" onClick={()=>{setMobileNav(false);beginTour();}}>Mulai Tour Fitur</button>:null}</div>
         <nav>{navItems.map((item)=><button data-tour={item.key} key={item.key} className={tab===item.key?"active":""} onClick={()=>{setTab(item.key);setMobileNav(false)}}><Icon name={item.icon}/><span>{item.label}</span></button>)}</nav>
-        {!isPro?<a className="drawer-pro" href="/pro"><Icon name="crown"/> Upgrade Arunika Pro <span>Rp49.000</span></a>:null}
+        {!isPro?<a className="drawer-pro" href="/pro">Upgrade Arunika Pro <span>Rp49.000</span></a>:null}
       </aside>
       {mobileNav?<button className="drawer-backdrop" onClick={()=>setMobileNav(false)} aria-label="Tutup menu"/>:null}
 
