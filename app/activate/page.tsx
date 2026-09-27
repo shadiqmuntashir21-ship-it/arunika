@@ -91,7 +91,7 @@ export default function ActivatePage(){
       </div>
 
       <form className="panel activation-card" onSubmit={submit}>
-        <div className="brand-symbol big">A</div>
+        <div className="brand-symbol big">G</div>
         <h2>Aktivasi Pro</h2>
         <label>
           <span>Kode lisensi</span>
