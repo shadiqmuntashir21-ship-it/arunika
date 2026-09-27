@@ -7060,3 +7060,13 @@ html[data-theme="light"] .distribution-saved-card span{
   height:18px;
   flex-basis:18px;
 }
+
+
+/* Growva monogram treatment for onboarding/loading states. */
+.loader-mark,
+.onboard-symbol{
+  background:linear-gradient(145deg,#ff3340,#b0060e)!important;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-weight:950!important;
+  letter-spacing:-.08em;
+}
