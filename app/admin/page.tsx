@@ -264,7 +264,9 @@ export default function AdminPage(){
     try{
       const res=await adminLicenses(token,"sendManualEmail",{licenseId,email});
       if(!res?.ok)throw new Error(res?.message||res?.code||"Email akses manual gagal dikirim.");
-      setMessage(`Email akses manual berhasil dikirim ke ${email}.`);
+      setMessage(`Email akses berhasil dikirim ke ${email}. Lisensi otomatis ditandai sudah didistribusikan.`);
+      await load();
+      setSelectedLicense(null);
     }catch(err){setMessage(String((err as Error)?.message||err))}
     finally{setBusy(false)}
   }
@@ -278,7 +280,8 @@ export default function AdminPage(){
         disable:"Lisensi dinonaktifkan.",
         enable:"Lisensi diaktifkan kembali.",
         resetAllDevices:"Semua slot perangkat lisensi sudah direset.",
-        revokeDevice:"Perangkat berhasil dicabut."
+        revokeDevice:"Perangkat berhasil dicabut.",
+        markDistributed:"Lisensi ditandai sudah didistribusikan dan dikeluarkan dari stok otomatis."
       };
       setMessage(copy[action]||"Lisensi diperbarui.");
       await load();
@@ -538,7 +541,7 @@ function LicensesView({licenses,devices,search,setSearch,revealed,setRevealed,on
         <tbody>{licenses.map((l:License)=><tr key={l.id}>
           <td><div className="license-code-cell"><strong>{revealed[l.id]?l.license_code:maskLicense(l.license_code)}</strong><button onClick={()=>setRevealed((v:any)=>({...v,[l.id]:!v[l.id]}))}>{revealed[l.id]?"Sembunyikan":"Lihat"}</button></div></td>
           <td><LicenseStatus status={l.status}/></td>
-          <td><span className={`license-source-badge ${String(l.notes||"").startsWith("Manual admin access")?"manual":"standard"}`}>{String(l.notes||"").startsWith("Manual admin access")?"Manual":"Order / stok"}</span></td>
+          <td><span className={`license-source-badge ${String(l.notes||"").toLowerCase().includes("manual")?"manual":"standard"}`}>{String(l.notes||"").toLowerCase().includes("manual")?"Manual":"Order / stok"}</span></td>
           <td><strong>{l.buyer_name||"Belum dialokasikan"}</strong><small>{l.buyer_contact||"—"}</small></td>
           <td><strong>{deviceCount(l.id)}/{l.max_devices||2}</strong><small>aktif</small></td>
           <td><strong>{l.first_activated_at?dt(l.first_activated_at):"Belum aktif"}</strong></td>
@@ -671,15 +674,23 @@ function OrderDrawer({order,license,busy,onClose,onAction}:any){
 
 function LicenseDrawer({license,devices,busy,onClose,onAction,onSendEmail}:any){
   const [revealPin,setRevealPin]=useState(false);
-  const [email,setEmail]=useState("");
+  const [email,setEmail]=useState(license.buyer_contact?.includes("@")?license.buyer_contact:"");
+  const [recipientName,setRecipientName]=useState(license.buyer_name&&license.buyer_name!=="Distribusi Manual"?license.buyer_name:"");
+  const [recipientContact,setRecipientContact]=useState(license.buyer_contact||"");
   const pin=String(license.entitlement?.activation_pin||"");
+  const distributed=license.status!=="unused";
+  const manual=String(license.notes||"").toLowerCase().includes("manual");
   const copy=(value:string)=>navigator.clipboard.writeText(value).catch(()=>undefined);
   const copyAll=()=>copy(`ARUNIKA PRO\nKode Aktivasi: ${license.license_code}\nPIN Aktivasi: ${pin||"—"}`);
 
   return <div className="admin-drawer-backdrop" onClick={onClose}>
     <aside className="admin-detail-drawer" onClick={e=>e.stopPropagation()}>
       <div className="admin-drawer-head"><div><span className="eyebrow">LICENSE DETAIL</span><h2>{license.license_code}</h2></div><button onClick={onClose}><Icon name="x" size={20}/></button></div>
-      <div className="license-drawer-badges"><LicenseStatus status={license.status}/>{String(license.notes||"").startsWith("Manual admin access")?<span className="license-source-badge manual">Manual</span>:null}</div>
+      <div className="license-drawer-badges">
+        <LicenseStatus status={license.status}/>
+        {manual?<span className="license-source-badge manual">Manual</span>:null}
+        {distributed?<span className="license-distributed-badge">Sudah Terdistribusi</span>:<span className="license-stock-badge">Masih Stok</span>}
+      </div>
 
       <div className="admin-detail-section manual-access-credentials">
         <h3>Kode & PIN Aktivasi</h3>
@@ -688,11 +699,23 @@ function LicenseDrawer({license,devices,busy,onClose,onAction,onSendEmail}:any){
         <button className="ghost-btn full" disabled={!pin} onClick={copyAll}>Copy Kode + PIN</button>
       </div>
 
-      <div className="admin-detail-section"><h3>Pemilik</h3><DetailLine label="Nama" value={license.buyer_name||"Belum dialokasikan"}/><DetailLine label="Kontak" value={license.buyer_contact||"—"}/><DetailLine label="Aktivasi pertama" value={dt(license.first_activated_at)}/>{license.notes?<DetailLine label="Catatan" value={license.notes}/>:null}</div>
+      {!distributed?<div className="admin-detail-section distribution-save-card">
+        <div className="distribution-title"><div><h3>Sudah diberikan ke orang?</h3><p>Simpan statusnya supaya kode ini langsung keluar dari stok otomatis dan tidak pernah dialokasikan ke pembeli lain.</p></div></div>
+        <div className="distribution-fields">
+          <input value={recipientName} onChange={e=>setRecipientName(e.target.value)} placeholder="Nama penerima · opsional"/>
+          <input value={recipientContact} onChange={e=>setRecipientContact(e.target.value)} placeholder="WA / email · opsional"/>
+        </div>
+        <button className="distribution-confirm-btn full" disabled={busy} onClick={()=>{if(confirm("Tandai lisensi ini sudah diberikan? Setelah disimpan, lisensi tidak akan dipakai lagi oleh alokasi otomatis."))onAction("markDistributed",license.id,{buyerName:recipientName,buyerContact:recipientContact,method:"manual"})}}>Tandai Sudah Diberikan</button>
+      </div>:<div className="distribution-saved-card">
+        <strong>✓ Lisensi sudah keluar dari stok otomatis</strong>
+        <span>Sistem tidak akan memilih kode ini lagi saat mengalokasikan lisensi pembelian baru.</span>
+      </div>}
+
+      <div className="admin-detail-section"><h3>Pemilik / distribusi</h3><DetailLine label="Nama" value={license.buyer_name||"Belum dialokasikan"}/><DetailLine label="Kontak" value={license.buyer_contact||"—"}/><DetailLine label="Aktivasi pertama" value={dt(license.first_activated_at)}/>{license.notes?<DetailLine label="Catatan" value={license.notes}/>:null}</div>
 
       <div className="admin-detail-section"><h3>Kirim lewat email · opsional</h3>
         <div className="manual-email-row"><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="email@contoh.com"/><button disabled={busy||!email||!pin} onClick={()=>onSendEmail(license.id,email)}>Kirim Email</button></div>
-        <p className="manual-helper">Tidak wajib. Kamu tetap bisa copy kode + PIN dan mengirimkannya sendiri lewat WhatsApp atau dipakai untuk testing.</p>
+        <p className="manual-helper">Jika email berhasil dikirim, lisensi otomatis ditandai sudah didistribusikan. Jika dibagikan lewat WhatsApp, gunakan tombol “Tandai Sudah Diberikan”.</p>
       </div>
 
       <div className="admin-detail-section"><h3>Perangkat aktif · {devices.length}/{license.max_devices||2}</h3>
