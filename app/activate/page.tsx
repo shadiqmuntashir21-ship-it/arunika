@@ -54,11 +54,11 @@ export default function ActivatePage(){
         });
       }
       setSuccess(true);
-      setMessage("Arunika Pro berhasil diaktifkan. Koleksi contoh Demo sudah dibersihkan dan aplikasi siap diisi dengan data milikmu.");
+      setMessage("Growva Pro berhasil diaktifkan. Koleksi contoh Demo sudah dibersihkan dan aplikasi siap diisi dengan data milikmu.");
     }catch(error){
       const raw=String((error as Error)?.message||error);
       const friendly=raw.includes("PRODUCT_NOT_ENTITLED")
-        ?"Kode ini tidak memiliki akses ke Arunika."
+        ?"Kode ini tidak memiliki akses ke Growva."
         :raw.includes("PIN_INVALID")
         ?"PIN aktivasi salah."
         :raw.includes("DEVICE_LIMIT")
@@ -77,12 +77,12 @@ export default function ActivatePage(){
   }
 
   return <main className="simple-page auth-page">
-    <a className="back-link" href="/">← Kembali ke Arunika</a>
+    <a className="back-link" href="/">← Kembali ke Growva</a>
     <section className="auth-layout">
       <div className="auth-copy">
-        <div className="eyebrow">AKTIVASI ARUNIKA PRO</div>
+        <div className="eyebrow">AKTIVASI GROWVA PRO</div>
         <h1>Aktivasi nyata. Lisensi terhubung ke backend.</h1>
-        <p>Kode aktivasi dan PIN diverifikasi ke server Arunika, lalu lisensi diikat ke perangkat ini.</p>
+        <p>Kode aktivasi dan PIN diverifikasi ke server Growva, lalu lisensi diikat ke perangkat ini.</p>
         <div className="auth-points">
           <span><Icon name="lock" size={18}/> Kode + PIN diverifikasi server</span>
           <span><Icon name="check" size={18}/> Maksimal perangkat mengikuti lisensi</span>
@@ -101,9 +101,9 @@ export default function ActivatePage(){
           <span>PIN aktivasi</span>
           <input value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,""))} placeholder="6 digit dari email" type="password" inputMode="numeric" maxLength={6}/>
         </label>
-        <button className="primary-btn large full" disabled={busy}>{busy?"Memverifikasi lisensi…":"Aktifkan Arunika Pro"}</button>
+        <button className="primary-btn large full" disabled={busy}>{busy?"Memverifikasi lisensi…":"Aktifkan Growva Pro"}</button>
         {message?<div className={success?"form-message success-message":"form-message"}>{message}</div>:null}
-        {success?<a className="netflix-play center" href="/app">Masuk ke Arunika <Icon name="arrow" size={15}/></a>:<a className="small-link center" href="/pro">Belum punya kode? Beli Pro</a>}
+        {success?<a className="netflix-play center" href="/app">Masuk ke Growva <Icon name="arrow" size={15}/></a>:<a className="small-link center" href="/pro">Belum punya kode? Beli Pro</a>}
       </form>
     </section>
   </main>;
