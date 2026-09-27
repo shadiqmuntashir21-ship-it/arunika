@@ -1,0 +1,77 @@
+name: Growva full UI audit
+
+on:
+  push:
+    branches: [growva-ui-rebrand]
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: growva-ui-rebrand
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - name: Audit visible branding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          roots=[Path('app'),Path('components'),Path('public')]
+          exts={'.tsx','.ts','.js','.svg','.webmanifest','.json'}
+          allow_tokens=('activateArunikaLicense','verifyArunikaLicense','ArunikaApp','ArunikaViews')
+          bad=[]
+          for root in roots:
+              for p in root.rglob('*'):
+                  if not p.is_file() or p.suffix not in exts: continue
+                  try: text=p.read_text()
+                  except: continue
+                  for n,line in enumerate(text.splitlines(),1):
+                      stripped=line
+                      for token in allow_tokens: stripped=stripped.replace(token,'')
+                      if 'Arunika' in stripped or 'ARUNIKA' in stripped:
+                          bad.append(f'{p}:{n}: {line}')
+          if bad:
+              print('\n'.join(bad))
+              raise SystemExit('Old visible Arunika branding remains')
+          PY
+      - name: Verify Growva + PWA + legacy compatibility
+        run: |
+          grep -q 'Growva — Reading & Learning Tracker' public/manifest.webmanifest
+          grep -q 'short_name.*Growva' public/manifest.webmanifest
+          grep -q 'aria-label="Growva"' app/icon.svg
+          grep -q 'aria-label="Growva"' public/favicon.svg
+          grep -q 'aria-label="Growva"' public/icons/icon.svg
+          grep -q 'aria-label="Growva"' public/icons/icon-maskable.svg
+          grep -q 'growva-v1-brand' public/sw.js
+          grep -q 'display.*standalone' public/manifest.webmanifest
+          grep -q 'Growva' components/Modal.tsx
+          grep -q 'Growva' app/page.tsx
+          grep -q 'Growva' app/admin/page.tsx
+          grep -q 'Growva' app/pro/page.tsx
+          grep -q 'Growva' app/activate/page.tsx
+          grep -q 'Growva' components/ArunikaApp.tsx
+          grep -q 'Growva' components/ArunikaViews.tsx
+          grep -q 'PRODUCT_CODE = "ARUNIKA"' lib/backend.ts
+          grep -q 'arunika-local' lib/db.ts
+          grep -q 'arunika_device_id' lib/backend.ts
+          test -f public/icons/icon-192.png
+          test -f public/icons/icon-512.png
+          test -f public/icons/icon-maskable-512.png
+          test -f public/icons/apple-touch-icon.png
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/growva-full-ui-audit.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Complete Growva full UI audit'
+          git push origin HEAD:growva-ui-rebrand
