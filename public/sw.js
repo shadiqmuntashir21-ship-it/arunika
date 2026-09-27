@@ -1,4 +1,4 @@
-const CACHE = "arunika-v8-demo-assets";
+const CACHE = "growva-v1-brand";
 const CORE = [
   "/",
   "/app",
