@@ -23,22 +23,22 @@ const benefits = [
   { icon:"play", title:"Belajar dari video tetap terarah", text:"Simpan YouTube, podcast, webinar, atau course lalu catat durasi dan progresnya." },
   { icon:"bulb", title:"Insight tidak hilang begitu saja", text:"Highlight, catatan, dan takeaway terkumpul di Knowledge Vault pribadi." },
   { icon:"chart", title:"Lihat perkembanganmu dengan jelas", text:"Rekap bulanan menunjukkan buku, video, halaman, durasi baca, dan durasi belajar." },
-  { icon:"lock", title:"Local-first dan tetap milikmu", text:"Data personal utama disimpan di perangkatmu. Arunika tidak memerlukan akun untuk jurnal pribadi." }
+  { icon:"lock", title:"Local-first dan tetap milikmu", text:"Data personal utama disimpan di perangkatmu. Growva tidak memerlukan akun untuk jurnal pribadi." }
 ] as const;
 
 const faqs = [
-  ["Apakah ini langganan bulanan?","Tidak. Arunika Pro dibeli sekali. Harga promo saat ini Rp49.000."],
-  ["Data buku dan catatan saya disimpan di mana?","Arunika menggunakan pendekatan local-first. Buku, sesi, habit, insight, dan data personal utama disimpan di perangkatmu."],
-  ["Bisa dipasang seperti aplikasi?","Bisa. Arunika adalah PWA dan dapat dipasang dari browser yang mendukung instalasi aplikasi web."],
-  ["Bisa dipakai untuk video YouTube?","Bisa. Simpan URL YouTube di Learning Tracker, lalu buka kembali video aslinya langsung dari Arunika."],
-  ["Berapa perangkat untuk satu lisensi?","Lisensi Arunika Pro mendukung maksimal 2 perangkat sesuai konfigurasi lisensi saat ini."],
+  ["Apakah ini langganan bulanan?","Tidak. Growva Pro dibeli sekali. Harga promo saat ini Rp49.000."],
+  ["Data buku dan catatan saya disimpan di mana?","Growva menggunakan pendekatan local-first. Buku, sesi, habit, insight, dan data personal utama disimpan di perangkatmu."],
+  ["Bisa dipasang seperti aplikasi?","Bisa. Growva adalah PWA dan dapat dipasang dari browser yang mendukung instalasi aplikasi web."],
+  ["Bisa dipakai untuk video YouTube?","Bisa. Simpan URL YouTube di Learning Tracker, lalu buka kembali video aslinya langsung dari Growva."],
+  ["Berapa perangkat untuk satu lisensi?","Lisensi Growva Pro mendukung maksimal 2 perangkat sesuai konfigurasi lisensi saat ini."],
   ["Bisa dicoba sebelum beli?","Bisa. Mode Demo berisi contoh buku, learning, habit, dan insight supaya kamu bisa merasakan aplikasinya terlebih dahulu."]
 ];
 
 export default function LandingPage(){
   return <main className="stream-landing conversion-landing">
     <header className="landing-stream-nav">
-      <a href="/" className="stream-wordmark landing-wordmark">ARUNIKA</a>
+      <a href="/" className="stream-wordmark landing-wordmark">GROWVA</a>
       <nav>
         <a href="#manfaat">Manfaat</a>
         <a href="#jelajah">Buku</a>
@@ -61,10 +61,10 @@ export default function LandingPage(){
       <div className="landing-cinema-copy conversion-hero-copy">
         <div className="hero-brandline"><span className="hero-a">A</span><span>READ · LEARN · GROW</span></div>
         <h1>Catat yang dibaca. <em>Simpan yang dipelajari.</em> Tumbuh setiap hari.</h1>
-        <p>Arunika menyatukan buku, video, sesi, habit, insight, dan rekap bulanan dalam satu aplikasi local-first yang terasa seperti perpustakaan streaming pribadimu.</p>
+        <p>Growva menyatukan buku, video, sesi, habit, insight, dan rekap bulanan dalam satu aplikasi local-first yang terasa seperti perpustakaan streaming pribadimu.</p>
 
         <div className="hero-offer-card">
-          <span className="offer-label">HARGA PROMO ARUNIKA PRO</span>
+          <span className="offer-label">HARGA PROMO GROWVA PRO</span>
           <div className="offer-price-row"><del>Rp100.000</del><strong>Rp49.000</strong><span>sekali bayar</span></div>
           <small>Tanpa langganan bulanan. Maksimal 2 perangkat.</small>
         </div>
@@ -74,7 +74,7 @@ export default function LandingPage(){
           <a className="netflix-more conversion-buy" href="/pro">Dapatkan Pro · Rp49.000</a>
           <InstallButton hero />
         </div>
-        <a className="hero-activate-link" href="/activate">Sudah punya kode? Aktivasi Arunika</a>
+        <a className="hero-activate-link" href="/activate">Sudah punya kode? Aktivasi Growva</a>
 
         <div className="landing-proof conversion-proof">
           <div className="landing-proof-item"><b>Local-first</b><span>Data jurnal tetap di perangkat</span></div>
@@ -91,19 +91,19 @@ export default function LandingPage(){
       <div><strong>Insight</strong><span>Rekap bulanan & knowledge vault</span></div>
     </section>
 
-    <section className="landing-product-stage" aria-label="Preview aplikasi Arunika">
+    <section className="landing-product-stage" aria-label="Preview aplikasi Growva">
       <div className="product-stage-copy">
         <span className="section-tag">LIHAT SEBELUM MEMBELI</span>
         <h2>Satu ruang yang membuat membaca dan belajar terasa <em>teratur.</em></h2>
-        <p>Buka Demo gratis untuk mencoba pengalaman aslinya. Preview ini menunjukkan bagaimana progres, habit, dan knowledge tampil di Arunika.</p>
+        <p>Buka Demo gratis untuk mencoba pengalaman aslinya. Preview ini menunjukkan bagaimana progres, habit, dan knowledge tampil di Growva.</p>
         <div className="product-stage-actions">
           <a className="netflix-play" href="/app"><Icon name="play" size={17}/> Jelajah Demo</a>
-          <a className="netflix-more" href="/pro"><Icon name="crown" size={17}/> Lihat Arunika Pro</a>
+          <a className="netflix-more" href="/pro"><Icon name="crown" size={17}/> Lihat Growva Pro</a>
         </div>
       </div>
       <div className="product-stage-device">
         <div className="product-stage-window">
-          <div className="product-stage-topbar"><span className="stream-wordmark">ARUNIKA</span><div><i/><i/><i/></div></div>
+          <div className="product-stage-topbar"><span className="stream-wordmark">GROWVA</span><div><i/><i/><i/></div></div>
           <div className="product-stage-body">
             <aside className="product-stage-sidebar">
               <span className="active"><Icon name="home" size={14}/></span>
@@ -139,9 +139,9 @@ export default function LandingPage(){
 
     <section className="landing-benefit-section" id="manfaat">
       <div className="conversion-section-copy">
-        <span className="section-tag">KENAPA ARUNIKA</span>
+        <span className="section-tag">KENAPA GROWVA</span>
         <h2>Kamu tidak butuh lebih banyak konten. Kamu butuh sistem untuk benar-benar <em>menjalankannya.</em></h2>
-        <p>Buku yang dibeli, video yang disimpan, dan insight yang menarik sering berhenti sebagai niat. Arunika membantu menjadikannya ritme harian yang bisa dilihat dan dilanjutkan.</p>
+        <p>Buku yang dibeli, video yang disimpan, dan insight yang menarik sering berhenti sebagai niat. Growva membantu menjadikannya ritme harian yang bisa dilihat dan dilanjutkan.</p>
       </div>
       <div className="conversion-benefit-grid">
         {benefits.map(item=><article className="conversion-benefit-card" key={item.title}>
@@ -224,7 +224,7 @@ export default function LandingPage(){
         </div>
       </div>
       <div className="feature-screen">
-        <div className="screen-nav"><span className="stream-wordmark">ARUNIKA</span><i/><i/><i/></div>
+        <div className="screen-nav"><span className="stream-wordmark">GROWVA</span><i/><i/><i/></div>
         <div className="screen-feature real-screen-feature">
           <img src="/demo/books/atomic-habits.jpg" alt="Atomic Habits"/>
           <div className="screen-feature-gradient"/>
@@ -241,16 +241,16 @@ export default function LandingPage(){
         <p>Coba dulu aplikasinya. Kalau cocok, aktivasi Pro dan mulai isi koleksimu sendiri.</p>
       </div>
       <div className="conversion-steps">
-        <article><span>01</span><h3>Coba Demo</h3><p>Jelajahi semua tab dengan data contoh agar kamu tahu bagaimana Arunika bekerja.</p><a href="/app">Buka Demo <Icon name="arrow" size={14}/></a></article>
+        <article><span>01</span><h3>Coba Demo</h3><p>Jelajahi semua tab dengan data contoh agar kamu tahu bagaimana Growva bekerja.</p><a href="/app">Buka Demo <Icon name="arrow" size={14}/></a></article>
         <article><span>02</span><h3>Ambil Pro</h3><p>Bayar Rp49.000 sekali. Setelah pembayaran dikonfirmasi, kode aktivasi dikirim ke email.</p><a href="/pro">Beli Pro <Icon name="arrow" size={14}/></a></article>
-        <article><span>03</span><h3>Mulai dari kosong</h3><p>Setelah aktivasi, data Demo dibersihkan dan ruang Arunika menjadi milik koleksimu sendiri.</p><a href="/activate">Sudah punya kode? <Icon name="arrow" size={14}/></a></article>
+        <article><span>03</span><h3>Mulai dari kosong</h3><p>Setelah aktivasi, data Demo dibersihkan dan ruang Growva menjadi milik koleksimu sendiri.</p><a href="/activate">Sudah punya kode? <Icon name="arrow" size={14}/></a></article>
       </div>
     </section>
 
     <section className="landing-pro-section conversion-pricing-section" id="pro">
       <div className="conversion-price-card">
         <div className="conversion-price-copy">
-          <span className="section-tag">ARUNIKA PRO</span>
+          <span className="section-tag">GROWVA PRO</span>
           <h2>Kalau satu aplikasi bisa membantu kebiasaan belajarmu lebih konsisten, <em>Rp49.000 terasa sederhana.</em></h2>
           <p>Buka koleksi tanpa batas, tracker penuh, backup & restore, knowledge vault, insight, serta pengalaman PWA lengkap.</p>
           <div className="conversion-price-features">
@@ -267,7 +267,7 @@ export default function LandingPage(){
           <del>Rp100.000</del>
           <strong>Rp49.000</strong>
           <small>sekali bayar · tanpa biaya bulanan</small>
-          <a href="/pro" className="netflix-play conversion-main-cta"><Icon name="crown" size={18}/> Dapatkan Arunika Pro</a>
+          <a href="/pro" className="netflix-play conversion-main-cta"><Icon name="crown" size={18}/> Dapatkan Growva Pro</a>
           <a href="/app" className="conversion-text-link">Masih ragu? Coba Demo dulu →</a>
         </div>
       </div>
@@ -293,6 +293,6 @@ export default function LandingPage(){
       </div>
     </section>
 
-    <footer className="stream-footer"><span className="stream-wordmark">ARUNIKA</span><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><small>© 2026 Arunika</small></footer>
+    <footer className="stream-footer"><span className="stream-wordmark">GROWVA</span><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><small>© 2026 Growva</small></footer>
   </main>;
 }
