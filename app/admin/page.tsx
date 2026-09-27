@@ -378,7 +378,7 @@ export default function AdminPage(){
   if(!token)return <main className="admin-page admin-login-page admin-v2-login">
     <a className="back-link" href="/">← Kembali ke Growva</a>
     <form className="panel admin-login-card" onSubmit={login}>
-      <div className="admin-login-brand"><span className="admin-brand-mark">G</span><div><div className="stream-wordmark">Growva</div><small>ADMIN CENTER</small></div></div>
+      <div className="admin-login-brand"><div><div className="stream-wordmark">Growva</div><small>ADMIN CENTER</small></div></div>
       <span className="eyebrow">SECURE ACCESS</span>
       <h1>Kelola penjualan tanpa kerja berulang.</h1>
       <p>Order, verifikasi pembayaran, lisensi, perangkat, dan email aktivasi terhubung dalam satu dashboard.</p>
@@ -391,7 +391,6 @@ export default function AdminPage(){
   return <main className="admin-shell-v2">
     <aside className={`admin-sidebar-v2 ${mobileNav?"open":""}`}>
       <div className="admin-sidebar-brand">
-        <span className="admin-brand-mark">G</span>
         <div><span className="stream-wordmark">Growva</span><small>ADMIN CENTER</small></div>
         <button className="admin-sidebar-close" onClick={()=>setMobileNav(false)}><Icon name="x" size={18}/></button>
       </div>
