@@ -1,6 +1,6 @@
 {
-  "name": "Arunika — Reading & Learning Tracker",
-  "short_name": "Arunika",
+  "name": "Growva — Reading & Learning Tracker",
+  "short_name": "Growva",
   "description": "Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.",
   "id": "/app",
   "start_url": "/app?source=pwa",
