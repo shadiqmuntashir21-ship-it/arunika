@@ -38,10 +38,17 @@ type License = {
   max_devices:number;
   buyer_name?:string|null;
   buyer_contact?:string|null;
+  notes?:string|null;
   created_at:string;
   updated_at?:string|null;
   first_activated_at?:string|null;
   disabled_at?:string|null;
+  entitlement?:{
+    activation_pin?:string|null;
+    status?:string;
+    max_devices?:number;
+    notes?:string|null;
+  }|null;
 };
 
 type Device = {
@@ -144,6 +151,8 @@ export default function AdminPage(){
   const [licenseSearch,setLicenseSearch]=useState("");
   const [selectedOrder,setSelectedOrder]=useState<Order|null>(null);
   const [selectedLicense,setSelectedLicense]=useState<License|null>(null);
+  const [manualAccessOpen,setManualAccessOpen]=useState(false);
+  const [manualAccessResult,setManualAccessResult]=useState<{licenseId:string;licenseCode:string;activationPin:string;purpose:string;buyerName?:string;email?:string}|null>(null);
   const [revealedCodes,setRevealedCodes]=useState<Record<string,boolean>>({});
   const [mobileNav,setMobileNav]=useState(false);
 
@@ -226,6 +235,36 @@ export default function AdminPage(){
       if(!res?.ok)throw new Error(res?.code||"Gagal membuat lisensi.");
       setMessage(`${res.licenses?.length||count} lisensi ARUNIKA baru dibuat.`);
       await load();
+    }catch(err){setMessage(String((err as Error)?.message||err))}
+    finally{setBusy(false)}
+  }
+
+  async function createManualAccess(payload:{purpose:string;buyerName:string;buyerContact:string;email:string}){
+    setBusy(true);setMessage("");
+    try{
+      const res=await adminLicenses(token,"createManual",payload);
+      if(!res?.ok)throw new Error(res?.message||res?.code||"Gagal membuat akses manual.");
+      const result={
+        licenseId:String(res.licenseId||""),
+        licenseCode:String(res.licenseCode||""),
+        activationPin:String(res.activationPin||""),
+        purpose:String(res.purpose||payload.purpose||"Testing"),
+        buyerName:payload.buyerName||undefined,
+        email:payload.email||undefined
+      };
+      setManualAccessResult(result);
+      setMessage("Akses manual ARUNIKA aktif. Kode dan PIN siap disalin.");
+      await load();
+    }catch(err){setMessage(String((err as Error)?.message||err))}
+    finally{setBusy(false)}
+  }
+
+  async function sendManualAccessEmail(licenseId:string,email:string){
+    setBusy(true);setMessage("");
+    try{
+      const res=await adminLicenses(token,"sendManualEmail",{licenseId,email});
+      if(!res?.ok)throw new Error(res?.message||res?.code||"Email akses manual gagal dikirim.");
+      setMessage(`Email akses manual berhasil dikirim ke ${email}.`);
     }catch(err){setMessage(String((err as Error)?.message||err))}
     finally{setBusy(false)}
   }
@@ -386,7 +425,7 @@ export default function AdminPage(){
 
         {tab==="dashboard"?<DashboardView analytics={analytics} orders={orders} settings={settings} licenses={licenses} awaiting={orders.filter(o=>o.status==="awaiting_verification")} onVerify={(o:Order)=>setSelectedOrder(o)} />:null}
         {tab==="orders"?<OrdersView orders={filteredOrders} search={search} setSearch={setSearch} statusFilter={statusFilter} setStatusFilter={setStatusFilter} busy={busy} onOpen={setSelectedOrder} />:null}
-        {tab==="licenses"?<LicensesView licenses={filteredLicenses} devices={devices} search={licenseSearch} setSearch={setLicenseSearch} busy={busy} revealed={revealedCodes} setRevealed={setRevealedCodes} onOpen={setSelectedLicense} onGenerate={generate} />:null}
+        {tab==="licenses"?<LicensesView licenses={filteredLicenses} devices={devices} search={licenseSearch} setSearch={setLicenseSearch} busy={busy} revealed={revealedCodes} setRevealed={setRevealedCodes} onOpen={setSelectedLicense} onGenerate={generate} onManual={()=>{setManualAccessResult(null);setManualAccessOpen(true)}} />:null}
         {tab==="email"?<EmailView orders={orders} analytics={analytics} busy={busy} onRefresh={(o:Order)=>orderAction("refreshEmailStatus",o.id)} onResend={(o:Order)=>orderAction("resendEmail",o.id)} />:null}
         {tab==="payments"?<PaymentsView methods={paymentMethods} setMethods={setPaymentMethods} busy={busy} onSave={savePayment} />:null}
         {tab==="settings"?<SettingsView settings={settings} config={config} setConfig={setConfig} guidebook={guidebook} busy={busy} onSave={saveSettings} onUpload={uploadGuidebook} />:null}
@@ -394,7 +433,8 @@ export default function AdminPage(){
     </section>
 
     {selectedOrder?<OrderDrawer order={selectedOrder} license={orderLicense(selectedOrder.license_id)} busy={busy} onClose={()=>setSelectedOrder(null)} onAction={orderAction} />:null}
-    {selectedLicense?<LicenseDrawer license={selectedLicense} devices={activeDevices(selectedLicense.id)} busy={busy} onClose={()=>setSelectedLicense(null)} onAction={licenseAction} />:null}
+    {selectedLicense?<LicenseDrawer license={selectedLicense} devices={activeDevices(selectedLicense.id)} busy={busy} onClose={()=>setSelectedLicense(null)} onAction={licenseAction} onSendEmail={sendManualAccessEmail} />:null}
+    {manualAccessOpen?<ManualAccessModal result={manualAccessResult} busy={busy} onClose={()=>setManualAccessOpen(false)} onCreate={createManualAccess} onSendEmail={sendManualAccessEmail} />:null}
   </main>;
 
   function goTab(next:Tab){setTab(next);setMobileNav(false)}
@@ -480,10 +520,10 @@ function OrdersView({orders,search,setSearch,statusFilter,setStatusFilter,onOpen
   </>;
 }
 
-function LicensesView({licenses,devices,search,setSearch,revealed,setRevealed,onOpen,onGenerate,busy}:any){
+function LicensesView({licenses,devices,search,setSearch,revealed,setRevealed,onOpen,onGenerate,onManual,busy}:any){
   const deviceCount=(id:string)=>devices.filter((d:Device)=>d.license_id===id&&!d.revoked_at).length;
   return <>
-    <PageHeader eyebrow="LICENSE INVENTORY" title="Lisensi" text="Stok lisensi ARUNIKA, pemilik, status aktivasi, dan perangkat terhubung." actions={<div className="admin-head-actions"><button className="ghost-btn" disabled={busy} onClick={()=>onGenerate(10)}>+10 kode</button><button className="netflix-play" disabled={busy} onClick={()=>onGenerate(100)}>+100 kode</button></div>} />
+    <PageHeader eyebrow="LICENSE INVENTORY" title="Lisensi" text="Kelola stok, perangkat, serta akses manual untuk testing atau pemberian akses tanpa membuat order." actions={<div className="admin-head-actions"><button className="netflix-play" disabled={busy} onClick={onManual}>Buat Akses Manual</button><button className="ghost-btn" disabled={busy} onClick={()=>onGenerate(10)}>+10 stok</button><button className="ghost-btn" disabled={busy} onClick={()=>onGenerate(100)}>+100 stok</button></div>} />
     <section className="admin-license-summary">
       <LicenseMini label="Total" value={licenses.length}/>
       <LicenseMini label="Tersedia" value={licenses.filter((l:License)=>l.status==="unused").length}/>
@@ -494,10 +534,11 @@ function LicensesView({licenses,devices,search,setSearch,revealed,setRevealed,on
     <section className="admin-filterbar panel one-search"><label><Icon name="search" size={17}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari kode, pembeli, kontak, status…"/></label><span>{licenses.length} lisensi</span></section>
     <section className="panel admin-table-card admin-table-card-v2">
       <div className="admin-table-scroll"><table className="admin-table admin-table-v2">
-        <thead><tr><th>Kode</th><th>Status</th><th>Pemilik</th><th>Perangkat</th><th>Aktivasi</th><th/></tr></thead>
+        <thead><tr><th>Kode</th><th>Status</th><th>Sumber</th><th>Pemilik</th><th>Perangkat</th><th>Aktivasi</th><th/></tr></thead>
         <tbody>{licenses.map((l:License)=><tr key={l.id}>
           <td><div className="license-code-cell"><strong>{revealed[l.id]?l.license_code:maskLicense(l.license_code)}</strong><button onClick={()=>setRevealed((v:any)=>({...v,[l.id]:!v[l.id]}))}>{revealed[l.id]?"Sembunyikan":"Lihat"}</button></div></td>
           <td><LicenseStatus status={l.status}/></td>
+          <td><span className={`license-source-badge ${String(l.notes||"").startsWith("Manual admin access")?"manual":"standard"}`}>{String(l.notes||"").startsWith("Manual admin access")?"Manual":"Order / stok"}</span></td>
           <td><strong>{l.buyer_name||"Belum dialokasikan"}</strong><small>{l.buyer_contact||"—"}</small></td>
           <td><strong>{deviceCount(l.id)}/{l.max_devices||2}</strong><small>aktif</small></td>
           <td><strong>{l.first_activated_at?dt(l.first_activated_at):"Belum aktif"}</strong></td>
@@ -628,12 +669,32 @@ function OrderDrawer({order,license,busy,onClose,onAction}:any){
   </div>;
 }
 
-function LicenseDrawer({license,devices,busy,onClose,onAction}:any){
+function LicenseDrawer({license,devices,busy,onClose,onAction,onSendEmail}:any){
+  const [revealPin,setRevealPin]=useState(false);
+  const [email,setEmail]=useState("");
+  const pin=String(license.entitlement?.activation_pin||"");
+  const copy=(value:string)=>navigator.clipboard.writeText(value).catch(()=>undefined);
+  const copyAll=()=>copy(`ARUNIKA PRO\nKode Aktivasi: ${license.license_code}\nPIN Aktivasi: ${pin||"—"}`);
+
   return <div className="admin-drawer-backdrop" onClick={onClose}>
     <aside className="admin-detail-drawer" onClick={e=>e.stopPropagation()}>
       <div className="admin-drawer-head"><div><span className="eyebrow">LICENSE DETAIL</span><h2>{license.license_code}</h2></div><button onClick={onClose}><Icon name="x" size={20}/></button></div>
-      <LicenseStatus status={license.status}/>
-      <div className="admin-detail-section"><h3>Pemilik</h3><DetailLine label="Nama" value={license.buyer_name||"Belum dialokasikan"}/><DetailLine label="Kontak" value={license.buyer_contact||"—"}/><DetailLine label="Aktivasi pertama" value={dt(license.first_activated_at)}/></div>
+      <div className="license-drawer-badges"><LicenseStatus status={license.status}/>{String(license.notes||"").startsWith("Manual admin access")?<span className="license-source-badge manual">Manual</span>:null}</div>
+
+      <div className="admin-detail-section manual-access-credentials">
+        <h3>Kode & PIN Aktivasi</h3>
+        <div className="credential-box"><span>Kode Lisensi</span><strong>{license.license_code}</strong><button onClick={()=>copy(license.license_code)}>Copy</button></div>
+        <div className="credential-box"><span>PIN Aktivasi</span><strong>{pin?(revealPin?pin:"••••••"):"—"}</strong><div><button onClick={()=>setRevealPin((v:boolean)=>!v)}>{revealPin?"Sembunyikan":"Lihat"}</button>{pin?<button onClick={()=>copy(pin)}>Copy</button>:null}</div></div>
+        <button className="ghost-btn full" disabled={!pin} onClick={copyAll}>Copy Kode + PIN</button>
+      </div>
+
+      <div className="admin-detail-section"><h3>Pemilik</h3><DetailLine label="Nama" value={license.buyer_name||"Belum dialokasikan"}/><DetailLine label="Kontak" value={license.buyer_contact||"—"}/><DetailLine label="Aktivasi pertama" value={dt(license.first_activated_at)}/>{license.notes?<DetailLine label="Catatan" value={license.notes}/>:null}</div>
+
+      <div className="admin-detail-section"><h3>Kirim lewat email · opsional</h3>
+        <div className="manual-email-row"><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="email@contoh.com"/><button disabled={busy||!email||!pin} onClick={()=>onSendEmail(license.id,email)}>Kirim Email</button></div>
+        <p className="manual-helper">Tidak wajib. Kamu tetap bisa copy kode + PIN dan mengirimkannya sendiri lewat WhatsApp atau dipakai untuk testing.</p>
+      </div>
+
       <div className="admin-detail-section"><h3>Perangkat aktif · {devices.length}/{license.max_devices||2}</h3>
         <div className="admin-device-list">{devices.map((d:Device)=><div key={d.id}><div><strong>{d.device_name||"Perangkat"}</strong><span>Aktif {dt(d.activated_at)} · terakhir {dt(d.last_seen)}</span></div><button disabled={busy} onClick={()=>onAction("revokeDevice",license.id,{deviceRecordId:d.id})}>Cabut</button></div>)}
         {!devices.length?<p>Belum ada perangkat aktif.</p>:null}</div>
@@ -643,6 +704,44 @@ function LicenseDrawer({license,devices,busy,onClose,onAction}:any){
         {license.status==="disabled"?<button className="netflix-play full" disabled={busy} onClick={()=>onAction("enable",license.id)}>Aktifkan Lisensi</button>:<button className="danger-btn full" disabled={busy} onClick={()=>{if(confirm("Nonaktifkan lisensi ini?"))onAction("disable",license.id)}}>Nonaktifkan Lisensi</button>}
       </div>
     </aside>
+  </div>;
+}
+
+function ManualAccessModal({result,busy,onClose,onCreate,onSendEmail}:any){
+  const [purpose,setPurpose]=useState("Testing");
+  const [buyerName,setBuyerName]=useState("");
+  const [buyerContact,setBuyerContact]=useState("");
+  const [email,setEmail]=useState("");
+  const [revealPin,setRevealPin]=useState(true);
+  const copy=(value:string)=>navigator.clipboard.writeText(value).catch(()=>undefined);
+  const copyAll=()=>result&&copy(`ARUNIKA PRO\nKode Aktivasi: ${result.licenseCode}\nPIN Aktivasi: ${result.activationPin}`);
+
+  return <div className="admin-drawer-backdrop manual-modal-backdrop" onClick={onClose}>
+    <section className="manual-access-modal panel" onClick={e=>e.stopPropagation()}>
+      <div className="admin-drawer-head"><div><span className="eyebrow">AKSES MANUAL</span><h2>{result?"Akses siap digunakan":"Buat akses tanpa order"}</h2></div><button onClick={onClose}><Icon name="x" size={20}/></button></div>
+
+      {!result?<>
+        <p className="manual-modal-copy">Buat lisensi ARUNIKA Pro langsung dari admin untuk testing, internal, hadiah, reviewer, atau complimentary. Akses ini <strong>tidak membuat order dan tidak masuk omzet.</strong></p>
+        <div className="admin-form-grid manual-access-form">
+          <label><span>Tujuan</span><select value={purpose} onChange={e=>setPurpose(e.target.value)}><option>Testing</option><option>Internal</option><option>Hadiah</option><option>Reviewer</option><option>Complimentary</option></select></label>
+          <label><span>Nama penerima · opsional</span><input value={buyerName} onChange={e=>setBuyerName(e.target.value)} placeholder="Contoh: Tester 1"/></label>
+          <label><span>Kontak / WA · opsional</span><input value={buyerContact} onChange={e=>setBuyerContact(e.target.value)} placeholder="08xxxxxxxxxx"/></label>
+          <label><span>Email · opsional</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tester@email.com"/></label>
+        </div>
+        <button className="netflix-play full" disabled={busy} onClick={()=>onCreate({purpose,buyerName,buyerContact,email})}>{busy?"Membuat…":"Buat & Aktifkan Lisensi"}</button>
+      </>:<>
+        <div className="manual-success-badge">AKTIF · TIDAK MASUK PENJUALAN</div>
+        <div className="manual-result-grid">
+          <div><span>Kode Lisensi</span><strong>{result.licenseCode}</strong><button onClick={()=>copy(result.licenseCode)}>Copy</button></div>
+          <div><span>PIN Aktivasi</span><strong>{revealPin?result.activationPin:"••••••"}</strong><div><button onClick={()=>setRevealPin((v:boolean)=>!v)}>{revealPin?"Sembunyikan":"Lihat"}</button><button onClick={()=>copy(result.activationPin)}>Copy</button></div></div>
+        </div>
+        <button className="ghost-btn full" onClick={copyAll}>Copy Semua Akses</button>
+        <div className="manual-share-block">
+          <p>Kamu bisa langsung pakai kode + PIN ini pada halaman Aktivasi. Email tidak wajib.</p>
+          <div className="manual-email-row"><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email opsional"/><button disabled={busy||!email} onClick={()=>onSendEmail(result.licenseId,email)}>Kirim Email</button></div>
+        </div>
+      </>}
+    </section>
   </div>;
 }
 
