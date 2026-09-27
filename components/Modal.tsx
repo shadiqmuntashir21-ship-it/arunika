@@ -10,7 +10,7 @@ export function Modal({ open, title, subtitle, onClose, children, wide = false }
       <div className={`modal-card ${wide ? "wide" : ""}`} role="dialog" aria-modal="true" aria-label={title}>
         <div className="modal-head">
           <div>
-            <div className="eyebrow">GROWVA</div>
+            <div className="eyebrow">Growva</div>
             <h2>{title}</h2>
             {subtitle ? <p>{subtitle}</p> : null}
           </div>
