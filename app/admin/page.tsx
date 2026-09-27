@@ -233,7 +233,7 @@ export default function AdminPage(){
     try{
       const res=await adminLicenses(token,"generate",{count});
       if(!res?.ok)throw new Error(res?.code||"Gagal membuat lisensi.");
-      setMessage(`${res.licenses?.length||count} lisensi ARUNIKA baru dibuat.`);
+      setMessage(`${res.licenses?.length||count} lisensi GROWVA baru dibuat.`);
       await load();
     }catch(err){setMessage(String((err as Error)?.message||err))}
     finally{setBusy(false)}
@@ -253,7 +253,7 @@ export default function AdminPage(){
         email:payload.email||undefined
       };
       setManualAccessResult(result);
-      setMessage("Akses manual ARUNIKA aktif. Kode dan PIN siap disalin.");
+      setMessage("Akses manual GROWVA aktif. Kode dan PIN siap disalin.");
       await load();
     }catch(err){setMessage(String((err as Error)?.message||err))}
     finally{setBusy(false)}
@@ -314,7 +314,7 @@ export default function AdminPage(){
         instructions:method.instructions||""
       });
       if(!res?.ok)throw new Error(res?.message||res?.code||"Metode pembayaran gagal disimpan.");
-      setMessage(`${method.label} berhasil diperbarui untuk ARUNIKA.`);
+      setMessage(`${method.label} berhasil diperbarui untuk GROWVA.`);
       await load();
     }catch(err){setMessage(String((err as Error)?.message||err))}
     finally{setBusy(false)}
@@ -376,9 +376,9 @@ export default function AdminPage(){
   const orderLicense=(licenseId?:string|null)=>licenses.find(l=>l.id===licenseId);
 
   if(!token)return <main className="admin-page admin-login-page admin-v2-login">
-    <a className="back-link" href="/">← Kembali ke Arunika</a>
+    <a className="back-link" href="/">← Kembali ke Growva</a>
     <form className="panel admin-login-card" onSubmit={login}>
-      <div className="admin-login-brand"><span className="admin-brand-mark">A</span><div><div className="stream-wordmark">ARUNIKA</div><small>ADMIN CENTER</small></div></div>
+      <div className="admin-login-brand"><span className="admin-brand-mark">A</span><div><div className="stream-wordmark">GROWVA</div><small>ADMIN CENTER</small></div></div>
       <span className="eyebrow">SECURE ACCESS</span>
       <h1>Kelola penjualan tanpa kerja berulang.</h1>
       <p>Order, verifikasi pembayaran, lisensi, perangkat, dan email aktivasi terhubung dalam satu dashboard.</p>
@@ -392,10 +392,10 @@ export default function AdminPage(){
     <aside className={`admin-sidebar-v2 ${mobileNav?"open":""}`}>
       <div className="admin-sidebar-brand">
         <span className="admin-brand-mark">A</span>
-        <div><span className="stream-wordmark">ARUNIKA</span><small>ADMIN CENTER</small></div>
+        <div><span className="stream-wordmark">GROWVA</span><small>ADMIN CENTER</small></div>
         <button className="admin-sidebar-close" onClick={()=>setMobileNav(false)}><Icon name="x" size={18}/></button>
       </div>
-      <div className="admin-product-chip"><span/><div><strong>ARUNIKA PRO</strong><small>{money(settings?.price||49000)} · aktif</small></div></div>
+      <div className="admin-product-chip"><span/><div><strong>GROWVA PRO</strong><small>{money(settings?.price||49000)} · aktif</small></div></div>
       <nav className="admin-side-nav">
         <SideNavButton icon="home" label="Dashboard" active={tab==="dashboard"} onClick={()=>goTab("dashboard")} />
         <SideNavButton icon="book" label="Pesanan" badge={analytics.awaiting||undefined} active={tab==="orders"} onClick={()=>goTab("orders")} />
@@ -416,7 +416,7 @@ export default function AdminPage(){
     <section className="admin-workspace">
       <header className="admin-v2-topbar">
         <button className="admin-mobile-menu" onClick={()=>setMobileNav(true)}><Icon name="menu" size={20}/></button>
-        <div className="admin-topbar-title"><span className="stream-wordmark mobile-brand">ARUNIKA</span><span className="admin-current-tab">{tabName(tab)}</span></div>
+        <div className="admin-topbar-title"><span className="stream-wordmark mobile-brand">GROWVA</span><span className="admin-current-tab">{tabName(tab)}</span></div>
         <div className="admin-v2-actions">
           <span className="admin-live-dot"><i/> Live</span>
           <button onClick={()=>load()} disabled={busy}><Icon name="sparkles" size={15}/><span>Refresh</span></button>
@@ -447,7 +447,7 @@ function DashboardView({analytics,orders,settings,licenses,awaiting,onVerify}:an
   const max=Math.max(...analytics.last7.map((x:any)=>x.value),1);
   const activity=orders.slice(0,7);
   return <>
-    <PageHeader eyebrow="OVERVIEW" title="Dashboard" text="Pantau order, pembayaran, lisensi, dan pengiriman email ARUNIKA dari satu tempat." />
+    <PageHeader eyebrow="OVERVIEW" title="Dashboard" text="Pantau order, pembayaran, lisensi, dan pengiriman email GROWVA dari satu tempat." />
     <section className="admin-kpi-grid">
       <KpiCard icon="chart" label="Omzet hari ini" value={money(analytics.todayRevenue)} helper={`${analytics.ordersToday} order masuk`} />
       <KpiCard icon="calendar" label="Omzet bulan ini" value={money(analytics.monthRevenue)} helper="Order selesai" />
@@ -592,7 +592,7 @@ function EmailView({orders,analytics,busy,onRefresh,onResend}:any){
 function PaymentsView({methods,setMethods,busy,onSave}:any){
   function patch(id:string,key:string,value:any){setMethods((rows:PaymentMethod[])=>rows.map(row=>row.id===id?{...row,[key]:value}:row))}
   return <>
-    <PageHeader eyebrow="PAYMENT CONFIG" title="Pembayaran" text="Konfigurasi ini khusus ARUNIKA. Perubahan nomor atau instruksi tidak mengubah konfigurasi produk Dailyn." />
+    <PageHeader eyebrow="PAYMENT CONFIG" title="Pembayaran" text="Konfigurasi ini khusus GROWVA. Perubahan nomor atau instruksi tidak mengubah konfigurasi produk Dailyn." />
     <section className="admin-payment-grid">
       {methods.map((m:PaymentMethod)=><article className={`panel admin-payment-card ${m.active?"active":"inactive"}`} key={m.id}>
         <div className="admin-payment-head"><div><span className={`payment-method-badge ${m.type}`}>{m.type.toUpperCase()}</span><h3>{m.label}</h3></div><label className="admin-toggle"><input type="checkbox" checked={m.active} onChange={e=>patch(m.id,"active",e.target.checked)}/><span/></label></div>
@@ -619,7 +619,7 @@ function SettingsView({settings,config,setConfig,guidebook,busy,onSave,onUpload}
         <div className="admin-form-grid">
           <label><span>Email admin</span><input type="email" value={config.adminEmail} onChange={e=>patch("adminEmail",e.target.value)} placeholder="admin@email.com"/></label>
           <label><span>WhatsApp admin</span><input value={config.adminWhatsapp} onChange={e=>patch("adminWhatsapp",e.target.value)} placeholder="08xxxxxxxxxx"/></label>
-          <label className="wide"><span>Email From</span><input value={config.emailFrom} onChange={e=>patch("emailFrom",e.target.value)} placeholder="Arunika <noreply@domain.com>"/></label>
+          <label className="wide"><span>Email From</span><input value={config.emailFrom} onChange={e=>patch("emailFrom",e.target.value)} placeholder="Growva <noreply@domain.com>"/></label>
           <label><span>Brand email</span><input value={config.emailBrandLabel} onChange={e=>patch("emailBrandLabel",e.target.value)}/></label>
           <label><span>Admin URL</span><input value={config.adminUrl} onChange={e=>patch("adminUrl",e.target.value)}/></label>
           <label className="wide"><span>Tagline email</span><input value={config.emailTagline} onChange={e=>patch("emailTagline",e.target.value)}/></label>
@@ -629,7 +629,7 @@ function SettingsView({settings,config,setConfig,guidebook,busy,onSave,onUpload}
       </article>
 
       <article className="panel admin-settings-card admin-product-settings-card">
-        <span className="eyebrow">PRODUCT</span><h2>ARUNIKA Pro</h2>
+        <span className="eyebrow">PRODUCT</span><h2>GROWVA Pro</h2>
         <div className="admin-readonly-list">
           <SystemLine label="Harga checkout" value={money(settings?.price||49000)} />
           <SystemLine label="Prefix order" value={settings?.order_prefix||"ARUN"} />
@@ -681,7 +681,7 @@ function LicenseDrawer({license,devices,busy,onClose,onAction,onSendEmail}:any){
   const distributed=license.status!=="unused";
   const manual=String(license.notes||"").toLowerCase().includes("manual");
   const copy=(value:string)=>navigator.clipboard.writeText(value).catch(()=>undefined);
-  const copyAll=()=>copy(`ARUNIKA PRO\nKode Aktivasi: ${license.license_code}\nPIN Aktivasi: ${pin||"—"}`);
+  const copyAll=()=>copy(`GROWVA PRO\nKode Aktivasi: ${license.license_code}\nPIN Aktivasi: ${pin||"—"}`);
 
   return <div className="admin-drawer-backdrop" onClick={onClose}>
     <aside className="admin-detail-drawer" onClick={e=>e.stopPropagation()}>
@@ -737,14 +737,14 @@ function ManualAccessModal({result,busy,onClose,onCreate,onSendEmail}:any){
   const [email,setEmail]=useState("");
   const [revealPin,setRevealPin]=useState(true);
   const copy=(value:string)=>navigator.clipboard.writeText(value).catch(()=>undefined);
-  const copyAll=()=>result&&copy(`ARUNIKA PRO\nKode Aktivasi: ${result.licenseCode}\nPIN Aktivasi: ${result.activationPin}`);
+  const copyAll=()=>result&&copy(`GROWVA PRO\nKode Aktivasi: ${result.licenseCode}\nPIN Aktivasi: ${result.activationPin}`);
 
   return <div className="admin-drawer-backdrop manual-modal-backdrop" onClick={onClose}>
     <section className="manual-access-modal panel" onClick={e=>e.stopPropagation()}>
       <div className="admin-drawer-head"><div><span className="eyebrow">AKSES MANUAL</span><h2>{result?"Akses siap digunakan":"Buat akses tanpa order"}</h2></div><button onClick={onClose}><Icon name="x" size={20}/></button></div>
 
       {!result?<>
-        <p className="manual-modal-copy">Buat lisensi ARUNIKA Pro langsung dari admin untuk testing, internal, hadiah, reviewer, atau complimentary. Akses ini <strong>tidak membuat order dan tidak masuk omzet.</strong></p>
+        <p className="manual-modal-copy">Buat lisensi GROWVA Pro langsung dari admin untuk testing, internal, hadiah, reviewer, atau complimentary. Akses ini <strong>tidak membuat order dan tidak masuk omzet.</strong></p>
         <div className="admin-form-grid manual-access-form">
           <label><span>Tujuan</span><select value={purpose} onChange={e=>setPurpose(e.target.value)}><option>Testing</option><option>Internal</option><option>Hadiah</option><option>Reviewer</option><option>Complimentary</option></select></label>
           <label><span>Nama penerima · opsional</span><input value={buyerName} onChange={e=>setBuyerName(e.target.value)} placeholder="Contoh: Tester 1"/></label>
