@@ -7190,3 +7190,144 @@ html[data-theme="light"] .stream-wordmark{
 .admin-sidebar-brand{
   gap:0!important;
 }
+
+
+/* =========================================================
+   GROWVA RIBBON ASSET V4
+   Final visual identity:
+   - Web: long flowing Growva ribbon wordmark only.
+   - Installed app/favicon: standalone ribbon G.
+   ========================================================= */
+.stream-wordmark{
+  display:inline-block!important;
+  width:112px!important;
+  height:35px!important;
+  min-width:112px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
+  letter-spacing:0!important;
+  background-color:transparent!important;
+  background-image:url("/brand/growva-wordmark?v=growva-ribbon-4")!important;
+  background-repeat:no-repeat!important;
+  background-position:left center!important;
+  background-size:contain!important;
+  -webkit-background-clip:border-box!important;
+  background-clip:border-box!important;
+  -webkit-text-fill-color:transparent!important;
+  filter:none!important;
+  overflow:visible!important;
+}
+.stream-wordmark::before,
+.stream-wordmark::after{
+  content:none!important;
+  display:none!important;
+}
+.landing-wordmark{
+  width:142px!important;
+  height:44px!important;
+  min-width:142px!important;
+}
+.stream-app .stream-wordmark{
+  width:116px!important;
+  height:36px!important;
+  min-width:116px!important;
+}
+.product-stage-topbar .stream-wordmark,
+.screen-nav .stream-wordmark{
+  width:86px!important;
+  height:27px!important;
+  min-width:86px!important;
+}
+.mobile-brand{
+  width:98px!important;
+  height:30px!important;
+  min-width:98px!important;
+}
+.stream-footer .stream-wordmark{
+  width:118px!important;
+  height:37px!important;
+  min-width:118px!important;
+}
+
+/* Any former standalone G used inside the website becomes the same long Growva wordmark. */
+.hero-a{
+  display:inline-block!important;
+  width:92px!important;
+  height:29px!important;
+  min-width:92px!important;
+  flex:0 0 92px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
+  background-color:transparent!important;
+  background-image:url("/brand/growva-wordmark?v=growva-ribbon-4")!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:contain!important;
+  overflow:visible!important;
+}
+.loader-mark,
+.onboard-symbol,
+.brand-symbol,
+.brand-symbol.big{
+  width:184px!important;
+  height:58px!important;
+  min-width:184px!important;
+  border:0!important;
+  border-radius:0!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
+  background-color:transparent!important;
+  background-image:url("/brand/growva-wordmark?v=growva-ribbon-4")!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:contain!important;
+  box-shadow:none!important;
+}
+.loader-mark{margin-bottom:4px!important}
+.onboard-symbol{margin:0 auto 18px!important}
+.brand-symbol.big{margin:0 auto 14px!important}
+.admin-brand-mark{display:none!important}
+
+/* Keep the approved ribbon art unchanged in light mode as well. */
+html[data-theme="light"] .stream-wordmark,
+html[data-theme="light"] .hero-a,
+html[data-theme="light"] .loader-mark,
+html[data-theme="light"] .onboard-symbol,
+html[data-theme="light"] .brand-symbol{
+  background-image:url("/brand/growva-wordmark?v=growva-ribbon-4")!important;
+}
+
+@media(max-width:680px){
+  .landing-wordmark{
+    width:118px!important;
+    height:37px!important;
+    min-width:118px!important;
+  }
+  .stream-app .stream-wordmark{
+    width:102px!important;
+    height:32px!important;
+    min-width:102px!important;
+  }
+  .mobile-drawer .stream-wordmark{
+    width:120px!important;
+    height:37px!important;
+    min-width:120px!important;
+  }
+  .loader-mark,
+  .onboard-symbol,
+  .brand-symbol,
+  .brand-symbol.big{
+    width:160px!important;
+    height:50px!important;
+    min-width:160px!important;
+  }
+}

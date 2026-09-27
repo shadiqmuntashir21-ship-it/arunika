@@ -6,8 +6,12 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 export const metadata: Metadata = {
   title: { default: "Growva", template: "%s · Growva" },
   description: "Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.",
-  manifest: "/manifest.webmanifest?v=growva-2",
-  icons: { icon: [{ url: "/favicon.svg?v=growva-2", type: "image/svg+xml" }, { url: "/icons/icon-192.png?v=growva-2", type: "image/png", sizes: "192x192" }], apple: [{ url: "/icons/apple-touch-icon.png?v=growva-2", type: "image/png", sizes: "180x180" }] }
+  manifest: "/manifest.webmanifest?v=growva-ribbon-4",
+  icons: {
+    icon: [{ url: "/icons/growva?v=growva-ribbon-4", type: "image/png", sizes: "512x512" }],
+    shortcut: [{ url: "/icons/growva?v=growva-ribbon-4", type: "image/png", sizes: "512x512" }],
+    apple: [{ url: "/icons/growva?v=growva-ribbon-4", type: "image/png", sizes: "512x512" }]
+  }
 };
 
 export const viewport: Viewport = {

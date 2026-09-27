@@ -1,14 +1,12 @@
-const CACHE = "growva-v2-identity";
+const CACHE = "growva-v4-ribbon-brand";
 const CORE = [
   "/",
   "/app",
   "/pro",
   "/activate",
-  "/manifest.webmanifest?v=growva-2",
-  "/icons/icon.svg?v=growva-2",
-  "/icons/icon-192.png?v=growva-2",
-  "/icons/icon-512.png?v=growva-2",
-  "/icons/icon-maskable-512.png?v=growva-2",
+  "/manifest.webmanifest?v=growva-ribbon-4",
+  "/brand/growva-wordmark?v=growva-ribbon-4",
+  "/icons/growva?v=growva-ribbon-4",
   "/demo/books/atomic-habits.jpg",
   "/demo/books/psychology-of-money.jpg",
   "/demo/books/deep-work.jpg",
