@@ -59,7 +59,7 @@ export default function LandingPage(){
       </div>
       <div className="cinema-vignette"/>
       <div className="landing-cinema-copy conversion-hero-copy">
-        <div className="hero-brandline"><span className="hero-a">A</span><span>READ · LEARN · GROW</span></div>
+        <div className="hero-brandline"><span className="hero-a">G</span><span>READ · LEARN · GROW</span></div>
         <h1>Catat yang dibaca. <em>Simpan yang dipelajari.</em> Tumbuh setiap hari.</h1>
         <p>Growva menyatukan buku, video, sesi, habit, insight, dan rekap bulanan dalam satu aplikasi local-first yang terasa seperti perpustakaan streaming pribadimu.</p>
 
@@ -284,7 +284,7 @@ export default function LandingPage(){
     </section>
 
     <section className="conversion-final-cta">
-      <span className="hero-a">A</span>
+      <span className="hero-a">G</span>
       <h2>Apa yang kamu baca hari ini bisa hilang besok—atau jadi sesuatu yang tumbuh.</h2>
       <p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p>
       <div>
