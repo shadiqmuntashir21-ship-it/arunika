@@ -1,12 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Growva">
   <defs>
-    <linearGradient id="growvaRed" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ff3340"/>
-      <stop offset=".52" stop-color="#e50914"/>
-      <stop offset="1" stop-color="#b0060e"/>
+    <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff1f2d"/>
+      <stop offset=".46" stop-color="#e50914"/>
+      <stop offset="1" stop-color="#a9060d"/>
+    </linearGradient>
+    <linearGradient id="barRed" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b20710"/>
+      <stop offset=".58" stop-color="#e50914"/>
+      <stop offset="1" stop-color="#ff2633"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" fill="url(#growvaRed)"/>
-  <path fill="#fff" d="M366 183c-25-34-63-54-110-54-75 0-132 55-132 127 0 73 57 127 134 127 55 0 100-24 126-65v-80H257v53h70v10c-16 19-40 30-68 30-48 0-82-32-82-75 0-42 34-74 79-74 30 0 52 11 69 31l41-30Z"/>
-  <path fill="#fff" d="M277 238h107v53H277z"/>
+  <rect width="512" height="512" fill="#050505"/>
+  <g transform="translate(51.2 51.2) scale(.8)">
+    <path fill="url(#gRed)" d="M375 177c-27-39-70-61-122-61-83 0-147 61-147 140 0 80 63 140 149 140 62 0 111-27 140-72v-89H254v58h78v12c-18 21-44 33-76 33-53 0-91-35-91-82 0-46 38-81 88-81 33 0 58 12 76 35l46-33Z"/>
+    <path fill="url(#barRed)" d="M276 235h119v58H276z"/>
+  </g>
 </svg>

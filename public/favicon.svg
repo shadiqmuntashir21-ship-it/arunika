@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Growva">
   <defs>
-    <linearGradient id="growvaRed" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ff3340"/>
-      <stop offset=".52" stop-color="#e50914"/>
-      <stop offset="1" stop-color="#b0060e"/>
+    <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff1f2d"/>
+      <stop offset=".46" stop-color="#e50914"/>
+      <stop offset="1" stop-color="#a9060d"/>
     </linearGradient>
-    <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
-      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#8f0008" flood-opacity=".28"/>
-    </filter>
+    <linearGradient id="barRed" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b20710"/>
+      <stop offset=".58" stop-color="#e50914"/>
+      <stop offset="1" stop-color="#ff2633"/>
+    </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#growvaRed)"/>
-  <g filter="url(#softShadow)">
-    <path fill="#fff" d="M375 177c-27-39-70-61-122-61-83 0-147 61-147 140 0 80 63 140 149 140 62 0 111-27 140-72v-89H254v58h78v12c-18 21-44 33-76 33-53 0-91-35-91-82 0-46 38-81 88-81 33 0 58 12 76 35l46-33Z"/>
-    <path fill="#fff" d="M276 235h119v58H276z"/>
-  </g>
+  <rect width="512" height="512" rx="108" fill="#050505"/>
+  <path fill="url(#gRed)" d="M375 177c-27-39-70-61-122-61-83 0-147 61-147 140 0 80 63 140 149 140 62 0 111-27 140-72v-89H254v58h78v12c-18 21-44 33-76 33-53 0-91-35-91-82 0-46 38-81 88-81 33 0 58 12 76 35l46-33Z"/>
+  <path fill="url(#barRed)" d="M276 235h119v58H276z"/>
 </svg>
