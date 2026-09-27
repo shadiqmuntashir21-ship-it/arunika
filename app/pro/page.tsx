@@ -96,7 +96,7 @@ export default function ProPage(){
       const res=await purchasePublic("status",{orderCode:order.order_code,accessToken});
       if(res?.ok){
         setOrder(res.order);
-        if(res.order.status==="completed")setMessage("Pembayaran sudah selesai diproses. Cek email untuk kode aktivasi Arunika.");
+        if(res.order.status==="completed")setMessage("Pembayaran sudah selesai diproses. Cek email untuk kode aktivasi Growva.");
         else if(res.order.status==="license_ready")setMessage("Lisensi sudah disiapkan. Email aktivasi sedang diproses.");
         else if(res.order.status==="awaiting_verification")setMessage("Pembayaran masih menunggu verifikasi admin.");
         else setMessage("Status pesanan diperbarui.");
@@ -113,13 +113,13 @@ export default function ProPage(){
   const features=["Koleksi buku tanpa batas","Learning tracker tanpa batas","Reading session & habit tracker","Knowledge vault & insights","Backup & restore data lokal","Lisensi maksimal 2 perangkat","PWA untuk HP dan laptop"];
 
   return <main className="simple-page pro-checkout-page">
-    <a className="back-link" href="/">← Kembali ke Arunika</a>
+    <a className="back-link" href="/">← Kembali ke Growva</a>
 
     <section className="pro-checkout-hero">
       <div>
-        <div className="eyebrow">ARUNIKA PRO</div>
+        <div className="eyebrow">GROWVA PRO</div>
         <h1>Upgrade sekali. Gunakan untuk perjalanan belajarmu.</h1>
-        <p>Arunika Pro membuka koleksi tanpa batas dan akses penuh aplikasi. Pembayaran dan lisensi sekarang sudah terhubung ke backend Arunika.</p>
+        <p>Growva Pro membuka koleksi tanpa batas dan akses penuh aplikasi. Pembayaran dan lisensi sekarang sudah terhubung ke backend Growva.</p>
         <div className="price-line promo-price-line"><del>{money(100000)}</del><strong>{money(price)}</strong><span>sekali bayar · tanpa biaya bulanan</span></div>
         <ul className="pro-feature-list">{features.map(f=><li key={f}><Icon name="check" size={17}/>{f}</li>)}</ul>
         <a className="ghost-btn" href="/activate">Saya sudah punya kode aktivasi</a>
@@ -127,7 +127,7 @@ export default function ProPage(){
 
       <div className="panel checkout-card">
         {!order ? <>
-          <div className="checkout-head"><div><span className="eyebrow">CHECKOUT</span><h2>Beli Arunika Pro</h2></div><div className="checkout-price promo-checkout-price"><del>{money(100000)}</del><strong>{money(price)}</strong></div></div>
+          <div className="checkout-head"><div><span className="eyebrow">CHECKOUT</span><h2>Beli Growva Pro</h2></div><div className="checkout-price promo-checkout-price"><del>{money(100000)}</del><strong>{money(price)}</strong></div></div>
           <form onSubmit={createOrder} className="checkout-form">
             <label><span>Nama lengkap</span><input required value={buyerName} onChange={e=>setBuyerName(e.target.value)} placeholder="Nama pembeli"/></label>
             <label><span>WhatsApp</span><input required value={whatsapp} onChange={e=>setWhatsapp(e.target.value)} placeholder="08xxxxxxxxxx" inputMode="tel"/></label>
@@ -156,7 +156,7 @@ export default function ProPage(){
           </div>:null}
           {order.status==="pending_payment"?<button className="netflix-play checkout-submit" disabled={busy} onClick={confirmPaid}>{busy?"Mengirim…":"Saya Sudah Bayar"}</button>:null}
           {order.status!=="pending_payment"?<button className="ghost-btn full" disabled={busy} onClick={refreshStatus}>{busy?"Memeriksa…":"Periksa Status Pesanan"}</button>:null}
-          {order.status==="completed"?<a href="/activate" className="netflix-play checkout-submit">Aktifkan Arunika Pro <Icon name="arrow" size={17}/></a>:null}
+          {order.status==="completed"?<a href="/activate" className="netflix-play checkout-submit">Aktifkan Growva Pro <Icon name="arrow" size={17}/></a>:null}
           <button className="checkout-reset" type="button" onClick={resetOrder}>Buat pesanan baru</button>
         </>}
         {message?<div className="checkout-message">{message}</div>:null}
