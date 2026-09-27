@@ -48,7 +48,7 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
         </div> : null}
 
         <div className="stream-hero-content">
-          <div className="hero-brandline"><span className="hero-a">G</span><span>GROWVA FEATURED</span></div>
+          <div className="hero-brandline"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img hero-wordmark-img" /><span>GROWVA FEATURED</span></div>
           <div className="hero-kicker">Pilihan untuk {data.settings.name}</div>
           <h2>{featured?.title || "Mulai perjalanan membacamu."}</h2>
           {featured ? <div className="hero-meta"><b>{heroPct}% dibaca</b><span>{featured.genre || "Buku"}</span><span>{featured.type}</span><span>{featured.rating ? `${featured.rating}★` : "Belum dinilai"}</span></div> : null}
@@ -507,7 +507,7 @@ export function Onboarding({ open, isPro, onTour, onSkip }: any) {
   return <div className="onboarding demo-welcome">
     <div className="onboard-card panel demo-welcome-card">
       <div className="demo-welcome-brand">
-        <div className="onboard-symbol">G</div>
+        <img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img large-wordmark-img" />
         <div><div className="eyebrow">SELAMAT DATANG DI GROWVA</div><span>{isPro?"GROWVA PRO AKTIF":"MODE DEMO GRATIS"}</span></div>
       </div>
       <h1>{isPro?"Ruang belajarmu sudah siap.":"Coba dulu seluruh pengalaman Growva."}</h1>

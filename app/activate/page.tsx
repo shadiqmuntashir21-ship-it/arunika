@@ -91,7 +91,7 @@ export default function ActivatePage(){
       </div>
 
       <form className="panel activation-card" onSubmit={submit}>
-        <div className="brand-symbol big">G</div>
+        <img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img large-wordmark-img" />
         <h2>Aktivasi Pro</h2>
         <label>
           <span>Kode lisensi</span>

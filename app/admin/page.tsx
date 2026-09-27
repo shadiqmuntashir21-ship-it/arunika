@@ -378,7 +378,7 @@ export default function AdminPage(){
   if(!token)return <main className="admin-page admin-login-page admin-v2-login">
     <a className="back-link" href="/">← Kembali ke Growva</a>
     <form className="panel admin-login-card" onSubmit={login}>
-      <div className="admin-login-brand"><div><div className="stream-wordmark">Growva</div><small>ADMIN CENTER</small></div></div>
+      <div className="admin-login-brand"><div><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img admin-wordmark-img" /><small>ADMIN CENTER</small></div></div>
       <span className="eyebrow">SECURE ACCESS</span>
       <h1>Kelola penjualan tanpa kerja berulang.</h1>
       <p>Order, verifikasi pembayaran, lisensi, perangkat, dan email aktivasi terhubung dalam satu dashboard.</p>
@@ -391,7 +391,7 @@ export default function AdminPage(){
   return <main className="admin-shell-v2">
     <aside className={`admin-sidebar-v2 ${mobileNav?"open":""}`}>
       <div className="admin-sidebar-brand">
-        <div><span className="stream-wordmark">Growva</span><small>ADMIN CENTER</small></div>
+        <div><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img admin-wordmark-img" /><small>ADMIN CENTER</small></div>
         <button className="admin-sidebar-close" onClick={()=>setMobileNav(false)}><Icon name="x" size={18}/></button>
       </div>
       <div className="admin-product-chip"><span/><div><strong>GROWVA PRO</strong><small>{money(settings?.price||49000)} · aktif</small></div></div>
@@ -415,7 +415,7 @@ export default function AdminPage(){
     <section className="admin-workspace">
       <header className="admin-v2-topbar">
         <button className="admin-mobile-menu" onClick={()=>setMobileNav(true)}><Icon name="menu" size={20}/></button>
-        <div className="admin-topbar-title"><span className="stream-wordmark mobile-brand">Growva</span><span className="admin-current-tab">{tabName(tab)}</span></div>
+        <div className="admin-topbar-title"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img mobile-wordmark-img" /><span className="admin-current-tab">{tabName(tab)}</span></div>
         <div className="admin-v2-actions">
           <span className="admin-live-dot"><i/> Live</span>
           <button onClick={()=>load()} disabled={busy}><Icon name="sparkles" size={15}/><span>Refresh</span></button>

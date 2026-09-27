@@ -1,11 +1,11 @@
-const CACHE = "growva-v4-ribbon-brand";
+const CACHE = "growva-v5-logo-render-fix";
 const CORE = [
   "/",
   "/app",
   "/pro",
   "/activate",
   "/manifest.webmanifest?v=growva-ribbon-4",
-  "/brand/growva-wordmark?v=growva-ribbon-4",
+  "/brand/growva-wordmark?v=growva-ribbon-5",
   "/icons/growva?v=growva-ribbon-4",
   "/demo/books/atomic-habits.jpg",
   "/demo/books/psychology-of-money.jpg",

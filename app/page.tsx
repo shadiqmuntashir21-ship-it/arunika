@@ -38,7 +38,7 @@ const faqs = [
 export default function LandingPage(){
   return <main className="stream-landing conversion-landing">
     <header className="landing-stream-nav">
-      <a href="/" className="stream-wordmark landing-wordmark">Growva</a>
+      <a href="/" className="growva-logo-link" aria-label="Growva"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img landing-wordmark-img" /></a>
       <nav>
         <a href="#manfaat">Manfaat</a>
         <a href="#jelajah">Buku</a>
@@ -59,7 +59,7 @@ export default function LandingPage(){
       </div>
       <div className="cinema-vignette"/>
       <div className="landing-cinema-copy conversion-hero-copy">
-        <div className="hero-brandline"><span className="hero-a">G</span><span>READ · LEARN · GROW</span></div>
+        <div className="hero-brandline"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img hero-wordmark-img" /><span>READ · LEARN · GROW</span></div>
         <h1>Catat yang dibaca. <em>Simpan yang dipelajari.</em> Tumbuh setiap hari.</h1>
         <p>Growva menyatukan buku, video, sesi, habit, insight, dan rekap bulanan dalam satu aplikasi local-first yang terasa seperti perpustakaan streaming pribadimu.</p>
 
@@ -103,7 +103,7 @@ export default function LandingPage(){
       </div>
       <div className="product-stage-device">
         <div className="product-stage-window">
-          <div className="product-stage-topbar"><span className="stream-wordmark">Growva</span><div><i/><i/><i/></div></div>
+          <div className="product-stage-topbar"><span className="growva-logo-static"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img compact-wordmark-img" /></span><div><i/><i/><i/></div></div>
           <div className="product-stage-body">
             <aside className="product-stage-sidebar">
               <span className="active"><Icon name="home" size={14}/></span>
@@ -224,7 +224,7 @@ export default function LandingPage(){
         </div>
       </div>
       <div className="feature-screen">
-        <div className="screen-nav"><span className="stream-wordmark">Growva</span><i/><i/><i/></div>
+        <div className="screen-nav"><span className="growva-logo-static"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img compact-wordmark-img" /></span><i/><i/><i/></div>
         <div className="screen-feature real-screen-feature">
           <img src="/demo/books/atomic-habits.jpg" alt="Atomic Habits"/>
           <div className="screen-feature-gradient"/>
@@ -284,7 +284,7 @@ export default function LandingPage(){
     </section>
 
     <section className="conversion-final-cta">
-      <span className="hero-a">G</span>
+      <img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img hero-wordmark-img" />
       <h2>Apa yang kamu baca hari ini bisa hilang besok—atau jadi sesuatu yang tumbuh.</h2>
       <p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p>
       <div>
@@ -293,6 +293,6 @@ export default function LandingPage(){
       </div>
     </section>
 
-    <footer className="stream-footer"><span className="stream-wordmark">Growva</span><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><small>© 2026 Growva</small></footer>
+    <footer className="stream-footer"><span className="growva-logo-static"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img compact-wordmark-img" /></span><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><small>© 2026 Growva</small></footer>
   </main>;
 }

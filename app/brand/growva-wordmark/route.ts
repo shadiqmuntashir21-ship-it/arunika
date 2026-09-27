@@ -10,7 +10,7 @@ export function GET(){
   return new Response(bytes,{
     headers:{
       "Content-Type":"image/webp",
-      "Cache-Control":"public, max-age=31536000, immutable"
+      "Cache-Control":"public, max-age=86400, stale-while-revalidate=604800"
     }
   });
 }

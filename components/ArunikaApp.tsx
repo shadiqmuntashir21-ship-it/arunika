@@ -209,7 +209,7 @@ export function ArunikaApp() {
     return { monthlyBooks, monthlyLearning, monthlyActivity: monthActivityMinutes(data, year), genres: top(genreCount), authors: top(authorCount), channels: top(channelCount) };
   }, [data, year]);
 
-  if (!data || !metrics || !insights) return <div className="loading"><div className="loader-mark">G</div><p>Menyiapkan Growva…</p></div>;
+  if (!data || !metrics || !insights) return <div className="loading"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img large-wordmark-img" /><p>Menyiapkan Growva…</p></div>;
 
   const snapshot = data;
 
@@ -358,7 +358,7 @@ export function ArunikaApp() {
       <header className="stream-nav">
         <div className="stream-nav-left">
           <button className="mobile-menu stream-menu-btn" onClick={() => setMobileNav((v) => !v)} aria-label="Menu"><Icon name="menu" /></button>
-          <button className="stream-wordmark" onClick={() => setTab("overview")} aria-label="Beranda Growva">Growva</button>
+          <button className="growva-logo-button" onClick={() => setTab("overview")} aria-label="Beranda Growva"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img app-wordmark-img" /></button>
           <nav className="stream-nav-links" aria-label="Navigasi utama">
             {navItems.slice(0, 8).map((item) => (
               <button data-tour={item.key} key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}>{item.label}</button>
@@ -375,7 +375,7 @@ export function ArunikaApp() {
       </header>
 
       <aside className={`mobile-drawer ${mobileNav ? "open" : ""}`}>
-        <div className="drawer-head"><span className="stream-wordmark">Growva</span><button className="icon-btn" onClick={()=>setMobileNav(false)}><Icon name="x"/></button></div>
+        <div className="drawer-head"><span className="growva-logo-static"><img src="/brand/growva-wordmark?v=growva-ribbon-5" alt="Growva" className="growva-wordmark-img drawer-wordmark-img" /></span><button className="icon-btn" onClick={()=>setMobileNav(false)}><Icon name="x"/></button></div>
         <div className="drawer-utility"><ThemeToggle /><InstallButton />{!isPro?<button className="drawer-tour-btn" type="button" onClick={()=>{setMobileNav(false);beginTour();}}>Mulai Tour Fitur</button>:null}</div>
         <nav>{navItems.map((item)=><button data-tour={item.key} key={item.key} className={tab===item.key?"active":""} onClick={()=>{setTab(item.key);setMobileNav(false)}}><Icon name={item.icon}/><span>{item.label}</span></button>)}</nav>
         {!isPro?<a className="drawer-pro" href="/pro">Upgrade Growva Pro <span>Rp49.000</span></a>:null}

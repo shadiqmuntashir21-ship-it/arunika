@@ -7331,3 +7331,38 @@ html[data-theme="light"] .brand-symbol{
     min-width:160px!important;
   }
 }
+
+
+/* =========================================================
+   GROWVA LOGO RENDER FIX V5
+   Real image logo + visible text fallback. Never blank.
+   ========================================================= */
+.growva-logo-link,.growva-logo-button,.growva-logo-static{
+  display:inline-flex;align-items:center;justify-content:flex-start;flex:0 0 auto;
+}
+.growva-logo-button{padding:0;border:0;background:transparent;cursor:pointer}
+.growva-wordmark-img{
+  display:block;width:112px;height:auto;max-width:none;object-fit:contain;
+  object-position:left center;user-select:none;-webkit-user-drag:none;
+}
+.landing-wordmark-img{width:142px}
+.app-wordmark-img{width:116px}
+.drawer-wordmark-img{width:122px}
+.compact-wordmark-img{width:86px}
+.hero-wordmark-img{width:94px}
+.large-wordmark-img{width:184px;margin:0 auto 14px}
+.admin-wordmark-img{width:112px;margin-bottom:4px}
+.mobile-wordmark-img{width:98px}
+.stream-wordmark{
+  display:inline-block!important;width:auto!important;height:auto!important;min-width:0!important;
+  padding:0!important;color:#e50914!important;font-size:24px!important;font-weight:950!important;
+  line-height:1!important;letter-spacing:-.06em!important;background:none!important;
+  -webkit-background-clip:border-box!important;background-clip:border-box!important;
+  -webkit-text-fill-color:#e50914!important;filter:none!important;
+}
+.stream-wordmark::before,.stream-wordmark::after{content:none!important;display:none!important}
+@media(max-width:680px){
+  .landing-wordmark-img{width:120px}.app-wordmark-img{width:104px}
+  .drawer-wordmark-img{width:116px}.hero-wordmark-img{width:86px}
+  .large-wordmark-img{width:158px}.mobile-wordmark-img{width:92px}
+}
