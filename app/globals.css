@@ -6635,3 +6635,266 @@ html[data-theme="light"] .conversion-landing .landing-nav-actions .landing-login
   border-color:#bdb6af;
   color:#111;
 }
+
+
+/* =========================================================
+   ADMIN MANUAL ACCESS
+   ========================================================= */
+.license-source-badge{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  background:#222;
+  color:#898989;
+}
+.license-source-badge.manual{
+  background:#2d2412;
+  color:#e6bd6e;
+}
+.license-source-badge.standard{
+  background:#1b2730;
+  color:#8fb6cf;
+}
+.license-drawer-badges{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.manual-access-credentials{
+  display:grid;
+  gap:8px;
+}
+.credential-box{
+  position:relative;
+  min-width:0;
+  padding:12px 72px 12px 12px;
+  display:grid;
+  gap:5px;
+  border:1px solid #292929;
+  border-radius:7px;
+  background:#151515;
+}
+.credential-box>span{
+  color:#707070;
+  font-size:7px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+}
+.credential-box>strong{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  color:#fff;
+  font-size:14px;
+  letter-spacing:.04em;
+}
+.credential-box>button,
+.credential-box>div{
+  position:absolute;
+  right:9px;
+  top:50%;
+  transform:translateY(-50%);
+}
+.credential-box>div{
+  display:flex;
+  gap:4px;
+}
+.credential-box button{
+  min-height:28px;
+  padding:0 7px;
+  border:1px solid #343434;
+  border-radius:5px;
+  background:#202020;
+  color:#aaa;
+  font-size:7px;
+  cursor:pointer;
+}
+.manual-email-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:7px;
+}
+.manual-email-row input{
+  width:100%;
+  min-width:0;
+  border:1px solid #303030;
+  border-radius:6px;
+  background:#0b0b0b;
+  color:#fff;
+  padding:10px 11px;
+  outline:0;
+  font-size:9px;
+}
+.manual-email-row button{
+  min-height:38px;
+  padding:0 11px;
+  border:1px solid #343434;
+  border-radius:6px;
+  background:#1c1c1c;
+  color:#ddd;
+  font-size:8px;
+  font-weight:850;
+  cursor:pointer;
+}
+.manual-helper{
+  margin:8px 0 0;
+  color:#666;
+  font-size:7px;
+  line-height:1.5;
+}
+.manual-modal-backdrop{
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.manual-access-modal{
+  width:min(620px,100%);
+  max-height:min(760px,calc(100vh - 36px));
+  overflow:auto;
+  padding:23px;
+  border-color:#303030;
+  background:#101010;
+  box-shadow:0 30px 100px rgba(0,0,0,.5);
+}
+.manual-modal-copy{
+  margin:0 0 18px;
+  max-width:560px;
+  color:#7f7f7f;
+  font-size:9px;
+  line-height:1.6;
+}
+.manual-modal-copy strong{color:#d5d5d5}
+.manual-access-form select{
+  width:100%;
+  border:1px solid #2c2c2c;
+  background:#090909;
+  color:#fff;
+  border-radius:5px;
+  padding:10px;
+  font-size:9px;
+}
+.manual-success-badge{
+  width:max-content;
+  max-width:100%;
+  margin-bottom:14px;
+  padding:6px 8px;
+  border-radius:4px;
+  background:#183527;
+  color:#76d7a0;
+  font-size:7px;
+  font-weight:950;
+  letter-spacing:.08em;
+}
+.manual-result-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:9px;
+}
+.manual-result-grid>div{
+  min-width:0;
+  padding:15px;
+  border:1px solid #2d2d2d;
+  border-radius:7px;
+  background:#151515;
+}
+.manual-result-grid span,
+.manual-result-grid strong{
+  display:block;
+}
+.manual-result-grid span{
+  color:#727272;
+  font-size:7px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.manual-result-grid strong{
+  margin-top:7px;
+  overflow-wrap:anywhere;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:15px;
+  color:#fff;
+}
+.manual-result-grid>div>button,
+.manual-result-grid>div>div button{
+  margin-top:10px;
+  min-height:29px;
+  padding:0 8px;
+  border:1px solid #343434;
+  border-radius:5px;
+  background:#202020;
+  color:#aaa;
+  font-size:7px;
+  cursor:pointer;
+}
+.manual-result-grid>div>div{
+  display:flex;
+  gap:5px;
+}
+.manual-share-block{
+  margin-top:16px;
+  padding-top:15px;
+  border-top:1px solid #262626;
+}
+.manual-share-block p{
+  margin:0 0 10px;
+  color:#6e6e6e;
+  font-size:8px;
+  line-height:1.55;
+}
+html[data-theme="light"] .license-source-badge.manual{
+  background:#fbf0d9;
+  color:#86621e;
+}
+html[data-theme="light"] .license-source-badge.standard{
+  background:#e8f0f4;
+  color:#476679;
+}
+html[data-theme="light"] .credential-box,
+html[data-theme="light"] .manual-access-modal,
+html[data-theme="light"] .manual-result-grid>div{
+  background:#fff;
+  border-color:#dce3dd;
+  color:#18201b;
+}
+html[data-theme="light"] .credential-box>strong,
+html[data-theme="light"] .manual-result-grid strong{
+  color:#18201b;
+}
+html[data-theme="light"] .manual-email-row input,
+html[data-theme="light"] .manual-access-form select{
+  background:#f8faf8;
+  border-color:#d8e0da;
+  color:#18201b;
+}
+html[data-theme="light"] .manual-email-row button,
+html[data-theme="light"] .credential-box button,
+html[data-theme="light"] .manual-result-grid button{
+  background:#edf1ed;
+  border-color:#d8e0da;
+  color:#465149;
+}
+@media(max-width:640px){
+  .manual-access-modal{
+    padding:18px;
+    max-height:calc(100svh - 24px);
+  }
+  .manual-result-grid{
+    grid-template-columns:1fr;
+  }
+  .manual-email-row{
+    grid-template-columns:1fr;
+  }
+  .manual-email-row button{
+    width:100%;
+  }
+}
