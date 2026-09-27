@@ -25,7 +25,7 @@ export function tourBookExample(): Book {
     price: 0,
     type: "Fisik",
     ownership: "Buku sendiri",
-    review: "Contoh buku untuk belajar memakai Arunika. Data ini akan dibersihkan setelah tour selesai.",
+    review: "Contoh buku untuk belajar memakai Growva. Data ini akan dibersihkan setelah tour selesai.",
     cover: "/demo/books/atomic-habits.jpg",
     createdAt: now,
     updatedAt: now
