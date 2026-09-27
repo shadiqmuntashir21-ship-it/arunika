@@ -100,7 +100,7 @@ export function InstallButton({ compact = false, hero = false }: { compact?: boo
         setInstalled(true);
         setFeedback("");
       } else {
-        setFeedback("Instalasi dibatalkan. Kamu tetap bisa memasang Arunika kapan saja dari tombol Install.");
+        setFeedback("Instalasi dibatalkan. Kamu tetap bisa memasang Growva kapan saja dari tombol Install.");
       }
       setPromptEvent(null);
       return;
@@ -112,7 +112,7 @@ export function InstallButton({ compact = false, hero = false }: { compact?: boo
     } else if (/android/.test(ua)) {
       setFeedback("Android/Chrome: buka menu ⋮ → Install app / Add to Home screen. Jika prompt sudah siap, tombol ini akan membuka instalasi langsung.");
     } else {
-      setFeedback("Chrome/Edge desktop: klik ikon Install di address bar atau menu browser → Install Arunika.");
+      setFeedback("Chrome/Edge desktop: klik ikon Install di address bar atau menu browser → Install Growva.");
     }
   }
 
@@ -122,7 +122,7 @@ export function InstallButton({ compact = false, hero = false }: { compact?: boo
   return <>
     <button type="button" className={className} onClick={install}>
       <Icon name="download" size={compact ? 15 : 18}/>
-      <span>{promptEvent ? "Install Arunika" : "Pasang Arunika"}</span>
+      <span>{promptEvent ? "Install Growva" : "Pasang Growva"}</span>
     </button>
     {feedback ? <div className="install-feedback" role="status">{feedback}</div> : null}
   </>;
