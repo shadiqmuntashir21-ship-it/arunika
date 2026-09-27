@@ -6898,3 +6898,134 @@ html[data-theme="light"] .manual-result-grid button{
     width:100%;
   }
 }
+
+
+/* =========================================================
+   LICENSE DISTRIBUTION STATUS
+   ========================================================= */
+.license-distributed-badge,
+.license-stock-badge{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.license-distributed-badge{
+  background:#173525;
+  color:#79d6a0;
+}
+.license-stock-badge{
+  background:#2a2a2a;
+  color:#8b8b8b;
+}
+.distribution-save-card{
+  border:1px solid #3a2d16;
+  border-radius:8px;
+  background:linear-gradient(180deg,#18140d,#12110f);
+  padding:14px!important;
+}
+.distribution-title h3{
+  margin:0 0 5px;
+  color:#fff;
+}
+.distribution-title p{
+  margin:0 0 12px;
+  color:#847a68;
+  font-size:8px;
+  line-height:1.55;
+}
+.distribution-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-bottom:8px;
+}
+.distribution-fields input{
+  min-width:0;
+  width:100%;
+  border:1px solid #3b3428;
+  border-radius:6px;
+  background:#0d0d0d;
+  color:#fff;
+  padding:10px 11px;
+  font-size:9px;
+  outline:0;
+}
+.distribution-confirm-btn{
+  min-height:40px;
+  border:0;
+  border-radius:6px;
+  background:#f0c765;
+  color:#17130a;
+  font-size:9px;
+  font-weight:950;
+  cursor:pointer;
+}
+.distribution-confirm-btn:hover{
+  filter:brightness(1.04);
+}
+.distribution-confirm-btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+.distribution-saved-card{
+  margin:0 0 14px;
+  padding:12px 13px;
+  display:grid;
+  gap:3px;
+  border:1px solid #234331;
+  border-radius:7px;
+  background:#111b15;
+}
+.distribution-saved-card strong{
+  color:#7bd49f;
+  font-size:9px;
+}
+.distribution-saved-card span{
+  color:#6e8f79;
+  font-size:7px;
+  line-height:1.5;
+}
+html[data-theme="light"] .license-distributed-badge{
+  background:#e3f4e9;
+  color:#2e6e47;
+}
+html[data-theme="light"] .license-stock-badge{
+  background:#edf0ed;
+  color:#687069;
+}
+html[data-theme="light"] .distribution-save-card{
+  border-color:#eadab8;
+  background:#fffaf0;
+}
+html[data-theme="light"] .distribution-title h3{
+  color:#302716;
+}
+html[data-theme="light"] .distribution-title p{
+  color:#84765d;
+}
+html[data-theme="light"] .distribution-fields input{
+  background:#fff;
+  border-color:#e7dbc4;
+  color:#1b1b1b;
+}
+html[data-theme="light"] .distribution-saved-card{
+  border-color:#cfe6d6;
+  background:#f1faf4;
+}
+html[data-theme="light"] .distribution-saved-card strong{
+  color:#2d7048;
+}
+html[data-theme="light"] .distribution-saved-card span{
+  color:#60806c;
+}
+@media(max-width:640px){
+  .distribution-fields{
+    grid-template-columns:1fr;
+  }
+}
