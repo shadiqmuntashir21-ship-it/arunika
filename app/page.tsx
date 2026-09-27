@@ -38,7 +38,7 @@ const faqs = [
 export default function LandingPage(){
   return <main className="stream-landing conversion-landing">
     <header className="landing-stream-nav">
-      <a href="/" className="stream-wordmark landing-wordmark">GROWVA</a>
+      <a href="/" className="stream-wordmark landing-wordmark">Growva</a>
       <nav>
         <a href="#manfaat">Manfaat</a>
         <a href="#jelajah">Buku</a>
@@ -103,7 +103,7 @@ export default function LandingPage(){
       </div>
       <div className="product-stage-device">
         <div className="product-stage-window">
-          <div className="product-stage-topbar"><span className="stream-wordmark">GROWVA</span><div><i/><i/><i/></div></div>
+          <div className="product-stage-topbar"><span className="stream-wordmark">Growva</span><div><i/><i/><i/></div></div>
           <div className="product-stage-body">
             <aside className="product-stage-sidebar">
               <span className="active"><Icon name="home" size={14}/></span>
@@ -224,7 +224,7 @@ export default function LandingPage(){
         </div>
       </div>
       <div className="feature-screen">
-        <div className="screen-nav"><span className="stream-wordmark">GROWVA</span><i/><i/><i/></div>
+        <div className="screen-nav"><span className="stream-wordmark">Growva</span><i/><i/><i/></div>
         <div className="screen-feature real-screen-feature">
           <img src="/demo/books/atomic-habits.jpg" alt="Atomic Habits"/>
           <div className="screen-feature-gradient"/>
@@ -293,6 +293,6 @@ export default function LandingPage(){
       </div>
     </section>
 
-    <footer className="stream-footer"><span className="stream-wordmark">GROWVA</span><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><small>© 2026 Growva</small></footer>
+    <footer className="stream-footer"><span className="stream-wordmark">Growva</span><p>Catat yang dibaca. Simpan yang dipelajari. Tumbuh setiap hari.</p><small>© 2026 Growva</small></footer>
   </main>;
 }
