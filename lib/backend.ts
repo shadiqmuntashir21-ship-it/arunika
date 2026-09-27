@@ -87,7 +87,7 @@ export async function activateArunikaLicense(licenseCode: string, activationPin:
     licenseCode: licenseCode.trim().toUpperCase(),
     productCode: PRODUCT_CODE,
     deviceId,
-    deviceName: navigator.userAgent.includes("Mobile") ? "Arunika Mobile" : "Arunika Web",
+    deviceName: navigator.userAgent.includes("Mobile") ? "Growva Mobile" : "Growva Web",
     publicKey: publicJwk,
     publicKeyThumbprint: thumbprint,
     activationPin: activationPin.trim(),
