@@ -1,24 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Arunika">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Growva">
   <defs>
-    <linearGradient id="redA" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="growvaRed" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ff3340"/>
-      <stop offset=".42" stop-color="#e50914"/>
-      <stop offset="1" stop-color="#9f050c"/>
+      <stop offset=".52" stop-color="#e50914"/>
+      <stop offset="1" stop-color="#b0060e"/>
     </linearGradient>
-    <linearGradient id="foldA" x1="0" y1="0" x2="1" y2=".15">
-      <stop offset="0" stop-color="#7f050b"/>
-      <stop offset="1" stop-color="#c60912"/>
-    </linearGradient>
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".55"/>
+    <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#8f0008" flood-opacity=".28"/>
     </filter>
   </defs>
-  <rect width="512" height="512" rx="104" fill="#070707"/>
-  <g filter="url(#shadow)">
-    <path d="M132 408 216 101c3-12 11-18 24-18h38L199 408Z" fill="url(#redA)"/>
-    <path d="M269 83h28c12 0 21 7 25 19l83 306h-69L263 137Z" fill="url(#redA)"/>
-    <path d="M184 274h145l15 58H169Z" fill="#f01824"/>
-    <path d="M255 136 269 83h28c8 0 15 3 20 8l-32 122Z" fill="url(#foldA)" opacity=".98"/>
-    <path d="M132 408h67l13-52h-66Z" fill="#a5070e" opacity=".9"/>
+  <rect width="512" height="512" rx="112" fill="url(#growvaRed)"/>
+  <g filter="url(#softShadow)">
+    <path fill="#fff" d="M375 177c-27-39-70-61-122-61-83 0-147 61-147 140 0 80 63 140 149 140 62 0 111-27 140-72v-89H254v58h78v12c-18 21-44 33-76 33-53 0-91-35-91-82 0-46 38-81 88-81 33 0 58 12 76 35l46-33Z"/>
+    <path fill="#fff" d="M276 235h119v58H276z"/>
   </g>
 </svg>
