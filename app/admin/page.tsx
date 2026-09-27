@@ -416,7 +416,7 @@ export default function AdminPage(){
     <section className="admin-workspace">
       <header className="admin-v2-topbar">
         <button className="admin-mobile-menu" onClick={()=>setMobileNav(true)}><Icon name="menu" size={20}/></button>
-        <div className="admin-topbar-title"><span className="stream-wordmark mobile-brand">GROWVA</span><span className="admin-current-tab">{tabName(tab)}</span></div>
+        <div className="admin-topbar-title"><span className="stream-wordmark mobile-brand">Growva</span><span className="admin-current-tab">{tabName(tab)}</span></div>
         <div className="admin-v2-actions">
           <span className="admin-live-dot"><i/> Live</span>
           <button onClick={()=>load()} disabled={busy}><Icon name="sparkles" size={15}/><span>Refresh</span></button>
@@ -629,7 +629,7 @@ function SettingsView({settings,config,setConfig,guidebook,busy,onSave,onUpload}
       </article>
 
       <article className="panel admin-settings-card admin-product-settings-card">
-        <span className="eyebrow">PRODUCT</span><h2>GROWVA Pro</h2>
+        <span className="eyebrow">PRODUCT</span><h2>Growva Pro</h2>
         <div className="admin-readonly-list">
           <SystemLine label="Harga checkout" value={money(settings?.price||49000)} />
           <SystemLine label="Prefix order" value={settings?.order_prefix||"ARUN"} />
