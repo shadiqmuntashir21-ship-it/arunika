@@ -336,7 +336,7 @@ export function ArunikaApp() {
   async function doExport() {
     if (!isPro) return setToast("Backup & export tersedia di Pro.");
     const backup = await exportBackup();
-    downloadJson(`arunika-backup-${todayISO()}.json`, backup);
+    downloadJson(`growva-backup-${todayISO()}.json`, backup);
     setToast("Backup berhasil diunduh.");
   }
 
