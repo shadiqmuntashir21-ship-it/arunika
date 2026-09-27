@@ -260,7 +260,7 @@ export const demoHabit: HabitDay[] = [
 
 export const demoSettings: Settings = {
   id: "settings",
-  name: "Pembaca Arunika",
+  name: "Pembaca Growva",
   dailyPageTarget: 20,
   dailyReadingMinutesTarget: 30,
   dailyLearningMinutesTarget: 30,
