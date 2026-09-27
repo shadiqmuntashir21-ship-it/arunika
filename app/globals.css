@@ -6523,3 +6523,48 @@ html[data-theme="light"] .demo-mode-strip button{
     display:none;
   }
 }
+
+
+/* =========================================================
+   LANDING HERO TYPOGRAPHY — breathing room only
+   Keep the rest of landing, app and PWA unchanged.
+   ========================================================= */
+@media(min-width:901px){
+  .conversion-landing .conversion-hero{
+    min-height:calc(100svh - 64px);
+    padding-top:clamp(96px,12vh,132px);
+    padding-bottom:clamp(76px,10vh,112px);
+    align-items:center;
+  }
+  .conversion-landing .conversion-hero-copy{
+    width:min(780px,64vw);
+    max-width:780px;
+  }
+  .conversion-landing .conversion-hero-copy h1{
+    max-width:12.8ch;
+    margin:14px 0 22px;
+    font-size:clamp(48px,4.7vw,66px);
+    line-height:1.055;
+    letter-spacing:-.052em;
+  }
+  .conversion-landing .conversion-hero-copy>p{
+    max-width:650px;
+    line-height:1.68;
+  }
+  .conversion-landing .hero-offer-card{
+    margin-top:22px;
+  }
+  .conversion-landing .above-fold-actions{
+    margin-top:16px;
+  }
+  .conversion-landing .conversion-proof{
+    margin-top:22px;
+  }
+}
+
+@media(max-width:640px){
+  .conversion-landing .conversion-hero-copy h1{
+    line-height:1.04;
+    letter-spacing:-.05em;
+  }
+}
