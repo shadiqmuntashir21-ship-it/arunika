@@ -48,11 +48,11 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
         </div> : null}
 
         <div className="stream-hero-content">
-          <div className="hero-brandline"><span className="hero-a">A</span><span>ARUNIKA FEATURED</span></div>
+          <div className="hero-brandline"><span className="hero-a">A</span><span>GROWVA FEATURED</span></div>
           <div className="hero-kicker">Pilihan untuk {data.settings.name}</div>
           <h2>{featured?.title || "Mulai perjalanan membacamu."}</h2>
           {featured ? <div className="hero-meta"><b>{heroPct}% dibaca</b><span>{featured.genre || "Buku"}</span><span>{featured.type}</span><span>{featured.rating ? `${featured.rating}★` : "Belum dinilai"}</span></div> : null}
-          <p>{featured?.review || "Catat sesi membaca dan belajar, lalu biarkan Arunika merangkum ritmemu setiap hari."}</p>
+          <p>{featured?.review || "Catat sesi membaca dan belajar, lalu biarkan Growva merangkum ritmemu setiap hari."}</p>
           <div className="stream-hero-actions">
             <button className="netflix-play" onClick={onSession}><Icon name="book" size={20}/> {featured ? "Catat Baca" : "Mulai Mencatat"}</button>
             <button className="netflix-more" onClick={() => onTab("habit")}><Icon name="calendar" size={19}/> Tracker Hari Ini</button>
@@ -72,7 +72,7 @@ export function Overview({ data, metrics, insights, onTab, onSession }: any) {
           {continueReading.map((book: Book) => (
             <button className="media-card wide-card book-media" key={book.id} onClick={() => onTab("books")}>
               <div className="media-art">
-                {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "ARUNIKA"}</small></div>}
+                {book.cover ? <img src={book.cover} alt={book.title}/> : <div className="poster-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre || "GROWVA"}</small></div>}
                 <div className="media-overlay"><span className="round-play"><Icon name="book" size={18}/></span></div>
               </div>
               <div className="media-progress"><span style={{width:`${percent(book.pagesRead,book.totalPages)}%`}}/></div>
@@ -357,7 +357,7 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport, onSt
   const [yearly,setYearly]=useState(settings.yearlyBookTarget);
 
   return <div className="page-stack">
-    <PageIntro eyebrow="Settings" title="Atur Arunika sesuai ritmemu" text="Target, tampilan, instalasi aplikasi, tour fitur, dan backup tersedia di satu tempat." />
+    <PageIntro eyebrow="Settings" title="Atur Growva sesuai ritmemu" text="Target, tampilan, instalasi aplikasi, tour fitur, dan backup tersedia di satu tempat." />
     <section className="settings-layout">
       <div className="panel settings-card target-settings-card">
         <SectionHead eyebrow="Profile & habit target" title="Target harian"/>
@@ -373,7 +373,7 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport, onSt
 
       <div className="panel settings-card app-settings-card">
         <SectionHead eyebrow="App experience" title="Tampilan & instalasi"/>
-        <p className="muted">Arunika selalu mulai dengan Dark Mode pada perangkat baru. Kamu tetap bisa beralih ke mode terang kapan saja.</p>
+        <p className="muted">Growva selalu mulai dengan Dark Mode pada perangkat baru. Kamu tetap bisa beralih ke mode terang kapan saja.</p>
         <div className="settings-app-actions"><ThemeToggle/><InstallButton/><button className="ghost-btn" onClick={onStartTour}><Icon name="sparkles" size={17}/> Jelajah Tour</button></div>
       </div>
 
@@ -385,7 +385,7 @@ export function SettingsView({ settings, isPro, onSave, onExport, onImport, onSt
       </div>
 
       <div className="panel settings-card accent">
-        <SectionHead eyebrow="Access" title={isPro?"Arunika Pro aktif":"Mode Demo aktif"}/>
+        <SectionHead eyebrow="Access" title={isPro?"Growva Pro aktif":"Mode Demo aktif"}/>
         <p>{isPro?("Lisensi "+(settings.licenseCode||"lokal")+" aktif di perangkat ini."):"Jelajahi semua fitur dengan data contoh. Upgrade Pro Rp49.000 untuk mulai dari ruang pribadi tanpa batas koleksi Demo."}</p>
         {!isPro?<a className="primary-btn" href="/pro">Upgrade Pro · Rp49.000</a>:null}
       </div>
@@ -508,9 +508,9 @@ export function Onboarding({ open, isPro, onTour, onSkip }: any) {
     <div className="onboard-card panel demo-welcome-card">
       <div className="demo-welcome-brand">
         <div className="onboard-symbol">A</div>
-        <div><div className="eyebrow">SELAMAT DATANG DI ARUNIKA</div><span>{isPro?"ARUNIKA PRO AKTIF":"MODE DEMO GRATIS"}</span></div>
+        <div><div className="eyebrow">SELAMAT DATANG DI GROWVA</div><span>{isPro?"GROWVA PRO AKTIF":"MODE DEMO GRATIS"}</span></div>
       </div>
-      <h1>{isPro?"Ruang belajarmu sudah siap.":"Coba dulu seluruh pengalaman Arunika."}</h1>
+      <h1>{isPro?"Ruang belajarmu sudah siap.":"Coba dulu seluruh pengalaman Growva."}</h1>
       <p>{isPro
         ?"Data Demo sudah dibersihkan. Kamu bisa menjelajah fitur dulu lewat Tour, lalu mulai mengisi buku dan learning milikmu sendiri."
         :"Data contoh sudah kami siapkan agar kamu bisa langsung melihat bagaimana buku, learning, sesi, habit, knowledge, dan insight saling terhubung."}</p>
@@ -522,7 +522,7 @@ export function Onboarding({ open, isPro, onTour, onSkip }: any) {
       </div>
       <div className="demo-welcome-actions">
         <button className="primary-btn large" onClick={onTour}><Icon name="sparkles" size={17}/> Jelajah dengan Tour</button>
-        <button className="ghost-btn large" onClick={onSkip}>{isPro?"Lewati Tour, Masuk Arunika":"Lewati Tour, Masuk Demo"}</button>
+        <button className="ghost-btn large" onClick={onSkip}>{isPro?"Lewati Tour, Masuk Growva":"Lewati Tour, Masuk Demo"}</button>
       </div>
       <small>Tour bisa dilewati kapan saja dan dapat dibuka ulang dari Pengaturan.</small>
     </div>
@@ -538,12 +538,12 @@ function RankList({ items }: any) { return <div className="rank-list">{items.map
 
 function BookHero({ book, onSession }: { book: Book; onSession: () => void }) {
   const pct=percent(book.pagesRead,book.totalPages);
-  return <div className="book-hero"><div className="book-cover large">{book.cover?<img src={book.cover} alt={book.title}/>:<div className="cover-fallback"><span>{book.title.slice(0,1)}</span><small>ARUNIKA</small></div>}</div><div className="book-hero-main"><span className={`status-pill ${book.status}`}>{bookStatusLabel(book.status)}</span><h3>{book.title}</h3><p>{book.author} · {book.genre||"Tanpa genre"}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="progress-copy"><span>{book.pagesRead}/{book.totalPages} halaman</span><strong>{pct}%</strong></div><button className="primary-btn compact" onClick={onSession}>Lanjut baca</button></div></div>;
+  return <div className="book-hero"><div className="book-cover large">{book.cover?<img src={book.cover} alt={book.title}/>:<div className="cover-fallback"><span>{book.title.slice(0,1)}</span><small>GROWVA</small></div>}</div><div className="book-hero-main"><span className={`status-pill ${book.status}`}>{bookStatusLabel(book.status)}</span><h3>{book.title}</h3><p>{book.author} · {book.genre||"Tanpa genre"}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="progress-copy"><span>{book.pagesRead}/{book.totalPages} halaman</span><strong>{pct}%</strong></div><button className="primary-btn compact" onClick={onSession}>Lanjut baca</button></div></div>;
 }
 
 function BookTile({ book, onEdit, onDelete }: { book: Book; onEdit:()=>void; onDelete:()=>void }) {
   const pct=percent(book.pagesRead,book.totalPages);
-  return <article className="panel book-tile"><div className="book-cover">{book.cover?<img src={book.cover} alt={book.title}/>:<div className="cover-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre||"ARUNIKA"}</small></div>}<div className="tile-actions"><button onClick={onEdit}><Icon name="edit" size={16}/></button><button className="danger" onClick={onDelete}><Icon name="trash" size={16}/></button></div></div><div className="tile-body"><div className="tile-top"><span className={`status-pill ${book.status}`}>{bookStatusLabel(book.status)}</span><span className="rating">{book.rating?`${"★".repeat(book.rating)}${"☆".repeat(5-book.rating)}`:"Belum rating"}</span></div><h3>{book.title}</h3><p>{book.author}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="tile-details"><span>{pct}%</span><span>{book.pagesRead}/{book.totalPages} hlm</span><span>{book.type}</span></div>{book.review?<div className="review-snippet">{book.review}</div>:null}</div></article>;
+  return <article className="panel book-tile"><div className="book-cover">{book.cover?<img src={book.cover} alt={book.title}/>:<div className="cover-fallback"><span>{book.title.slice(0,1)}</span><small>{book.genre||"GROWVA"}</small></div>}<div className="tile-actions"><button onClick={onEdit}><Icon name="edit" size={16}/></button><button className="danger" onClick={onDelete}><Icon name="trash" size={16}/></button></div></div><div className="tile-body"><div className="tile-top"><span className={`status-pill ${book.status}`}>{bookStatusLabel(book.status)}</span><span className="rating">{book.rating?`${"★".repeat(book.rating)}${"☆".repeat(5-book.rating)}`:"Belum rating"}</span></div><h3>{book.title}</h3><p>{book.author}</p><div className="progress"><span style={{width:`${pct}%`}}/></div><div className="tile-details"><span>{pct}%</span><span>{book.pagesRead}/{book.totalPages} hlm</span><span>{book.type}</span></div>{book.review?<div className="review-snippet">{book.review}</div>:null}</div></article>;
 }
 
 function LearningTile({ item, onEdit, onDelete, onSession }: { item: LearningItem; onEdit:()=>void; onDelete:()=>void; onSession:()=>void }) {
