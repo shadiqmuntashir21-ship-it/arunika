@@ -1,0 +1,47 @@
+name: Render Growva PWA icons
+
+on:
+  push:
+    branches: [growva-ui-rebrand]
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: growva-ui-rebrand
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install SVG renderer
+        run: pip install cairosvg
+      - name: Render Growva icons
+        run: |
+          python - <<'PY'
+          import cairosvg
+          from pathlib import Path
+          src='public/icons/icon.svg'
+          outputs={
+            'public/icons/icon-192.png':192,
+            'public/icons/icon-512.png':512,
+            'public/icons/icon-maskable-512.png':512,
+            'public/icons/apple-touch-icon.png':180,
+          }
+          for path,size in outputs.items():
+              cairosvg.svg2png(url=src, write_to=path, output_width=size, output_height=size)
+              assert Path(path).stat().st_size > 5000, path
+          PY
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/render-growva-icons.yml
+      - name: Commit Growva icons
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/icons .github/workflows/render-growva-icons.yml
+          git commit -m 'Render Growva PWA icons'
+          git push origin HEAD:growva-ui-rebrand
