@@ -7070,3 +7070,10 @@ html[data-theme="light"] .distribution-saved-card span{
   font-weight:950!important;
   letter-spacing:-.08em;
 }
+
+
+/* Admin already has a dedicated square G mark; avoid a duplicate icon there. */
+.admin-login-brand .stream-wordmark::before,
+.admin-sidebar-brand .stream-wordmark::before{
+  display:none;
+}
